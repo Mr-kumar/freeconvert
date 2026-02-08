@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --muted: 214 32% 97%;
+    --muted-foreground: 215 16% 47%;
+    /* Vibrant indigo – stands out, trustworthy, modern */
+    --primary: 239 84% 57%;
+    --primary-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --ring: 239 84% 57%;
+    /* Soft accent for upload zones and highlights */
+    --accent: 239 84% 97%;
+  }
+  body {
+    @apply bg-white text-[hsl(var(--foreground))] antialiased;
+  }
+}

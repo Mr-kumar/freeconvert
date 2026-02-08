@@ -1,0 +1,2 @@
+# Docker Compose: local dev.
+# Logic: Services for Redis (Celery broker), Postgres (DB), LocalStack (S3). Wire ports; env in .env.

@@ -1,0 +1,1 @@
+# Dependencies: fastapi, uvicorn, celery[redis], redis, sqlalchemy, alembic, pypdf2, pillow, boto3
