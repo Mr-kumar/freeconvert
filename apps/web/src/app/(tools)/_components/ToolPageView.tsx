@@ -23,7 +23,8 @@ export interface ToolPageViewProps {
 export function ToolPageView({ toolId }: ToolPageViewProps) {
   const flow = useToolFlow({
     minFiles: MIN_FILES[toolId] ?? 1,
-    simulateDuration: 2500,
+    toolType: toolId as "merge" | "compress" | "reduce" | "jpg-to-pdf",
+    compressionLevel: "medium",
   });
   const tool = getToolById(toolId);
   if (!tool) return null;
@@ -49,7 +50,13 @@ export function ToolPageView({ toolId }: ToolPageViewProps) {
         onRemove={flow.removeFile}
         onPrimary={flow.startProcessing}
         onReset={flow.reset}
-        onDownload={() => window.alert("Download (frontend-only demo)")}
+        onRetry={flow.retry}
+        onDownload={() => {
+          if (flow.downloadUrl) {
+            window.open(flow.downloadUrl, "_blank");
+          }
+        }}
+        errorMessage={flow.errorMessage}
         canSubmit={flow.canSubmit}
       />
     </ToolTemplate>

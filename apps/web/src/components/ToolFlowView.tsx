@@ -9,7 +9,7 @@ import { SuccessScreen } from "@/components/SuccessScreen";
 import type { FileItem } from "@/types";
 
 export interface ToolFlowViewProps {
-  step: "upload" | "processing" | "download";
+  step: "upload" | "processing" | "download" | "error";
   progress: number;
   resultFileName: string;
   files: FileItem[];
@@ -21,7 +21,9 @@ export interface ToolFlowViewProps {
   onRemove: (id: string) => void;
   onPrimary: () => void;
   onReset: () => void;
+  onRetry?: () => void;
   onDownload?: () => void;
+  errorMessage?: string;
   canSubmit: boolean;
 }
 
@@ -29,6 +31,7 @@ const stepToKey: Record<string, StepKey> = {
   upload: "upload",
   processing: "processing",
   download: "download",
+  error: "upload", // Show upload step on error
 };
 
 export function ToolFlowView({
@@ -44,17 +47,16 @@ export function ToolFlowView({
   onRemove,
   onPrimary,
   onReset,
+  onRetry,
   onDownload,
+  errorMessage,
   canSubmit,
 }: ToolFlowViewProps) {
   if (step === "processing") {
     return (
       <div className="space-y-6">
         <ProgressStepper activeStep={stepToKey[step]} />
-        <ProcessingCard
-          fileName={files[0]?.name}
-          progress={progress}
-        />
+        <ProcessingCard fileName={files[0]?.name} progress={progress} />
       </div>
     );
   }
@@ -72,25 +74,41 @@ export function ToolFlowView({
     );
   }
 
+  if (step === "error") {
+    return (
+      <div className="space-y-6">
+        <ProgressStepper activeStep="upload" />
+        <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
+          <div className="text-red-600 font-medium mb-2">
+            ❌ Processing Failed
+          </div>
+          <div className="text-red-700 text-sm mb-4">
+            {errorMessage || "An error occurred during processing"}
+          </div>
+          <div className="flex gap-3 justify-center">
+            <Button variant="outline" onClick={onRetry}>
+              Try Again
+            </Button>
+            <Button onClick={onReset}>Start Over</Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      <UploadZone
-        accept={accept}
-        multiple={multiple}
-        onFiles={onFiles}
-      />
+      <ProgressStepper activeStep={stepToKey[step]} />
+      <UploadZone accept={accept} multiple={multiple} onFiles={onFiles} />
       {files.length > 0 && (
         <>
-          <FileList
-            files={files}
-            onRemove={onRemove}
-            type={fileListType}
-          />
-          <Button
-            className="w-full"
-            onClick={onPrimary}
-            disabled={!canSubmit}
-          >
+          <FileList files={files} onRemove={onRemove} type={fileListType} />
+          {errorMessage && (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700 text-sm">
+              {errorMessage}
+            </div>
+          )}
+          <Button className="w-full" onClick={onPrimary} disabled={!canSubmit}>
             {primaryLabel}
           </Button>
         </>
