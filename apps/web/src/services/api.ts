@@ -1,7 +1,219 @@
 /**
- * API client (services)
- * Logic: Central place for calling backend (or /api proxy). Functions: uploadFiles, getJobStatus,
- * mergePdfs, compressImages, reducePdf, getDownloadUrl. Uses NEXT_PUBLIC_API_URL or relative /api.
+ * API client for FreeConvert backend integration
+ * Logic: Real backend communication with FastAPI endpoints for file processing
  */
 
-export const api = {};
+// Types for API responses
+export interface PresignedURLRequest {
+  file_name: string;
+  file_type: string;
+  file_size: number;
+}
+
+export interface PresignedURLResponse {
+  upload_url: string;
+  file_key: string;
+  bucket: string;
+  region: string;
+  expires_in: number;
+  max_file_size: number;
+}
+
+export interface JobStatusResponse {
+  id: string;
+  status: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
+  tool_type: "merge" | "compress" | "reduce" | "jpg-to-pdf";
+  input_files: string[];
+  result_key?: string;
+  error_message?: string;
+  created_at: string;
+  completed_at?: string;
+  compression_level?: string;
+}
+
+export interface StartJobRequest {
+  tool_type: "merge" | "compress" | "reduce" | "jpg-to-pdf";
+  file_keys: string[];
+  compression_level?: "low" | "medium" | "high";
+}
+
+export interface StartJobResponse {
+  job_id: string;
+  status: string;
+  message: string;
+}
+
+export interface DownloadResponse {
+  download_url: string;
+  expires_in: number;
+  file_name: string;
+}
+
+// API configuration
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+class ApiClient {
+  private baseUrl: string;
+
+  constructor(baseUrl: string = API_BASE_URL) {
+    this.baseUrl = baseUrl;
+  }
+
+  private async request<T>(
+    endpoint: string,
+    options: RequestInit = {},
+  ): Promise<T> {
+    const url = `${this.baseUrl}/api/v1${endpoint}`;
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        ...options.headers,
+      },
+      ...options,
+    });
+
+    if (!response.ok) {
+      const error = await response
+        .json()
+        .catch(() => ({ message: "Unknown error" }));
+      throw new Error(
+        error.message || `HTTP ${response.status}: ${response.statusText}`,
+      );
+    }
+
+    return response.json();
+  }
+
+  // Upload endpoints
+  async getPresignedUploadUrl(
+    request: PresignedURLRequest,
+  ): Promise<PresignedURLResponse> {
+    return this.request<PresignedURLResponse>("/upload/presigned-url", {
+      method: "POST",
+      body: JSON.stringify(request),
+    });
+  }
+
+  async confirmUpload(
+    fileKey: string,
+  ): Promise<{ status: string; file_key: string; file_size: number }> {
+    return this.request<{
+      status: string;
+      file_key: string;
+      file_size: number;
+    }>("/upload/confirm-upload", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({ file_key: fileKey }),
+    });
+  }
+
+  async cleanupUpload(
+    fileKey: string,
+  ): Promise<{ status: string; message: string }> {
+    return this.request<{ status: string; message: string }>(
+      `/upload/cleanup-upload`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({ file_key: fileKey }),
+      },
+    );
+  }
+
+  // Job endpoints
+  async startJob(request: StartJobRequest): Promise<StartJobResponse> {
+    return this.request<StartJobResponse>("/job/start", {
+      method: "POST",
+      body: JSON.stringify(request),
+    });
+  }
+
+  async getJobStatus(jobId: string): Promise<JobStatusResponse> {
+    return this.request<JobStatusResponse>(`/job/${jobId}/status`);
+  }
+
+  async getUserJobs(): Promise<JobStatusResponse[]> {
+    return this.request<JobStatusResponse[]>("/job/my-jobs");
+  }
+
+  // Download endpoints
+  async getDownloadUrl(jobId: string): Promise<DownloadResponse> {
+    return this.request<DownloadResponse>(`/download/${jobId}`);
+  }
+
+  // Health check
+  async healthCheck(): Promise<{ status: string; service: string }> {
+    return this.request<{ status: string; service: string }>("/health");
+  }
+
+  // Utility methods
+  async uploadFileToS3(
+    file: File,
+    presignedData: PresignedURLResponse,
+  ): Promise<void> {
+    const formData = new FormData();
+
+    // For S3 presigned POST, we need to add the file and any additional fields
+    formData.append("file", file);
+
+    const response = await fetch(presignedData.upload_url, {
+      method: "PUT",
+      body: file,
+      headers: {
+        "Content-Type": file.type,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to upload file to S3: ${response.statusText}`);
+    }
+  }
+
+  // Poll job status with interval
+  async pollJobStatus(
+    jobId: string,
+    onStatusUpdate: (status: JobStatusResponse) => void,
+    intervalMs: number = 2000,
+    maxAttempts: number = 300, // 10 minutes max
+  ): Promise<JobStatusResponse> {
+    let attempts = 0;
+
+    const poll = async (): Promise<JobStatusResponse> => {
+      const status = await this.getJobStatus(jobId);
+      onStatusUpdate(status);
+
+      if (status.status === "COMPLETED" || status.status === "FAILED") {
+        return status;
+      }
+
+      attempts++;
+      if (attempts >= maxAttempts) {
+        throw new Error("Job polling timeout exceeded");
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, intervalMs));
+      return poll();
+    };
+
+    return poll();
+  }
+}
+
+// Export singleton instance
+export const api = new ApiClient();
+
+// Export types for use in components
+export type {
+  PresignedURLRequest,
+  PresignedURLResponse,
+  JobStatusResponse,
+  StartJobRequest,
+  StartJobResponse,
+  DownloadResponse,
+};
