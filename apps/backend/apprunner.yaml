@@ -1,0 +1,26 @@
+version: 1.0
+runtime: python311
+build:
+  commands:
+    build:
+      - pip install -r requirements.txt
+run:
+  runtime-version: python311
+  command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+  network:
+    port: 8000
+  env:
+    - name: AWS_ACCESS_KEY_ID
+      value: "YOUR_AWS_ACCESS_KEY"
+    - name: AWS_SECRET_ACCESS_KEY
+      value: "YOUR_AWS_SECRET_KEY"
+    - name: AWS_DEFAULT_REGION
+      value: "us-east-1"
+    - name: DATABASE_URL
+      value: "postgresql://postgres:YourSecurePassword123!@your-rds-endpoint:5432/freeconvert"
+    - name: REDIS_URL
+      value: "redis://your-redis-endpoint:6379/0"
+    - name: S3_BUCKET_NAME
+      value: "your-freeconvert-bucket"
+    - name: CORS_ORIGINS
+      value: "https://yourdomain.com,https://www.yourdomain.com"

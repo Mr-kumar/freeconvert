@@ -4,7 +4,10 @@
   "scripts": {
     "install:web": "npm install --prefix apps/web",
     "dev": "npm run dev --prefix apps/web",
-    "build": "npm run build --prefix apps/web",
+    "build": "cd apps/web && npm install && npm run build",
     "start": "npm run start --prefix apps/web"
+  },
+  "devDependencies": {
+    "@types/node": "^20"
   }
 }
