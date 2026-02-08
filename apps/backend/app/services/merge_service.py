@@ -24,22 +24,8 @@ class MergeService:
     
     def __init__(self):
         """Initialize merge service."""
-        self.merger = None
-        self.reader = None
-        self.writer = None
-        
-        # Try to initialize with PyPDF2 first
-        try:
-            self.merger = PdfMerger()
-            self.reader = PdfReader
-            self.writer = PdfWriter()
-            logger.info("Initialized merge service with PyPDF2")
-        except:
-            # Fallback to pypdf
-            self.merger = PdfMerger()
-            self.reader = PdfReader()
-            self.writer = PdfWriter()
-            logger.info("Initialized merge service with pypdf")
+        # Remove stateful initialization - will be done per request
+        pass
     
     def merge_pdfs(self, pdf_data_list: List[bytes]) -> bytes:
         """
@@ -58,15 +44,15 @@ class MergeService:
             raise ValueError("No PDF files provided for merging")
         
         try:
+            # Initialize fresh merger for each request (stateless)
+            merger = PdfMerger()
+            
             # Create PDF readers for each input
             pdf_files = []
             for i, pdf_data in enumerate(pdf_data_list):
                 try:
                     pdf_stream = io.BytesIO(pdf_data)
-                    if self.reader.__name__ == 'PdfReader':
-                        pdf_file = self.reader(pdf_stream)
-                    else:
-                        pdf_file = self.reader(pdf_stream)
+                    pdf_file = PdfReader(pdf_stream)
                     
                     # Validate PDF
                     if len(pdf_file.pages) == 0:
@@ -83,25 +69,17 @@ class MergeService:
             if not pdf_files:
                 raise ValueError("No valid PDF files could be processed")
             
-            # Create merger and append PDFs
-            if self.merger.__name__ == 'PdfMerger':
-                # PyPDF2 approach
-                for pdf in pdf_files:
-                    self.merger.append(PDF)
-                
-                # Write to BytesIO
-                output_stream = io.BytesIO()
-                self.merger.write(output_stream)
-                result = output_stream.getvalue()
-                
-            else:
-                # pypdf approach
-                output_stream = io.BytesIO()
-                for PDF in pdf_files:
-                    self.merger.append(PDF)
-                
-                self.merger.write(output_stream)
-                result = output_stream.getvalue()
+            # Append PDFs to merger
+            for pdf in pdf_files:
+                merger.append(pdf)
+            
+            # Write to BytesIO
+            output_stream = io.BytesIO()
+            merger.write(output_stream)
+            result = output_stream.getvalue()
+            
+            # Close merger to free resources
+            merger.close()
             
             logger.info(f"Successfully merged {len(pdf_files)} PDFs")
             return result
@@ -122,10 +100,7 @@ class MergeService:
         """
         try:
             pdf_stream = io.BytesIO(pdf_data)
-            if self.reader.__name__ == 'PdfReader':
-                pdf_file = self.reader(pdf_stream)
-            else:
-                pdf_file = self.reader(pdf_stream)
+            pdf_file = PdfReader(pdf_stream)
             
             return {
                 "pages": len(pdf_file.pages),
@@ -158,10 +133,7 @@ class MergeService:
         """
         try:
             pdf_stream = io.BytesIO(pdf_data)
-            if self.reader.__name__ == 'PdfReader':
-                pdf_file = self.reader(pdf_stream)
-            else:
-                pdf_file = self.reader(pdf_stream)
+            pdf_file = PdfReader(pdf_stream)
             
             # Check if it has pages and is not encrypted
             return len(pdf_file.pages) > 0 and not pdf_file.is_encrypted
@@ -182,20 +154,18 @@ class MergeService:
         """
         try:
             pdf_stream = io.BytesIO(pdf_data)
-            if self.reader.__name__ == 'PdfReader':
-                pdf_file = self.reader(pdf_stream)
-            else:
-                pdf_file = self.reader(pdf_stream)
+            pdf_file = PdfReader(pdf_stream)
             
             # Create new PDF writer
             output_stream = io.BytesIO()
+            writer = PdfWriter()
             
             # Copy pages while optimizing
             for page in pdf_file.pages:
-                self.writer.add_page(page)
+                writer.add_page(page)
             
             # Write optimized PDF
-            self.writer.write(output_stream)
+            writer.write(output_stream)
             result = output_stream.getvalue()
             
             logger.info("PDF optimization completed")

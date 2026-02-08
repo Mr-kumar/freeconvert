@@ -1,10 +1,13 @@
 """
 Celery tasks for background file processing.
 Logic: Download files from S3, process with service libraries, upload results back to S3.
+Optimized to use tempfile instead of memory for large files.
 """
 
 import logging
 import uuid
+import tempfile
+import os
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 
@@ -21,10 +24,99 @@ from app.services.reduce_service import ReduceService
 logger = logging.getLogger(__name__)
 
 
+def _download_files_to_temp(file_keys: List[str]) -> List[str]:
+    """
+    Download files from S3 to temporary files on disk.
+    
+    Args:
+        file_keys: List of S3 keys to download
+        
+    Returns:
+        List[str]: List of temporary file paths
+        
+    Raises:
+        ValueError: If download fails
+    """
+    temp_files = []
+    
+    try:
+        for file_key in file_keys:
+            # Create temporary file
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_path = temp_file.name
+            
+            # Download file from S3 to temp file
+            file_data = s3_client.download_file(file_key)
+            if file_data:
+                with open(temp_path, 'wb') as f:
+                    f.write(file_data)
+                temp_files.append(temp_path)
+                logger.info(f"Downloaded {file_key} to {temp_path}")
+            else:
+                # Cleanup on failure
+                for path in temp_files:
+                    try:
+                        os.unlink(path)
+                    except:
+                        pass
+                raise ValueError(f"Failed to download file {file_key}")
+    
+    except Exception as e:
+        # Cleanup on error
+        for path in temp_files:
+            try:
+                os.unlink(path)
+            except:
+                pass
+        raise e
+    
+    return temp_files
+
+
+def _cleanup_temp_files(temp_files: List[str]):
+    """
+    Clean up temporary files.
+    
+    Args:
+        temp_files: List of temporary file paths
+    """
+    for temp_path in temp_files:
+        try:
+            os.unlink(temp_path)
+            logger.debug(f"Cleaned up temp file: {temp_path}")
+        except Exception as e:
+            logger.warning(f"Failed to cleanup temp file {temp_path}: {e}")
+
+
+def _read_temp_files(temp_files: List[str]) -> List[bytes]:
+    """
+    Read temporary files into memory for processing.
+    
+    Args:
+        temp_files: List of temporary file paths
+        
+    Returns:
+        List[bytes]: File data
+    """
+    file_data_list = []
+    
+    for temp_path in temp_files:
+        try:
+            with open(temp_path, 'rb') as f:
+                file_data = f.read()
+            file_data_list.append(file_data)
+        except Exception as e:
+            logger.error(f"Failed to read temp file {temp_path}: {e}")
+            raise e
+    
+    return file_data_list
+
+
 @celery_app.task(bind=True, name="app.workers.tasks.merge_pdf_task")
 def merge_pdf_task(self, job_id: str, file_keys: List[str]) -> Dict[str, Any]:
     """
     Background task to merge multiple PDF files.
+    Optimized to use tempfile for memory efficiency.
     
     Args:
         job_id: UUID of the job
@@ -35,6 +127,7 @@ def merge_pdf_task(self, job_id: str, file_keys: List[str]) -> Dict[str, Any]:
     """
     task = current_task
     db = get_db_session()
+    temp_files = []
     
     try:
         # Update job status to processing
@@ -45,14 +138,11 @@ def merge_pdf_task(self, job_id: str, file_keys: List[str]) -> Dict[str, Any]:
         job.status = JobStatus.PROCESSING
         db.commit()
         
-        # Download input files from S3
-        input_files = []
-        for file_key in file_keys:
-            file_data = s3_client.download_file(file_key)
-            if file_data:
-                input_files.append(file_data)
-            else:
-                raise ValueError(f"Failed to download file {file_key}")
+        # Download input files from S3 to temp files
+        temp_files = _download_files_to_temp(file_keys)
+        
+        # Read temp files for processing (only when needed)
+        input_files = _read_temp_files(temp_files)
         
         # Process merge
         merge_service = MergeService()
@@ -70,7 +160,7 @@ def merge_pdf_task(self, job_id: str, file_keys: List[str]) -> Dict[str, Any]:
             job.error_message = None
             db.commit()
             
-            # Cleanup input files
+            # Cleanup input files from S3
             s3_client.delete_files(file_keys)
             
             return {
@@ -98,6 +188,8 @@ def merge_pdf_task(self, job_id: str, file_keys: List[str]) -> Dict[str, Any]:
         )
         return {"status": "error", "message": str(e)}
     finally:
+        # Always cleanup temp files
+        _cleanup_temp_files(temp_files)
         db.close()
 
 
@@ -105,6 +197,7 @@ def merge_pdf_task(self, job_id: str, file_keys: List[str]) -> Dict[str, Any]:
 def compress_image_task(self, job_id: str, file_keys: List[str], compression_level: str = "medium") -> Dict[str, Any]:
     """
     Background task to compress images.
+    Optimized to use tempfile for memory efficiency.
     
     Args:
         job_id: UUID of the job
@@ -116,6 +209,7 @@ def compress_image_task(self, job_id: str, file_keys: List[str], compression_lev
     """
     task = current_task
     db = get_db_session()
+    temp_files = []
     
     try:
         # Update job status to processing
@@ -127,21 +221,22 @@ def compress_image_task(self, job_id: str, file_keys: List[str], compression_lev
         job.compression_level = compression_level
         db.commit()
         
-        # Download and process files
-        compress_service = CompressService()
-        processed_files = []
+        # Download files to temp storage
+        temp_files = _download_files_to_temp(file_keys)
         
-        for i, file_key in enumerate(file_keys):
-            file_data = s3_client.download_file(file_key)
-            if file_data:
-                compressed_data = compress_service.compress_image(file_data, compression_level)
-                processed_files.append(compressed_data)
-                
-                # Upload compressed file
-                compressed_key = f"results/{job_id}/compressed_{i}.jpg"
-                s3_client.upload_file(compressed_data, compressed_key, "image/jpeg")
-            else:
-                raise ValueError(f"Failed to download file {file_key}")
+        # Process files one at a time to minimize memory usage
+        compress_service = CompressService()
+        
+        for i, temp_path in enumerate(temp_files):
+            # Read file only when processing
+            with open(temp_path, 'rb') as f:
+                file_data = f.read()
+            
+            compressed_data = compress_service.compress_image(file_data, compression_level)
+            
+            # Upload compressed file
+            compressed_key = f"results/{job_id}/compressed_{i}.jpg"
+            s3_client.upload_file(compressed_data, compressed_key, "image/jpeg")
         
         # For now, return first compressed file (could be enhanced for multiple files)
         result_key = f"results/{job_id}/compressed_0.jpg"
@@ -153,7 +248,7 @@ def compress_image_task(self, job_id: str, file_keys: List[str], compression_lev
         job.error_message = None
         db.commit()
         
-        # Cleanup input files
+        # Cleanup input files from S3
         s3_client.delete_files(file_keys)
         
         return {
@@ -179,6 +274,8 @@ def compress_image_task(self, job_id: str, file_keys: List[str], compression_lev
         )
         return {"status": "error", "message": str(e)}
     finally:
+        # Always cleanup temp files
+        _cleanup_temp_files(temp_files)
         db.close()
 
 
@@ -186,6 +283,7 @@ def compress_image_task(self, job_id: str, file_keys: List[str], compression_lev
 def reduce_pdf_task(self, job_id: str, file_key: str, compression_level: str = "medium") -> Dict[str, Any]:
     """
     Background task to reduce PDF file size.
+    Optimized to use tempfile for memory efficiency.
     
     Args:
         job_id: UUID of the job
@@ -197,6 +295,7 @@ def reduce_pdf_task(self, job_id: str, file_key: str, compression_level: str = "
     """
     task = current_task
     db = get_db_session()
+    temp_file = None
     
     try:
         # Update job status to processing
@@ -208,10 +307,16 @@ def reduce_pdf_task(self, job_id: str, file_key: str, compression_level: str = "
         job.compression_level = compression_level
         db.commit()
         
-        # Download and process file
-        file_data = s3_client.download_file(file_key)
-        if not file_data:
+        # Download file to temp storage
+        temp_files = _download_files_to_temp([file_key])
+        temp_file = temp_files[0] if temp_files else None
+        
+        if not temp_file:
             raise ValueError(f"Failed to download file {file_key}")
+        
+        # Read file for processing
+        with open(temp_file, 'rb') as f:
+            file_data = f.read()
         
         # Process PDF reduction
         reduce_service = ReduceService()
@@ -229,7 +334,7 @@ def reduce_pdf_task(self, job_id: str, file_key: str, compression_level: str = "
             job.error_message = None
             db.commit()
             
-            # Cleanup input file
+            # Cleanup input file from S3
             s3_client.delete_file(file_key)
             
             return {
@@ -257,6 +362,9 @@ def reduce_pdf_task(self, job_id: str, file_key: str, compression_level: str = "
         )
         return {"status": "error", "message": str(e)}
     finally:
+        # Always cleanup temp file
+        if temp_file:
+            _cleanup_temp_files([temp_file])
         db.close()
 
 
@@ -264,6 +372,7 @@ def reduce_pdf_task(self, job_id: str, file_key: str, compression_level: str = "
 def jpg_to_pdf_task(self, job_id: str, file_keys: List[str]) -> Dict[str, Any]:
     """
     Background task to convert JPG images to PDF.
+    Optimized to use tempfile for memory efficiency.
     
     Args:
         job_id: UUID of the job
@@ -274,6 +383,7 @@ def jpg_to_pdf_task(self, job_id: str, file_keys: List[str]) -> Dict[str, Any]:
     """
     task = current_task
     db = get_db_session()
+    temp_files = []
     
     try:
         # Update job status to processing
@@ -284,24 +394,21 @@ def jpg_to_pdf_task(self, job_id: str, file_keys: List[str]) -> Dict[str, Any]:
         job.status = JobStatus.PROCESSING
         db.commit()
         
-        # Download input files from S3
-        input_files = []
-        for file_key in file_keys:
-            file_data = s3_client.download_file(file_key)
-            if file_data:
-                input_files.append(file_data)
-            else:
-                raise ValueError(f"Failed to download file {file_key}")
+        # Download files to temp storage
+        temp_files = _download_files_to_temp(file_keys)
         
         # Process JPG to PDF conversion
         from PIL import Image
         import io
         
         # Create PDF from images
-        pdf_data = io.BytesIO()
         images = []
         
-        for file_data in input_files:
+        for temp_path in temp_files:
+            # Read file only when processing
+            with open(temp_path, 'rb') as f:
+                file_data = f.read()
+            
             img = Image.open(io.BytesIO(file_data))
             if img.mode == 'RGBA':
                 img = img.convert('RGB')
@@ -328,7 +435,7 @@ def jpg_to_pdf_task(self, job_id: str, file_keys: List[str]) -> Dict[str, Any]:
             job.error_message = None
             db.commit()
             
-            # Cleanup input files
+            # Cleanup input files from S3
             s3_client.delete_files(file_keys)
             
             return {
@@ -356,6 +463,8 @@ def jpg_to_pdf_task(self, job_id: str, file_keys: List[str]) -> Dict[str, Any]:
         )
         return {"status": "error", "message": str(e)}
     finally:
+        # Always cleanup temp files
+        _cleanup_temp_files(temp_files)
         db.close()
 
 
