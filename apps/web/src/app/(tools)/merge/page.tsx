@@ -5,13 +5,14 @@ import { ToolPageView } from "../_components/ToolPageView";
 const TOOL_ID = "merge";
 const meta = getToolMeta(TOOL_ID);
 
-export const metadata: Metadata = meta
-  ? {
-      title: meta.title,
-      description: meta.description,
-      openGraph: { title: meta.title, description: meta.description },
-    }
-  : undefined;
+export const metadata: Metadata = {
+  title: meta?.title || "Merge PDF",
+  description: meta?.description || "Combine multiple PDF files into one document. No file size limits.",
+  openGraph: { 
+    title: meta?.title || "Merge PDF", 
+    description: meta?.description || "Combine multiple PDF files into one document. No file size limits." 
+  }
+};
 
 export default function Page() {
   return <ToolPageView toolId={TOOL_ID} />;
