@@ -207,13 +207,3 @@ class ApiClient {
 
 // Export singleton instance
 export const api = new ApiClient();
-
-// Export types for use in components
-export type {
-  PresignedURLRequest,
-  PresignedURLResponse,
-  JobStatusResponse,
-  StartJobRequest,
-  StartJobResponse,
-  DownloadResponse,
-};
