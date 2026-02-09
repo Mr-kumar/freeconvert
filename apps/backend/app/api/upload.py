@@ -54,10 +54,11 @@ async def get_presigned_url(
     """
     try:
         # Validate file size
-        if request.file_size > settings.max_file_size:
+        max_file_size_bytes = settings.max_file_size_mb * 1024 * 1024
+        if request.file_size > max_file_size_bytes:
             raise HTTPException(
                 status_code=413,
-                detail=f"File size {request.file_size} exceeds maximum allowed size {settings.max_file_size}"
+                detail=f"File size {request.file_size} exceeds maximum allowed size {max_file_size_bytes} bytes"
             )
         
         # Validate file type
@@ -94,7 +95,7 @@ async def get_presigned_url(
             bucket=presigned_data["bucket"],
             region=presigned_data["region"],
             expires_in=presigned_data["expires_in"],
-            max_file_size=settings.max_file_size
+            max_file_size=max_file_size_bytes
         )
         
     except HTTPException:
