@@ -8,16 +8,16 @@ alembic==1.11.3
 pydantic==2.3.0
 pydantic-settings==2.0.3
 
-# Database drivers
-psycopg2-binary==2.9.7
+# Database drivers - pre-compiled wheels only
+psycopg2-binary==2.9.5
 
 # AWS SDK
 boto3==1.28.85
 botocore==1.31.85
 
-# File processing libraries - pre-compiled versions
+# File processing libraries - pre-compiled versions only
 pypdf2==3.0.1
-pillow==10.0.0
+Pillow==9.5.0
 python-multipart==0.0.6
 
 # HTTP client
