@@ -78,7 +78,11 @@ async def get_presigned_url(
         
         # Generate unique file key
         session_id = http_request.cookies.get("session_id", "anonymous")
-        file_key = f"uploads/{session_id}/{uuid.uuid4()}-{request.file_name}"
+        
+        # Sanitize filename to handle special characters
+        import re
+        safe_filename = re.sub(r'[^\w\-_\.]', '', request.file_name)
+        file_key = f"uploads/{session_id}/{uuid.uuid4()}-{safe_filename}"
         
         # Generate presigned upload URL
         presigned_data = s3_client.generate_presigned_upload_url(
