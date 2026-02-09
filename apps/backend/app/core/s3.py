@@ -58,12 +58,13 @@ class S3Client:
                 raise ValueError(f"File size {file_size_mb}MB exceeds maximum {max_size}MB")
             
             # Generate presigned URL for PUT operation
+            # Note: We DO NOT include ContentType in Params to give flexibility
+            # to the client to send the correct Content-Type header
             url = self.client.generate_presigned_url(
                 'put_object',
                 Params={
                     'Bucket': self.bucket_name,
-                    'Key': file_key,
-                    'ContentType': file_type
+                    'Key': file_key
                 },
                 ExpiresIn=settings.s3_expiry_seconds
             )

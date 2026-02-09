@@ -61,7 +61,7 @@ class ApiClient {
 
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {},
+    options: RequestInit = {}
   ): Promise<T> {
     const url = `${this.baseUrl}/api/v1${endpoint}`;
 
@@ -78,7 +78,7 @@ class ApiClient {
         .json()
         .catch(() => ({ message: "Unknown error" }));
       throw new Error(
-        error.message || `HTTP ${response.status}: ${response.statusText}`,
+        error.message || `HTTP ${response.status}: ${response.statusText}`
       );
     }
 
@@ -87,7 +87,7 @@ class ApiClient {
 
   // Upload endpoints
   async getPresignedUploadUrl(
-    request: PresignedURLRequest,
+    request: PresignedURLRequest
   ): Promise<PresignedURLResponse> {
     return this.request<PresignedURLResponse>("/upload/presigned-url", {
       method: "POST",
@@ -96,7 +96,7 @@ class ApiClient {
   }
 
   async confirmUpload(
-    fileKey: string,
+    fileKey: string
   ): Promise<{ status: string; file_key: string; file_size: number }> {
     return this.request<{
       status: string;
@@ -104,25 +104,19 @@ class ApiClient {
       file_size: number;
     }>("/upload/confirm-upload", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({ file_key: fileKey }),
+      body: JSON.stringify({ file_key: fileKey }),
     });
   }
 
   async cleanupUpload(
-    fileKey: string,
+    fileKey: string
   ): Promise<{ status: string; message: string }> {
     return this.request<{ status: string; message: string }>(
       `/upload/cleanup-upload`,
       {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({ file_key: fileKey }),
-      },
+        body: JSON.stringify({ file_key: fileKey }),
+      }
     );
   }
 
@@ -155,23 +149,62 @@ class ApiClient {
   // Utility methods
   async uploadFileToS3(
     file: File,
-    presignedData: PresignedURLResponse,
+    presignedData: PresignedURLResponse
   ): Promise<void> {
-    const formData = new FormData();
+    try {
+      // Determine correct Content-Type
+      let contentType = file.type || "application/octet-stream";
 
-    // For S3 presigned POST, we need to add the file and any additional fields
-    formData.append("file", file);
+      // Fallback for common file types if browser doesn't detect
+      if (!file.type) {
+        const fileName = file.name.toLowerCase();
+        if (fileName.endsWith(".pdf")) {
+          contentType = "application/pdf";
+        } else if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+          contentType = "image/jpeg";
+        } else if (fileName.endsWith(".png")) {
+          contentType = "image/png";
+        }
+      }
 
-    const response = await fetch(presignedData.upload_url, {
-      method: "PUT",
-      body: file,
-      headers: {
-        "Content-Type": file.type,
-      },
-    });
+      console.log(
+        `[Upload] Starting S3 upload: ${file.name} (${file.size} bytes, ${contentType})`
+      );
 
-    if (!response.ok) {
-      throw new Error(`Failed to upload file to S3: ${response.statusText}`);
+      const response = await fetch(presignedData.upload_url, {
+        method: "PUT",
+        body: file,
+        headers: {
+          "Content-Type": contentType,
+        },
+      });
+
+      if (!response.ok) {
+        // Try to get the error details from S3
+        let errorMessage = response.statusText;
+        try {
+          const errorBody = await response.text();
+          if (errorBody) {
+            errorMessage = errorBody.substring(0, 200); // Limit error message length
+          }
+        } catch (e) {
+          // Ignore error parsing issues
+        }
+
+        console.error(
+          `[Upload] S3 Error for ${file.name}: HTTP ${response.status}`
+        );
+        console.error(`[Upload] Error Details: ${errorMessage}`);
+
+        throw new Error(
+          `HTTP ${response.status}: ${errorMessage || response.statusText}`
+        );
+      }
+
+      console.log(`[Upload] Successfully uploaded ${file.name} to S3`);
+    } catch (error) {
+      console.error(`[Upload] Failed for ${file.name}:`, error);
+      throw error;
     }
   }
 
@@ -180,7 +213,7 @@ class ApiClient {
     jobId: string,
     onStatusUpdate: (status: JobStatusResponse) => void,
     intervalMs: number = 2000,
-    maxAttempts: number = 300, // 10 minutes max
+    maxAttempts: number = 300 // 10 minutes max
   ): Promise<JobStatusResponse> {
     let attempts = 0;
 

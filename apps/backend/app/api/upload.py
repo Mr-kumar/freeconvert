@@ -34,6 +34,25 @@ class PresignedURLResponse(BaseModel):
     max_file_size: int
 
 
+class ConfirmUploadRequest(BaseModel):
+    """Request model for confirming upload."""
+    file_key: str
+
+
+class ConfirmUploadResponse(BaseModel):
+    """Response model for confirm upload."""
+    status: str
+    file_key: str
+    file_size: int
+    last_modified: str
+    session_id: str
+
+
+class CleanupUploadRequest(BaseModel):
+    """Request model for cleaning up upload."""
+    file_key: str
+
+
 @router.post("/presigned-url", response_model=PresignedURLResponse)
 async def get_presigned_url(
     request: PresignedURLRequest,
@@ -111,11 +130,11 @@ async def get_presigned_url(
         )
 
 
-@router.post("/confirm-upload")
+@router.post("/confirm-upload", response_model=ConfirmUploadResponse)
 async def confirm_upload(
-    request: Dict[str, str],
+    request: ConfirmUploadRequest,
     http_request: Request
-) -> Dict[str, Any]:
+) -> ConfirmUploadResponse:
     """
     Confirm that a file has been successfully uploaded to S3.
     
@@ -124,75 +143,52 @@ async def confirm_upload(
         http_request: HTTP request for session tracking
         
     Returns:
-        Dict: Confirmation response
+        ConfirmUploadResponse: Confirmation response
+        
+    Raises:
+        HTTPException: If validation fails
     """
     try:
-        # Log the raw request for debugging
-        import json
-        logger.info(f"Raw request type: {type(request)}")
-        logger.info(f"Raw request content: {request}")
-        
-        # Try multiple ways to extract file_key
-        file_key = None
-        
-        if isinstance(request, dict):
-            file_key = request.get("file_key")
-            logger.info(f"Extracted file_key from dict: {file_key}")
-        elif hasattr(request, 'json'):
-            try:
-                json_data = await request.json()
-                file_key = json_data.get("file_key")
-                logger.info(f"Extracted file_key from JSON: {file_key}")
-            except Exception as e:
-                logger.error(f"Failed to parse JSON: {e}")
-        elif hasattr(request, 'form'):
-            form_data = await request.form()
-            file_key = form_data.get("file_key")
-            logger.info(f"Extracted file_key from form: {file_key}")
-        
-        if not file_key:
-            logger.error("file_key is missing from all request formats")
-            raise HTTPException(
-                status_code=422,
-                detail="file_key is required"
-            )
+        file_key = request.file_key
+        logger.info(f"Confirming upload for file: {file_key}")
         
         # Verify file exists in S3
         exists = s3_client.file_exists(file_key)
         
         if not exists:
+            logger.warning(f"File not found in S3: {file_key}")
             raise HTTPException(
                 status_code=404,
-                detail="File not found in S3"
+                detail=f"File not found in S3: {file_key}"
             )
         
         # Get file info
         file_info = s3_client.get_file_info(file_key)
         session_id = http_request.cookies.get("session_id", "anonymous")
         
-        logger.info(f"Upload confirmed for session {session_id}: {file_key}")
+        logger.info(f"Upload confirmed for session {session_id}: {file_key} (size: {file_info['size']} bytes)")
         
-        return {
-            "status": "confirmed",
-            "file_key": file_key,
-            "file_size": file_info["size"],
-            "last_modified": file_info["last_modified"],
-            "session_id": session_id
-        }
+        return ConfirmUploadResponse(
+            status="confirmed",
+            file_key=file_key,
+            file_size=file_info["size"],
+            last_modified=file_info["last_modified"],
+            session_id=session_id
+        )
         
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Failed to confirm upload: {e}")
+        logger.error(f"Failed to confirm upload: {str(e)}")
         raise HTTPException(
             status_code=500,
-            detail="Failed to confirm upload"
+            detail=f"Failed to confirm upload: {str(e)}"
         )
 
 
 @router.delete("/cleanup-upload")
 async def cleanup_upload(
-    request: Dict[str, str],
+    request: CleanupUploadRequest,
     http_request: Request
 ) -> Dict[str, str]:
     """
@@ -206,12 +202,9 @@ async def cleanup_upload(
         Dict: Cleanup response
     """
     try:
-        file_key = request.get("file_key")
-        if not file_key:
-            raise HTTPException(
-                status_code=422,
-                detail="file_key is required"
-            )
+        file_key = request.file_key
+        logger.info(f"Cleaning up file: {file_key}")
+        
         # Delete file from S3
         s3_client.delete_file(file_key)
         
@@ -224,11 +217,13 @@ async def cleanup_upload(
             "message": "File successfully deleted"
         }
         
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"Failed to cleanup upload: {e}")
+        logger.error(f"Failed to cleanup upload: {str(e)}")
         raise HTTPException(
             status_code=500,
-            detail="Failed to delete file"
+            detail=f"Failed to delete file: {str(e)}"
         )
 
 

@@ -52,7 +52,7 @@ export function useToolFlow(options: UseToolFlowOptions) {
       setStep("upload");
       setErrorMessage("");
     },
-    [maxFiles],
+    [maxFiles]
   );
 
   const removeFile = useCallback((id: string) => {
@@ -64,10 +64,27 @@ export function useToolFlow(options: UseToolFlowOptions) {
 
     for (const fileItem of files) {
       try {
+        console.log(`[FileUpload] Processing: ${fileItem.name}`);
+
+        // Determine file type with fallback
+        let fileType = fileItem.file.type;
+        if (!fileType) {
+          const fileName = fileItem.name.toLowerCase();
+          if (fileName.endsWith(".pdf")) {
+            fileType = "application/pdf";
+          } else if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+            fileType = "image/jpeg";
+          } else if (fileName.endsWith(".png")) {
+            fileType = "image/png";
+          } else {
+            fileType = "application/octet-stream";
+          }
+        }
+
         // Get presigned upload URL
         const presignedData = await api.getPresignedUploadUrl({
           file_name: fileItem.name,
-          file_type: fileItem.file.type,
+          file_type: fileType,
           file_size: fileItem.size,
         });
 
@@ -81,7 +98,9 @@ export function useToolFlow(options: UseToolFlowOptions) {
       } catch (error) {
         console.error("Failed to upload file:", error);
         throw new Error(
-          `Failed to upload ${fileItem.name}: ${error instanceof Error ? error.message : "Unknown error"}`,
+          `Failed to upload ${fileItem.name}: ${
+            error instanceof Error ? error.message : "Unknown error"
+          }`
         );
       }
     }
@@ -139,7 +158,7 @@ export function useToolFlow(options: UseToolFlowOptions) {
           if (status.status === "PROCESSING") {
             setProgress(75);
           }
-        },
+        }
       );
 
       // Get download URL
@@ -150,7 +169,7 @@ export function useToolFlow(options: UseToolFlowOptions) {
     } catch (error) {
       console.error("Processing failed:", error);
       setErrorMessage(
-        error instanceof Error ? error.message : "Processing failed",
+        error instanceof Error ? error.message : "Processing failed"
       );
       setStep("error");
     }

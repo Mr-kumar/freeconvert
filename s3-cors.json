@@ -1,13 +1,13 @@
 [
-    {
-        "AllowedHeaders": ["*"],
-        "AllowedMethods": ["GET", "POST", "PUT", "DELETE"],
-        "AllowedOrigins": [
-            "https://freeconvert-web.vercel.app",
-            "https://freeconvert-api.onrender.com",
-            "http://localhost:3000"
-        ],
-        "ExposeHeaders": ["ETag"],
-        "MaxAgeSeconds": 3600
-    }
+  {
+    "AllowedHeaders": ["*"],
+    "AllowedMethods": ["GET", "PUT", "POST", "DELETE", "HEAD"],
+    "AllowedOrigins": [
+      "https://freeconvert-web.vercel.app",
+      "https://freeconvert.in",
+      "http://localhost:3000"
+    ],
+    "ExposeHeaders": ["ETag", "x-amz-request-id", "x-amz-id-2"],
+    "MaxAgeSeconds": 3600
+  }
 ]
