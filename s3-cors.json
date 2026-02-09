@@ -1,0 +1,13 @@
+[
+    {
+        "AllowedHeaders": ["*"],
+        "AllowedMethods": ["GET", "POST", "PUT", "DELETE"],
+        "AllowedOrigins": [
+            "https://freeconvert-web.vercel.app",
+            "https://freeconvert-api.onrender.com",
+            "http://localhost:3000"
+        ],
+        "ExposeHeaders": ["ETag"],
+        "MaxAgeSeconds": 3600
+    }
+]

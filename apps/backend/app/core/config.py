@@ -30,7 +30,12 @@ class BaseSettings(BaseSettings):
     
     # CORS Configuration
     cors_origins: List[str] = Field(
-        default=["http://localhost:3000", "https://freeconvert.com"],
+        default=[
+            "http://localhost:3000", 
+            "https://freeconvert.com",
+            "https://freeconvert-web.vercel.app",
+            "https://yourdomain.com"  # Add your custom domain here
+        ],
         env="CORS_ORIGINS"
     )
     
