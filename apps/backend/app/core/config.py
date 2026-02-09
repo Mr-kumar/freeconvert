@@ -14,7 +14,7 @@ class BaseSettings(BaseSettings):
     # AWS Configuration
     aws_access_key_id: str = Field(..., env="AWS_ACCESS_KEY_ID")
     aws_secret_access_key: str = Field(..., env="AWS_SECRET_ACCESS_KEY")
-    aws_region: str = Field("us-east-1", env="AWS_REGION")
+    aws_region: str = Field("eu-north-1", env="AWS_REGION")
     s3_bucket_name: str = Field(..., env="S3_BUCKET_NAME")
     
     # Database Configuration
