@@ -90,10 +90,11 @@ async def health_check():
 
 
 # Include API routers
-from app.api import upload, job, download
+from app.api import upload, job, download, migrate
 app.include_router(upload.router, prefix="/api/v1/upload", tags=["upload"])
 app.include_router(job.router, prefix="/api/v1/job", tags=["job"])
 app.include_router(download.router, prefix="/api/v1/download", tags=["download"])
+app.include_router(migrate.router, prefix="/api/v1/migrate", tags=["migrate"])
 
 # TODO: Add tool-specific routers when implemented
 # from app.api import merge, compress, reduce
