@@ -73,6 +73,7 @@ class S3Client:
                 "upload_url": url,
                 "file_key": file_key,
                 "bucket": self.bucket_name,
+                "region": self.config['region'],
                 "expires_in": settings.s3_expiry_seconds,
                 "max_file_size_mb": max_size
             }
