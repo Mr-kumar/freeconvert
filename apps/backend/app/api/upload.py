@@ -83,8 +83,7 @@ async def get_presigned_url(
         # Generate presigned upload URL
         presigned_data = s3_client.generate_presigned_upload_url(
             file_key=file_key,
-            file_type=request.file_type,
-            expires_in=3600  # 1 hour
+            file_type=request.file_type
         )
         
         logger.info(f"Generated presigned URL for session {session_id}: {file_key}")
