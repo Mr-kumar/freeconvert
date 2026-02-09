@@ -127,17 +127,36 @@ async def confirm_upload(
         Dict: Confirmation response
     """
     try:
-        # Log the incoming request for debugging
-        logger.info(f"Confirm upload request body: {request}")
-        logger.info(f"Request type: {type(request)}")
+        # Log the raw request for debugging
+        import json
+        logger.info(f"Raw request type: {type(request)}")
+        logger.info(f"Raw request content: {request}")
         
-        file_key = request.get("file_key")
+        # Try multiple ways to extract file_key
+        file_key = None
+        
+        if isinstance(request, dict):
+            file_key = request.get("file_key")
+            logger.info(f"Extracted file_key from dict: {file_key}")
+        elif hasattr(request, 'json'):
+            try:
+                json_data = await request.json()
+                file_key = json_data.get("file_key")
+                logger.info(f"Extracted file_key from JSON: {file_key}")
+            except Exception as e:
+                logger.error(f"Failed to parse JSON: {e}")
+        elif hasattr(request, 'form'):
+            form_data = await request.form()
+            file_key = form_data.get("file_key")
+            logger.info(f"Extracted file_key from form: {file_key}")
+        
         if not file_key:
-            logger.error("file_key is missing from request")
+            logger.error("file_key is missing from all request formats")
             raise HTTPException(
                 status_code=422,
                 detail="file_key is required"
             )
+        
         # Verify file exists in S3
         exists = s3_client.file_exists(file_key)
         
