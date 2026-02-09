@@ -63,8 +63,7 @@ class S3Client:
                 Params={
                     'Bucket': self.bucket_name,
                     'Key': file_key,
-                    'ContentType': file_type,
-                    'ACL': 'private'
+                    'ContentType': file_type
                 },
                 ExpiresIn=settings.s3_expiry_seconds
             )
