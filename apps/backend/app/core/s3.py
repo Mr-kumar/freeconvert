@@ -290,6 +290,39 @@ class S3Client:
         except ClientError as e:
             logger.error(f"Error getting file size {file_key}: {e}")
             return None
+    
+    def get_file_info(self, file_key: str) -> Dict[str, Any]:
+        """
+        Get complete file information from S3 metadata.
+        
+        Args:
+            file_key: S3 key for the file
+            
+        Returns:
+            Dict containing file size and last modified timestamp
+            
+        Raises:
+            ValueError: If file doesn't exist or can't be accessed
+        """
+        try:
+            response = self.client.head_object(
+                Bucket=self.bucket_name,
+                Key=file_key
+            )
+            return {
+                "size": response.get('ContentLength', 0),
+                "last_modified": response.get('LastModified', '').isoformat() if response.get('LastModified') else '',
+                "content_type": response.get('ContentType', 'application/octet-stream'),
+                "etag": response.get('ETag', '')
+            }
+        except ClientError as e:
+            if e.response['Error']['Code'] == '404':
+                raise ValueError(f"File not found: {file_key}")
+            logger.error(f"Error getting file info {file_key}: {e}")
+            raise ValueError(f"Failed to get file info: {str(e)}")
+        except Exception as e:
+            logger.error(f"Unexpected error getting file info {file_key}: {e}")
+            raise ValueError(f"Failed to get file info: {str(e)}")
 
 
 # Global S3 client instance

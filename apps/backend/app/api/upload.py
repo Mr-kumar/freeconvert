@@ -163,7 +163,15 @@ async def confirm_upload(
             )
         
         # Get file info
-        file_info = s3_client.get_file_info(file_key)
+        try:
+            file_info = s3_client.get_file_info(file_key)
+        except ValueError as e:
+            logger.error(f"Failed to get file info: {str(e)}")
+            raise HTTPException(
+                status_code=404,
+                detail=str(e)
+            )
+        
         session_id = http_request.cookies.get("session_id", "anonymous")
         
         logger.info(f"Upload confirmed for session {session_id}: {file_key} (size: {file_info['size']} bytes)")
@@ -179,7 +187,7 @@ async def confirm_upload(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Failed to confirm upload: {str(e)}")
+        logger.error(f"Failed to confirm upload: {str(e)}", exc_info=True)
         raise HTTPException(
             status_code=500,
             detail=f"Failed to confirm upload: {str(e)}"
