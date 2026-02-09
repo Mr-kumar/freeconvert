@@ -127,8 +127,13 @@ async def confirm_upload(
         Dict: Confirmation response
     """
     try:
+        # Log the incoming request for debugging
+        logger.info(f"Confirm upload request body: {request}")
+        logger.info(f"Request type: {type(request)}")
+        
         file_key = request.get("file_key")
         if not file_key:
+            logger.error("file_key is missing from request")
             raise HTTPException(
                 status_code=422,
                 detail="file_key is required"
