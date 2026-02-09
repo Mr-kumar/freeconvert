@@ -96,9 +96,9 @@ async def get_presigned_url(
             upload_url=presigned_data["upload_url"],
             file_key=presigned_data["file_key"],
             bucket=presigned_data["bucket"],
-            region=presigned_data["region"],
+            region=settings.aws_region,  # Use settings.aws_region instead of presigned_data["region"]
             expires_in=presigned_data["expires_in"],
-            max_file_size=max_file_size_bytes
+            max_file_size=(settings.max_file_size_mb * 1024 * 1024)  # Use correct setting name and convert to bytes
         )
         
     except HTTPException:
