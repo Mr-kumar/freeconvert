@@ -113,20 +113,26 @@ async def get_presigned_url(
 
 @router.post("/confirm-upload")
 async def confirm_upload(
-    file_key: str,
+    request: Dict[str, str],
     http_request: Request
 ) -> Dict[str, Any]:
     """
     Confirm that a file has been successfully uploaded to S3.
     
     Args:
-        file_key: S3 key of the uploaded file
+        request: Request body containing file_key
         http_request: HTTP request for session tracking
         
     Returns:
         Dict: Confirmation response
     """
     try:
+        file_key = request.get("file_key")
+        if not file_key:
+            raise HTTPException(
+                status_code=422,
+                detail="file_key is required"
+            )
         # Verify file exists in S3
         exists = s3_client.file_exists(file_key)
         
@@ -162,20 +168,26 @@ async def confirm_upload(
 
 @router.delete("/cleanup-upload")
 async def cleanup_upload(
-    file_key: str,
+    request: Dict[str, str],
     http_request: Request
 ) -> Dict[str, str]:
     """
     Clean up an uploaded file (useful for failed operations).
     
     Args:
-        file_key: S3 key of the file to delete
+        request: Request body containing file_key
         http_request: HTTP request for session tracking
         
     Returns:
         Dict: Cleanup response
     """
     try:
+        file_key = request.get("file_key")
+        if not file_key:
+            raise HTTPException(
+                status_code=422,
+                detail="file_key is required"
+            )
         # Delete file from S3
         s3_client.delete_file(file_key)
         
