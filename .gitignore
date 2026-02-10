@@ -77,3 +77,34 @@ coverage.xml
 
 # OS
 Thumbs.db
+
+# Additional Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Additional Node.js
+apps/*/node_modules/
+apps/*/.next/
+apps/*/out/
+apps/*/build/
+
+# Environment files (keep .env.production)
+.env.local
+.env.development
+.env.test
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Deployment files
+.ecr/
+.dockerignore
