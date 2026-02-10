@@ -47,10 +47,37 @@ def get_db() -> Session:
 
 
 def init_db() -> None:
-    """Initialize database tables."""
-    from app.models import job  # Import all models
-    
-    Base.metadata.create_all(bind=engine)
+    """Initialize database using migrations instead of auto-creation."""
+    try:
+        # Run alembic migrations instead of create_all
+        import os
+        import subprocess
+        
+        # Change to the backend directory
+        os.chdir("/opt/render/project/src/apps/backend")
+        
+        # Run alembic upgrade head
+        result = subprocess.run(
+            ["alembic", "upgrade", "head"],
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode != 0:
+            print(f"Alembic migration failed: {result.stderr}")
+            # Fallback to create_all if migration fails
+            from app.models import job  # Import all models
+            Base.metadata.create_all(bind=engine)
+            print("Fallback: Created tables using create_all")
+        else:
+            print("Database migrations completed successfully")
+            
+    except Exception as e:
+        print(f"Database initialization error: {e}")
+        # Fallback to create_all
+        from app.models import job  # Import all models
+        Base.metadata.create_all(bind=engine)
+        print("Fallback: Created tables using create_all")
 
 
 def get_db_session() -> Session:

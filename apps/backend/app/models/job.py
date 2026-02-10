@@ -6,6 +6,7 @@ Logic: SQLAlchemy model with job tracking, status management, and S3 integration
 from datetime import datetime
 from typing import Optional
 from enum import Enum
+import uuid
 
 from sqlalchemy import Column, String, DateTime, JSON, Text, Integer
 from sqlalchemy.dialects.postgresql import UUID
@@ -35,8 +36,8 @@ class Job(Base):
     
     __tablename__ = "jobs"
     
-    # Primary key
-    id = Column(UUID(as_uuid=True), primary_key=True, server_default=func.uuid_generate_v4())
+    # Primary key - use string UUID instead of uuid_generate_v4()
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     
     # Job metadata
     tool_type = Column(String(50), nullable=False, index=True)
