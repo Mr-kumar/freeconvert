@@ -64,15 +64,15 @@ class CleanupUploadRequest(BaseModel):
 @router.post("/presigned-url", response_model=PresignedURLResponse)
 @limiter.limit("5/minute")
 async def get_presigned_url(
-    request: PresignedURLRequest,
-    http_request: Request
+    payload: PresignedURLRequest,
+    request: Request
 ) -> PresignedURLResponse:
     """
     Generate a presigned URL for direct-to-S3 upload.
     
     Args:
-        request: Upload request with file details
-        http_request: HTTP request for session tracking
+        payload: Upload request with file details
+        request: HTTP request for session tracking
         
     Returns:
         PresignedURLResponse: Upload URL and metadata
@@ -83,32 +83,32 @@ async def get_presigned_url(
     try:
         # Validate file size
         max_file_size_bytes = settings.max_file_size_mb * 1024 * 1024
-        if request.file_size > max_file_size_bytes:
+        if payload.file_size > max_file_size_bytes:
             raise HTTPException(
                 status_code=413,
-                detail=f"File size {request.file_size} exceeds maximum allowed size {max_file_size_bytes} bytes"
+                detail=f"File size {payload.file_size} exceeds maximum allowed size {max_file_size_bytes} bytes"
             )
         
         # Validate file type
         allowed_types = set(settings.allowed_file_types)
         
-        if request.file_type not in allowed_types:
+        if payload.file_type not in allowed_types:
             raise HTTPException(
                 status_code=400,
-                detail=f"File type {request.file_type} not allowed. Allowed types: {allowed_types}"
+                detail=f"File type {payload.file_type} not allowed. Allowed types: {allowed_types}"
             )
         
         # Generate unique file key
-        session_id = http_request.cookies.get("session_id", "anonymous")
+        session_id = request.cookies.get("session_id", "anonymous")
         
         # Sanitize filename to handle special characters
-        safe_filename = re.sub(r'[^\w\-_\.]', '', request.file_name)
+        safe_filename = re.sub(r'[^\w\-_\.]', '', payload.file_name)
         file_key = f"uploads/{session_id}/{uuid.uuid4()}-{safe_filename}"
         
         # Generate presigned upload URL
         presigned_data = s3_client.generate_presigned_upload_url(
             file_key=file_key,
-            file_type=request.file_type
+            file_type=payload.file_type
         )
         
         logger.info(f"Generated presigned URL for session {session_id}: {file_key}")

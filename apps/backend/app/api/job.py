@@ -63,15 +63,15 @@ class DownloadResponse(BaseModel):
 @router.post("/start", response_model=StartJobResponse)
 @limiter.limit("10/minute")
 async def start_job(
-    request: StartJobRequest,
-    http_request: Request
+    payload: StartJobRequest,
+    request: Request
 ) -> StartJobResponse:
     """
     Start a new background job for file processing.
     
     Args:
-        request: Job request with tool type and files
-        http_request: HTTP request for session tracking
+        payload: Job request with tool type and files
+        request: HTTP request for session tracking
         
     Returns:
         StartJobResponse: Job ID and status
@@ -83,15 +83,15 @@ async def start_job(
     
     try:
         # Get the string value directly (e.g., "merge")
-        tool_type_str = request.tool_type.value if hasattr(request.tool_type, 'value') else str(request.tool_type)
+        tool_type_str = payload.tool_type.value if hasattr(payload.tool_type, 'value') else str(payload.tool_type)
         
         # Validate file keys exist in S3
-        for file_key in request.file_keys:
+        for file_key in payload.file_keys:
             if not s3_client.file_exists(file_key):
                 raise HTTPException(status_code=404, detail=f"File not found: {file_key}")
         
         job_id = str(uuid.uuid4())
-        session_id = http_request.cookies.get("session_id", "anonymous")
+        session_id = request.cookies.get("session_id", "anonymous")
         
         # Create job record using strings for String columns
         job = Job(
@@ -99,8 +99,8 @@ async def start_job(
             session_id=session_id,
             tool_type=tool_type_str,  # Use plain string
             status=JobStatus.PENDING.value,  # Use plain string "PENDING"
-            input_files=request.file_keys,
-            compression_level=request.compression_level
+            input_files=payload.file_keys,
+            compression_level=payload.compression_level
         )
         
         db.add(job)
@@ -109,16 +109,16 @@ async def start_job(
         # Start Celery task
         # FIX: Explicitly name tasks to match tasks.py
         if tool_type_str == "merge":
-            celery_app.send_task("app.workers.tasks.merge_pdf_task", args=[job_id, request.file_keys])
+            celery_app.send_task("app.workers.tasks.merge_pdf_task", args=[job_id, payload.file_keys])
         elif tool_type_str == "compress":
-            celery_app.send_task("app.workers.tasks.compress_image_task", args=[job_id, request.file_keys, request.compression_level])
+            celery_app.send_task("app.workers.tasks.compress_image_task", args=[job_id, payload.file_keys, payload.compression_level])
         elif tool_type_str == "reduce":
-            if len(request.file_keys) != 1:
+            if len(payload.file_keys) != 1:
                 raise HTTPException(status_code=400, detail="Reduce tool requires exactly one file")
             # FIX: Use 'reduce_pdf_task' instead of 'reduce_task'
-            celery_app.send_task("app.workers.tasks.reduce_pdf_task", args=[job_id, request.file_keys[0], request.compression_level])
+            celery_app.send_task("app.workers.tasks.reduce_pdf_task", args=[job_id, payload.file_keys[0], payload.compression_level])
         elif tool_type_str == "jpg-to-pdf":
-            celery_app.send_task("app.workers.tasks.jpg_to_pdf_task", args=[job_id, request.file_keys])
+            celery_app.send_task("app.workers.tasks.jpg_to_pdf_task", args=[job_id, payload.file_keys])
         
         logger.info(f"Started job {job_id} for session {session_id}: {tool_type_str}")
         
