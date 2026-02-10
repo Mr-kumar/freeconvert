@@ -41,7 +41,7 @@ class Job(Base):
     
     # Job metadata
     tool_type = Column(String(50), nullable=False, index=True)
-    status = Column(String(20), nullable=False, default=JobStatus.PENDING, index=True)
+    status = Column(String(20), nullable=False, default="PENDING", index=True)  # Use plain string
     session_id = Column(String(255), nullable=False, index=True)
     
     # File tracking

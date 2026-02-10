@@ -75,28 +75,23 @@ async def start_job(
     db = get_db_session()
     
     try:
+        # Get the string value directly (e.g., "merge")
+        tool_type_str = request.tool_type.value if hasattr(request.tool_type, 'value') else str(request.tool_type)
+        
         # Validate file keys exist in S3
         for file_key in request.file_keys:
             if not s3_client.file_exists(file_key):
-                raise HTTPException(
-                    status_code=404,
-                    detail=f"File not found: {file_key}"
-                )
+                raise HTTPException(status_code=404, detail=f"File not found: {file_key}")
         
-        # Generate job ID
         job_id = str(uuid.uuid4())
         session_id = http_request.cookies.get("session_id", "anonymous")
         
-        # Create job record
-        # Handle tool_type as enum or string
-        tool_type_value = request.tool_type.value if hasattr(request.tool_type, 'value') else str(request.tool_type)
-        tool_type_enum = ToolType(tool_type_value) if isinstance(request.tool_type, str) else request.tool_type
-        
+        # Create job record using strings for String columns
         job = Job(
             id=job_id,
             session_id=session_id,
-            tool_type=tool_type_enum,
-            status=JobStatus.PENDING,
+            tool_type=tool_type_str,  # Use plain string
+            status=JobStatus.PENDING.value,  # Use plain string "PENDING"
             input_files=request.file_keys,
             compression_level=request.compression_level
         )
@@ -104,38 +99,27 @@ async def start_job(
         db.add(job)
         db.commit()
         
-        # Start appropriate Celery task
-        # Handle tool_type as enum or string
-        tool_type_value = request.tool_type.value if hasattr(request.tool_type, 'value') else str(request.tool_type)
-        task_name = f"app.workers.tasks.{tool_type_value}_task"
+        # Start Celery task
+        task_name = f"app.workers.tasks.{tool_type_str}_task"
         
-        # Convert to enum for comparison
-        if isinstance(request.tool_type, str):
-            tool_type_enum = ToolType(tool_type_value)
-        else:
-            tool_type_enum = request.tool_type
-        
-        if tool_type_enum == ToolType.MERGE:
+        # Standardize argument passing for Celery
+        if tool_type_str == "merge":
             celery_app.send_task(task_name, args=[job_id, request.file_keys])
-        elif tool_type_enum == ToolType.COMPRESS:
+        elif tool_type_str == "compress":
             celery_app.send_task(task_name, args=[job_id, request.file_keys, request.compression_level])
-        elif tool_type_enum == ToolType.REDUCE:
-            # Reduce task takes single file key
+        elif tool_type_str == "reduce":
             if len(request.file_keys) != 1:
-                raise HTTPException(
-                    status_code=400,
-                    detail="Reduce tool requires exactly one file"
-                )
+                raise HTTPException(status_code=400, detail="Reduce tool requires exactly one file")
             celery_app.send_task(task_name, args=[job_id, request.file_keys[0], request.compression_level])
-        elif tool_type_enum == ToolType.JPG_TO_PDF:
+        elif tool_type_str == "jpg-to-pdf":
             celery_app.send_task(task_name, args=[job_id, request.file_keys])
         
-        logger.info(f"Started job {job_id} for session {session_id}: {tool_type_value}")
+        logger.info(f"Started job {job_id} for session {session_id}: {tool_type_str}")
         
         return StartJobResponse(
             job_id=job_id,
             status="started",
-            message=f"Job started successfully for {tool_type_value}"
+            message=f"Job started successfully for {tool_type_str}"
         )
         
     except HTTPException:
