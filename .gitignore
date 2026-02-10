@@ -89,6 +89,8 @@ apps/*/node_modules/
 apps/*/.next/
 apps/*/out/
 apps/*/build/
+.next/
+node_modules/
 
 # Environment files (keep .env.production)
 .env.local
