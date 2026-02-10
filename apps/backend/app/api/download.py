@@ -67,13 +67,13 @@ async def get_download_url(job_id: str) -> DownloadResponse:
         )
         
         # Generate appropriate filename based on tool type
-        if job.tool_type.value == "merge":
+        if job.tool_type == "merge":
             file_name = "merged.pdf"
-        elif job.tool_type.value == "compress":
+        elif job.tool_type == "compress":
             file_name = "compressed.jpg"
-        elif job.tool_type.value == "reduce":
+        elif job.tool_type == "reduce":
             file_name = "reduced.pdf"
-        elif job.tool_type.value == "jpg-to-pdf":
+        elif job.tool_type == "jpg-to-pdf":
             file_name = "converted.pdf"
         else:
             file_name = "result"
