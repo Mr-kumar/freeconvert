@@ -92,7 +92,7 @@ apps/*/build/
 .next/
 node_modules/
 
-# Environment files (keep .env.production)
+# Environment files (keep .env.production and .env.template)
 .env.local
 .env.development
 .env.test
