@@ -5,6 +5,7 @@ Logic: Initialize Celery app with Redis broker for background task processing.
 
 import os
 from celery import Celery
+from kombu import Queue, Exchange
 
 from app.core.config import get_redis_url, settings
 
@@ -60,11 +61,11 @@ celery_app.conf.beat_schedule = {
 
 # Configure worker queues
 celery_app.conf.task_queues = (
-    {"name": "default", "exchange": "default", "routing_key": "default"},
-    {"name": "merge", "exchange": "merge", "routing_key": "merge"},
-    {"name": "compress", "exchange": "compress", "routing_key": "compress"},
-    {"name": "reduce", "exchange": "reduce", "routing_key": "reduce"},
-    {"name": "jpg-to-pdf", "exchange": "jpg-to-pdf", "routing_key": "jpg-to-pdf"},
+    Queue("default", Exchange("default"), routing_key="default"),
+    Queue("merge", Exchange("merge"), routing_key="merge"),
+    Queue("compress", Exchange("compress"), routing_key="compress"),
+    Queue("reduce", Exchange("reduce"), routing_key="reduce"),
+    Queue("jpg-to-pdf", Exchange("jpg-to-pdf"), routing_key="jpg-to-pdf"),
 )
 
 # Configure task priorities
