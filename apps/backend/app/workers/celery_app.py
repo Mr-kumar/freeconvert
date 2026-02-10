@@ -17,12 +17,21 @@ celery_app = Celery(
     backend=get_redis_url(),
     include=["app.workers.tasks"],
     broker_transport_options={
+        'master_name': 'mymaster',
+    'visibility_timeout': 3600,
+        'retry_policy': {
+            'timeout': 5.0
+        },
         'ssl_cert_reqs': None,
         'ssl_ca_certs': None,
         'ssl_certfile': None,
         'ssl_keyfile': None,
     },
     result_backend_transport_options={
+        'result_expires': 3600,
+        'retry_policy': {
+            'timeout': 5.0
+        },
         'ssl_cert_reqs': None,
         'ssl_ca_certs': None,
         'ssl_certfile': None,
@@ -97,7 +106,11 @@ celery_app.conf.result_backend_transport_options = {
     'visibility_timeout': 3600,
     'group_meta': {
         'default_expires': 3600,
-    }
+    },
+    'ssl_cert_reqs': None,
+    'ssl_ca_certs': None,
+    'ssl_certfile': None,
+    'ssl_keyfile': None,
 }
 
 # Configure monitoring
