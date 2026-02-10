@@ -24,6 +24,10 @@ python-multipart==0.0.6
 # HTTP client
 httpx==0.24.1
 
+# Security & Rate Limiting
+slowapi==0.1.9
+redis==4.6.0
+
 # Utilities
 python-jose[cryptography]==3.3.0
 uuid==1.30

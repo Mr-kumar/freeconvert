@@ -10,6 +10,8 @@ from typing import Dict, Any
 
 from fastapi import APIRouter, HTTPException, Request, Depends
 from pydantic import BaseModel, Field
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 from app.core.s3 import s3_client
 from app.core.config import settings
@@ -17,13 +19,17 @@ from app.core.database import get_db_session
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+limiter = Limiter(key_func=get_remote_address)
 
 
 class PresignedURLRequest(BaseModel):
     """Request model for presigned URL generation."""
-    file_name: str
-    file_type: str
-    file_size: int  # in bytes
+    file_name: str = Field(..., min_length=1, max_length=255, regex=r'^[a-zA-Z0-9._-]+$')
+    file_type: str = Field(..., regex=r'^(application|image)\/[a-zA-Z0-9._-]+$')
+    file_size: int = Field(..., gt=0, le=settings.max_file_size_mb * 1024 * 1024)
+    
+    class Config:
+        str_strip_whitespace = True
 
 
 class PresignedURLResponse(BaseModel):
@@ -56,6 +62,7 @@ class CleanupUploadRequest(BaseModel):
 
 
 @router.post("/presigned-url", response_model=PresignedURLResponse)
+@limiter.limit("5/minute")
 async def get_presigned_url(
     request: PresignedURLRequest,
     http_request: Request

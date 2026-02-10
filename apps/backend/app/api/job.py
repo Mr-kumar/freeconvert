@@ -10,6 +10,8 @@ from datetime import datetime
 
 from fastapi import APIRouter, HTTPException, Depends, Request
 from pydantic import BaseModel
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 from app.core.database import get_db_session
 from app.core.s3 import s3_client
@@ -18,13 +20,17 @@ from app.workers.celery_app import celery_app
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+limiter = Limiter(key_func=get_remote_address)
 
 
 class StartJobRequest(BaseModel):
     """Request model for starting a job."""
-    tool_type: Union[ToolType, str]
-    file_keys: List[str]
-    compression_level: Optional[str] = "medium"
+    tool_type: Union[ToolType, str] = Field(..., regex=r'^(merge|compress|reduce|jpg-to-pdf)$')
+    file_keys: List[str] = Field(..., min_items=1, max_items=20)
+    compression_level: Optional[str] = Field("medium", regex=r'^(low|medium|high)$')
+    
+    class Config:
+        str_strip_whitespace = True
 
 
 class StartJobResponse(BaseModel):
@@ -55,6 +61,7 @@ class DownloadResponse(BaseModel):
 
 
 @router.post("/start", response_model=StartJobResponse)
+@limiter.limit("10/minute")
 async def start_job(
     request: StartJobRequest,
     http_request: Request
@@ -100,19 +107,18 @@ async def start_job(
         db.commit()
         
         # Start Celery task
-        task_name = f"app.workers.tasks.{tool_type_str}_task"
-        
-        # Standardize argument passing for Celery
+        # FIX: Explicitly name tasks to match tasks.py
         if tool_type_str == "merge":
-            celery_app.send_task(task_name, args=[job_id, request.file_keys])
+            celery_app.send_task("app.workers.tasks.merge_pdf_task", args=[job_id, request.file_keys])
         elif tool_type_str == "compress":
-            celery_app.send_task(task_name, args=[job_id, request.file_keys, request.compression_level])
+            celery_app.send_task("app.workers.tasks.compress_image_task", args=[job_id, request.file_keys, request.compression_level])
         elif tool_type_str == "reduce":
             if len(request.file_keys) != 1:
                 raise HTTPException(status_code=400, detail="Reduce tool requires exactly one file")
-            celery_app.send_task(task_name, args=[job_id, request.file_keys[0], request.compression_level])
+            # FIX: Use 'reduce_pdf_task' instead of 'reduce_task'
+            celery_app.send_task("app.workers.tasks.reduce_pdf_task", args=[job_id, request.file_keys[0], request.compression_level])
         elif tool_type_str == "jpg-to-pdf":
-            celery_app.send_task(task_name, args=[job_id, request.file_keys])
+            celery_app.send_task("app.workers.tasks.jpg_to_pdf_task", args=[job_id, request.file_keys])
         
         logger.info(f"Started job {job_id} for session {session_id}: {tool_type_str}")
         
