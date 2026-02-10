@@ -61,7 +61,7 @@ class S3Client:
         """
         try:
             # Validate file size
-            max_size = file_size_mb or settings.s3_max_file_size_mb
+            max_size = file_size_mb or settings.max_file_size_mb
             if file_size_mb and file_size_mb > max_size:
                 raise ValueError(f"File size {file_size_mb}MB exceeds maximum {max_size}MB")
             
