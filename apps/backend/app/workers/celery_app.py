@@ -15,7 +15,19 @@ celery_app = Celery(
     "freeconvert",
     broker=get_redis_url(),
     backend=get_redis_url(),
-    include=["app.workers.tasks"]
+    include=["app.workers.tasks"],
+    broker_transport_options={
+        'ssl_cert_reqs': None,
+        'ssl_ca_certs': None,
+        'ssl_certfile': None,
+        'ssl_keyfile': None,
+    },
+    result_backend_transport_options={
+        'ssl_cert_reqs': None,
+        'ssl_ca_certs': None,
+        'ssl_certfile': None,
+        'ssl_keyfile': None,
+    }
 )
 
 # Configure Celery settings
