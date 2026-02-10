@@ -61,7 +61,7 @@ class ApiClient {
 
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
   ): Promise<T> {
     const url = `${this.baseUrl}/api/v1${endpoint}`;
 
@@ -78,7 +78,7 @@ class ApiClient {
         .json()
         .catch(() => ({ message: "Unknown error" }));
       throw new Error(
-        error.message || `HTTP ${response.status}: ${response.statusText}`
+        error.message || `HTTP ${response.status}: ${response.statusText}`,
       );
     }
 
@@ -87,7 +87,7 @@ class ApiClient {
 
   // Upload endpoints
   async getPresignedUploadUrl(
-    request: PresignedURLRequest
+    request: PresignedURLRequest,
   ): Promise<PresignedURLResponse> {
     return this.request<PresignedURLResponse>("/upload/presigned-url", {
       method: "POST",
@@ -96,7 +96,7 @@ class ApiClient {
   }
 
   async confirmUpload(
-    fileKey: string
+    fileKey: string,
   ): Promise<{ status: string; file_key: string; file_size: number }> {
     return this.request<{
       status: string;
@@ -109,14 +109,14 @@ class ApiClient {
   }
 
   async cleanupUpload(
-    fileKey: string
+    fileKey: string,
   ): Promise<{ status: string; message: string }> {
     return this.request<{ status: string; message: string }>(
       `/upload/cleanup-upload`,
       {
         method: "DELETE",
         body: JSON.stringify({ file_key: fileKey }),
-      }
+      },
     );
   }
 
@@ -129,27 +129,35 @@ class ApiClient {
   }
 
   async getJobStatus(jobId: string): Promise<JobStatusResponse> {
-    return this.request<JobStatusResponse>(`/job/${jobId}/status`);
+    return this.request<JobStatusResponse>(`/job/${jobId}/status`, {
+      method: "GET",
+    });
   }
 
   async getUserJobs(): Promise<JobStatusResponse[]> {
-    return this.request<JobStatusResponse[]>("/job/my-jobs");
+    return this.request<JobStatusResponse[]>("/job/my-jobs", {
+      method: "GET",
+    });
   }
 
   // Download endpoints
   async getDownloadUrl(jobId: string): Promise<DownloadResponse> {
-    return this.request<DownloadResponse>(`/download/${jobId}`);
+    return this.request<DownloadResponse>(`/download/${jobId}`, {
+      method: "GET",
+    });
   }
 
   // Health check
   async healthCheck(): Promise<{ status: string; service: string }> {
-    return this.request<{ status: string; service: string }>("/health");
+    return this.request<{ status: string; service: string }>("/health", {
+      method: "GET",
+    });
   }
 
   // Utility methods
   async uploadFileToS3(
     file: File,
-    presignedData: PresignedURLResponse
+    presignedData: PresignedURLResponse,
   ): Promise<void> {
     try {
       // Determine correct Content-Type
@@ -168,7 +176,7 @@ class ApiClient {
       }
 
       console.log(
-        `[Upload] Starting S3 upload: ${file.name} (${file.size} bytes, ${contentType})`
+        `[Upload] Starting S3 upload: ${file.name} (${file.size} bytes, ${contentType})`,
       );
 
       const response = await fetch(presignedData.upload_url, {
@@ -192,12 +200,12 @@ class ApiClient {
         }
 
         console.error(
-          `[Upload] S3 Error for ${file.name}: HTTP ${response.status}`
+          `[Upload] S3 Error for ${file.name}: HTTP ${response.status}`,
         );
         console.error(`[Upload] Error Details: ${errorMessage}`);
 
         throw new Error(
-          `HTTP ${response.status}: ${errorMessage || response.statusText}`
+          `HTTP ${response.status}: ${errorMessage || response.statusText}`,
         );
       }
 
@@ -213,7 +221,7 @@ class ApiClient {
     jobId: string,
     onStatusUpdate: (status: JobStatusResponse) => void,
     intervalMs: number = 2000,
-    maxAttempts: number = 300 // 10 minutes max
+    maxAttempts: number = 300, // 10 minutes max
   ): Promise<JobStatusResponse> {
     let attempts = 0;
 
