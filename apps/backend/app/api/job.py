@@ -5,7 +5,7 @@ Logic: Start jobs, check status, get download URLs, and manage job lifecycle.
 
 import uuid
 import logging
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Union
 from datetime import datetime
 
 from fastapi import APIRouter, HTTPException, Depends, Request
@@ -22,7 +22,7 @@ router = APIRouter()
 
 class StartJobRequest(BaseModel):
     """Request model for starting a job."""
-    tool_type: ToolType
+    tool_type: Union[ToolType, str]
     file_keys: List[str]
     compression_level: Optional[str] = "medium"
 
@@ -88,10 +88,14 @@ async def start_job(
         session_id = http_request.cookies.get("session_id", "anonymous")
         
         # Create job record
+        # Handle tool_type as enum or string
+        tool_type_value = request.tool_type.value if hasattr(request.tool_type, 'value') else str(request.tool_type)
+        tool_type_enum = ToolType(tool_type_value) if isinstance(request.tool_type, str) else request.tool_type
+        
         job = Job(
             id=job_id,
             session_id=session_id,
-            tool_type=request.tool_type,
+            tool_type=tool_type_enum,
             status=JobStatus.PENDING,
             input_files=request.file_keys,
             compression_level=request.compression_level
@@ -101,13 +105,21 @@ async def start_job(
         db.commit()
         
         # Start appropriate Celery task
-        task_name = f"app.workers.tasks.{request.tool_type.value}_task"
+        # Handle tool_type as enum or string
+        tool_type_value = request.tool_type.value if hasattr(request.tool_type, 'value') else str(request.tool_type)
+        task_name = f"app.workers.tasks.{tool_type_value}_task"
         
-        if request.tool_type == ToolType.MERGE:
+        # Convert to enum for comparison
+        if isinstance(request.tool_type, str):
+            tool_type_enum = ToolType(tool_type_value)
+        else:
+            tool_type_enum = request.tool_type
+        
+        if tool_type_enum == ToolType.MERGE:
             celery_app.send_task(task_name, args=[job_id, request.file_keys])
-        elif request.tool_type == ToolType.COMPRESS:
+        elif tool_type_enum == ToolType.COMPRESS:
             celery_app.send_task(task_name, args=[job_id, request.file_keys, request.compression_level])
-        elif request.tool_type == ToolType.REDUCE:
+        elif tool_type_enum == ToolType.REDUCE:
             # Reduce task takes single file key
             if len(request.file_keys) != 1:
                 raise HTTPException(
@@ -115,15 +127,15 @@ async def start_job(
                     detail="Reduce tool requires exactly one file"
                 )
             celery_app.send_task(task_name, args=[job_id, request.file_keys[0], request.compression_level])
-        elif request.tool_type == ToolType.JPG_TO_PDF:
+        elif tool_type_enum == ToolType.JPG_TO_PDF:
             celery_app.send_task(task_name, args=[job_id, request.file_keys])
         
-        logger.info(f"Started job {job_id} for session {session_id}: {request.tool_type.value}")
+        logger.info(f"Started job {job_id} for session {session_id}: {tool_type_value}")
         
         return StartJobResponse(
             job_id=job_id,
             status="started",
-            message=f"Job started successfully for {request.tool_type.value}"
+            message=f"Job started successfully for {tool_type_value}"
         )
         
     except HTTPException:
