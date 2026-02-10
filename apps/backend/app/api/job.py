@@ -9,7 +9,7 @@ from typing import List, Dict, Any, Optional, Union
 from datetime import datetime
 
 from fastapi import APIRouter, HTTPException, Depends, Request
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
