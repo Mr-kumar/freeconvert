@@ -35,15 +35,36 @@ class BaseSettings(BaseSettings):
         env="CORS_ORIGINS"
     )
     
-    # Security Configuration
-    secret_key: str = Field(..., env="SECRET_KEY")
-    session_expiry_hours: int = Field(24, env="SESSION_EXPIRY_HOURS")
-    
     # File Processing Configuration
     allowed_file_types: List[str] = Field(
         default=["application/pdf", "image/jpeg", "image/png", "image/jpg"],
         env="ALLOWED_FILE_TYPES"
     )
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Parse CORS_ORIGINS if it's a string
+        if isinstance(self.cors_origins, str):
+            import json
+            try:
+                self.cors_origins = json.loads(self.cors_origins)
+            except json.JSONDecodeError:
+                # Fallback to comma-separated
+                self.cors_origins = [origin.strip() for origin in self.cors_origins.split(",")]
+        
+        # Parse ALLOWED_FILE_TYPES if it's a string
+        if isinstance(self.allowed_file_types, str):
+            import json
+            try:
+                self.allowed_file_types = json.loads(self.allowed_file_types)
+            except json.JSONDecodeError:
+                # Fallback to comma-separated
+                self.allowed_file_types = [ft.strip() for ft in self.allowed_file_types.split(",")]
+    
+    # Security Configuration
+    secret_key: str = Field(..., env="SECRET_KEY")
+    session_expiry_hours: int = Field(24, env="SESSION_EXPIRY_HOURS")
+    
     max_file_size_mb: int = Field(100, env="MAX_FILE_SIZE_MB")
     
     # S3 Configuration

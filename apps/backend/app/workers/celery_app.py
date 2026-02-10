@@ -74,7 +74,6 @@ celery_app.conf.worker_direct = True
 
 # Configure result backend
 celery_app.conf.result_backend_transport_options = {
-    'master_name': 'mymaster',
     'result_expires': 3600,  # 1 hour
     'retry_policy': {
         'timeout': 5,

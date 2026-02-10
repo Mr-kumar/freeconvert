@@ -5,13 +5,15 @@ Logic: Provides presigned URLs for direct-to-S3 uploads.
 
 import uuid
 import logging
+import re
 from typing import Dict, Any
 
-from fastapi import APIRouter, HTTPException, Depends, Request
-from pydantic import BaseModel
+from fastapi import APIRouter, HTTPException, Request, Depends
+from pydantic import BaseModel, Field
 
 from app.core.s3 import s3_client
 from app.core.config import settings
+from app.core.database import get_db_session
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -81,13 +83,7 @@ async def get_presigned_url(
             )
         
         # Validate file type
-        allowed_types = {
-            'application/pdf',
-            'image/jpeg', 'image/jpg',
-            'image/png',
-            'image/webp',
-            'image/heic', 'image/heif'
-        }
+        allowed_types = set(settings.allowed_file_types)
         
         if request.file_type not in allowed_types:
             raise HTTPException(
@@ -99,7 +95,6 @@ async def get_presigned_url(
         session_id = http_request.cookies.get("session_id", "anonymous")
         
         # Sanitize filename to handle special characters
-        import re
         safe_filename = re.sub(r'[^\w\-_\.]', '', request.file_name)
         file_key = f"uploads/{session_id}/{uuid.uuid4()}-{safe_filename}"
         

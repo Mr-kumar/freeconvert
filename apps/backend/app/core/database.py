@@ -53,24 +53,42 @@ def init_db() -> None:
         import os
         import subprocess
         
-        # Change to the backend directory
-        os.chdir("/opt/render/project/src/apps/backend")
+        # Try to find alembic.ini and run from correct directory
+        current_dir = os.getcwd()
+        alembic_paths = [
+            "/opt/render/project/src/apps/backend",
+            "/opt/render/project/src",
+            current_dir,
+            os.path.join(current_dir, "apps/backend")
+        ]
         
-        # Run alembic upgrade head
-        result = subprocess.run(
-            ["alembic", "upgrade", "head"],
-            capture_output=True,
-            text=True
-        )
+        alembic_dir = None
+        for path in alembic_paths:
+            if os.path.exists(os.path.join(path, "alembic.ini")):
+                alembic_dir = path
+                break
         
-        if result.returncode != 0:
-            print(f"Alembic migration failed: {result.stderr}")
-            # Fallback to create_all if migration fails
+        if alembic_dir:
+            os.chdir(alembic_dir)
+            result = subprocess.run(
+                ["alembic", "upgrade", "head"],
+                capture_output=True,
+                text=True
+            )
+            
+            if result.returncode != 0:
+                print(f"Alembic migration failed: {result.stderr}")
+                # Fallback to create_all if migration fails
+                from app.models import job  # Import all models
+                Base.metadata.create_all(bind=engine)
+                print("Fallback: Created tables using create_all")
+            else:
+                print("Database migrations completed successfully")
+        else:
+            print("Alembic.ini not found, using create_all")
             from app.models import job  # Import all models
             Base.metadata.create_all(bind=engine)
-            print("Fallback: Created tables using create_all")
-        else:
-            print("Database migrations completed successfully")
+            print("Created tables using create_all")
             
     except Exception as e:
         print(f"Database initialization error: {e}")
