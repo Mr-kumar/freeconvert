@@ -100,7 +100,7 @@ class S3Client:
         self, 
         file_key: str, 
         expires_in: int = None
-    ) -> str:
+    ) -> Dict[str, Any]:
         """
         Generate a presigned URL for file download.
         
@@ -109,7 +109,7 @@ class S3Client:
             expires_in: Custom expiry time in seconds
             
         Returns:
-            str: Presigned download URL
+            Dict containing download URL and metadata
         """
         try:
             expires_in = expires_in or settings.s3_expiry_seconds
@@ -123,7 +123,10 @@ class S3Client:
                 ExpiresIn=expires_in
             )
             
-            return url
+            return {
+                "download_url": url,
+                "expires_in": expires_in
+            }
             
         except ClientError as e:
             logger.error(f"S3 client error generating download URL: {e}")
