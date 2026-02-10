@@ -1,0 +1,41 @@
+name: freeconvert-worker
+services:
+- name: celery-worker
+  type: WORKER
+  build:
+    context: ./apps/backend
+    dockerfile: Dockerfile.worker
+  env:
+  - name: DATABASE_URL
+    value: postgresql://neondb_owner:npg_iT8qFoPuQKG4@ep-icy-darkness-aitc1lax-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+  - name: REDIS_URL
+    value: rediss://default:AW71AAIncDI0ZTNhZjIxNjFiNWE0MDhhYWFmMzg2MDBhOWY5MWI0OXAyMjg0MDU@factual-ox-28405.upstash.io:6379
+  - name: AWS_ACCESS_KEY_ID
+    value: 60d7b42db0473b02c9ab7ce66633b339
+  - name: AWS_SECRET_ACCESS_KEY
+    value: 9db0c8161ffdfa5aa0c907aa74197e89dcfa9b3fe8a0e3205931e3af8f70836e
+  - name: AWS_REGION
+    value: us-east-1
+  - name: S3_BUCKET_NAME
+    value: uploads
+  - name: S3_ENDPOINT_URL
+    value: https://cvguwhejqzfiftimjjzt.storage.supabase.co/storage/v1/s3
+  - name: SECRET_KEY
+    value: "@@@Manishanti@@@09876"
+  - name: ENVIRONMENT
+    value: production
+  - name: DEBUG
+    value: "false"
+  - name: CORS_ORIGINS
+    value: '["https://freeconvert.in", "https://freeconvert-web.vercel.app"]'
+  - name: ALLOWED_FILE_TYPES
+    value: '["application/pdf", "image/jpeg", "image/png", "image/jpg"]'
+  - name: MAX_FILE_SIZE_MB
+    value: "100"
+  - name: S3_EXPIRY_SECONDS
+    value: "3600"
+  instance_type: nano
+  regions:
+  - sgp
+  health_check:
+    disabled: true

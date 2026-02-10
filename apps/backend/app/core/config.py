@@ -1,9 +1,9 @@
 """
-App configuration with AWS integration.
+App configuration with professional stack integration.
 Logic: Load from environment variables using Pydantic Settings for type safety and validation.
 """
 
-from typing import List
+from typing import List, Optional
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
@@ -11,31 +11,27 @@ from pydantic_settings import BaseSettings
 class BaseSettings(BaseSettings):
     """Base configuration class for the FreeConvert backend."""
     
-    # AWS Configuration
+    # AWS Configuration (Supabase S3)
     aws_access_key_id: str = Field(..., env="AWS_ACCESS_KEY_ID")
     aws_secret_access_key: str = Field(..., env="AWS_SECRET_ACCESS_KEY")
-    aws_region: str = Field("eu-north-1", env="AWS_REGION")
+    aws_region: str = Field("us-east-1", env="AWS_REGION")
     s3_bucket_name: str = Field(..., env="S3_BUCKET_NAME")
+    s3_endpoint_url: Optional[str] = Field(None, env="S3_ENDPOINT_URL")
     
-    # Database Configuration
+    # Database Configuration (Neon)
     database_url: str = Field(..., env="DATABASE_URL")
     
-    # Redis Configuration
+    # Redis Configuration (Upstash)
     redis_url: str = Field(..., env="REDIS_URL")
     
     # Application Configuration
     app_name: str = Field("FreeConvert Backend", env="APP_NAME")
     debug: bool = Field(False, env="DEBUG")
-    environment: str = Field("development", env="ENVIRONMENT")
+    environment: str = Field("production", env="ENVIRONMENT")
     
     # CORS Configuration
     cors_origins: List[str] = Field(
-        default=[
-            "http://localhost:3000", 
-            "https://freeconvert.com",
-            "https://freeconvert-web.vercel.app",
-            "https://yourdomain.com"  # Add your custom domain here
-        ],
+        default=["https://freeconvert.in", "https://freeconvert-web.vercel.app"],
         env="CORS_ORIGINS"
     )
     
@@ -44,15 +40,14 @@ class BaseSettings(BaseSettings):
     session_expiry_hours: int = Field(24, env="SESSION_EXPIRY_HOURS")
     
     # File Processing Configuration
-    max_file_size_mb: int = Field(100, env="MAX_FILE_SIZE_MB")
     allowed_file_types: List[str] = Field(
         default=["application/pdf", "image/jpeg", "image/png", "image/jpg"],
         env="ALLOWED_FILE_TYPES"
     )
+    max_file_size_mb: int = Field(100, env="MAX_FILE_SIZE_MB")
     
     # S3 Configuration
-    s3_expiry_seconds: int = Field(3600, env="S3_EXPIRY_SECONDS")  # 1 hour
-    s3_max_file_size_mb: int = Field(100, env="S3_MAX_FILE_SIZE_MB")
+    s3_expiry_seconds: int = Field(3600, env="S3_EXPIRY_SECONDS")
     
     class Config:
         env_file = ".env"

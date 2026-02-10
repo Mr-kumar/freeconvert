@@ -20,18 +20,26 @@ class S3Client:
     """S3 client wrapper for file operations."""
     
     def __init__(self):
-        """Initialize S3 client with AWS credentials."""
+        """Initialize S3 client with Supabase S3 compatibility."""
         self.config = get_s3_config()
-        self.client = boto3.client(
-            's3',
-            aws_access_key_id=self.config['aws_access_key_id'],
-            aws_secret_access_key=self.config['aws_secret_access_key'],
-            region_name=self.config['region'],
-            config=Config(
+        
+        # Build S3 client parameters
+        s3_params = {
+            'aws_access_key_id': self.config['aws_access_key_id'],
+            'aws_secret_access_key': self.config['aws_secret_access_key'],
+            'region_name': self.config['region'],
+            'config': Config(
+                signature_version='s3v4',
                 retries={'max_attempts': 3},
                 max_pool_connections=50
             )
-        )
+        }
+        
+        # Add custom endpoint for Supabase S3
+        if settings.s3_endpoint_url:
+            s3_params['endpoint_url'] = settings.s3_endpoint_url
+        
+        self.client = boto3.client('s3', **s3_params)
         self.bucket_name = self.config['bucket_name']
     
     def generate_presigned_upload_url(
