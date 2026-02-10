@@ -24,8 +24,8 @@ limiter = Limiter(key_func=get_remote_address)
 
 class PresignedURLRequest(BaseModel):
     """Request model for presigned URL generation."""
-    file_name: str = Field(..., min_length=1, max_length=255, regex=r'^[a-zA-Z0-9._-]+$')
-    file_type: str = Field(..., regex=r'^(application|image)\/[a-zA-Z0-9._-]+$')
+    file_name: str = Field(..., min_length=1, max_length=255, pattern=r'^[a-zA-Z0-9._-]+$')
+    file_type: str = Field(..., pattern=r'^(application|image)\/[a-zA-Z0-9._-]+$')
     file_size: int = Field(..., gt=0, le=settings.max_file_size_mb * 1024 * 1024)
     
     class Config:

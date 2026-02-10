@@ -25,9 +25,9 @@ limiter = Limiter(key_func=get_remote_address)
 
 class StartJobRequest(BaseModel):
     """Request model for starting a job."""
-    tool_type: Union[ToolType, str] = Field(..., regex=r'^(merge|compress|reduce|jpg-to-pdf)$')
+    tool_type: Union[ToolType, str] = Field(..., pattern=r'^(merge|compress|reduce|jpg-to-pdf)$')
     file_keys: List[str] = Field(..., min_items=1, max_items=20)
-    compression_level: Optional[str] = Field("medium", regex=r'^(low|medium|high)$')
+    compression_level: Optional[str] = Field("medium", pattern=r'^(low|medium|high)$')
     
     class Config:
         str_strip_whitespace = True
