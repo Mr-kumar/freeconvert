@@ -29,7 +29,7 @@ function InfoLine({ info }: { info?: ImageInfo | null }) {
 
 function EmptyPreview() {
   return (
-    <div className="flex min-h-80 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 text-center">
+    <div className="flex min-h-64 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 text-center sm:min-h-80">
       <p className="max-w-xs text-sm leading-6 text-[var(--muted)]">
         Add an image to start processing.
       </p>
@@ -150,7 +150,7 @@ export function ImagePreview({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-end">{controls}</div>
+      <div className="flex min-w-0 items-center justify-end">{controls}</div>
       <div
         className={cn(
           "grid gap-4",
@@ -159,7 +159,7 @@ export function ImagePreview({
       >
         {panels.map((panel) => (
           <figure key={panel.label} className="min-w-0">
-            <div className="flex h-[460px] items-center justify-center overflow-hidden rounded-t-xl border border-[var(--border)] bg-[var(--surface)] p-4">
+            <div className="flex h-[320px] items-center justify-center overflow-hidden rounded-t-xl border border-[var(--border)] bg-[var(--surface)] p-3 sm:h-[460px] sm:p-4">
               {panel.url ? (
                 <RawImage
                   alt={panel.label}

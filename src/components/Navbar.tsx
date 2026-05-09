@@ -169,12 +169,18 @@ function SearchDialog({
 
   /* Focus input on open */
   useEffect(() => {
-    if (open) {
+    if (!open) {
+      return;
+    }
+
+    const frame = requestAnimationFrame(() => {
       setQuery("");
       setResults([]);
       setActiveIndex(-1);
-      requestAnimationFrame(() => inputRef.current?.focus());
-    }
+      inputRef.current?.focus();
+    });
+
+    return () => cancelAnimationFrame(frame);
   }, [open]);
 
   /* Lock scroll */
@@ -225,12 +231,12 @@ function SearchDialog({
   return (
     <div
       aria-modal="true"
-      className="fixed inset-0 z-[60] flex items-start justify-center bg-black/40 px-4 pt-[12vh] backdrop-blur-sm sm:pt-[18vh]"
+      className="fixed inset-0 z-[60] flex items-start justify-center bg-black/40 px-3 pt-4 backdrop-blur-sm sm:px-4 sm:pt-[18vh]"
       role="dialog"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl animate-[dialogIn_200ms_ease-out] overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-2xl shadow-slate-900/20"
+        className="max-h-[calc(100vh-2rem)] w-full max-w-2xl animate-[dialogIn_200ms_ease-out] overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-2xl shadow-slate-900/20"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search input */}
@@ -238,7 +244,7 @@ function SearchDialog({
           <Search className="h-5 w-5 shrink-0 text-[var(--muted)]" />
           <input
             ref={inputRef}
-            className="h-8 flex-1 bg-transparent text-base font-medium text-[var(--text)] outline-none placeholder:text-[var(--muted)]"
+            className="h-8 min-w-0 flex-1 bg-transparent text-base font-medium text-[var(--text)] outline-none placeholder:text-[var(--muted)]"
             placeholder="Search tools, guides, formats..."
             type="text"
             value={query}
@@ -251,7 +257,7 @@ function SearchDialog({
         </div>
 
         {/* Results list */}
-        <div className="max-h-[50vh] overflow-y-auto overscroll-contain">
+        <div className="max-h-[calc(100vh-12rem)] overflow-y-auto overscroll-contain sm:max-h-[50vh]">
           {/* Popular searches when empty */}
           {showPopular ? (
             <div className="p-4">
@@ -347,8 +353,8 @@ function SearchDialog({
         </div>
 
         {/* Footer hint */}
-        <div className="flex items-center justify-between border-t border-[var(--border)] bg-[var(--surface-2)] px-5 py-2.5">
-          <div className="flex items-center gap-3 text-[10px] text-[var(--muted)]">
+        <div className="flex items-center justify-between border-t border-[var(--border)] bg-[var(--surface-2)] px-4 py-2.5 sm:px-5">
+          <div className="hidden items-center gap-3 text-[10px] text-[var(--muted)] sm:flex">
             <span className="flex items-center gap-1">
               <kbd className="rounded border border-[var(--border)] bg-white px-1 py-px font-mono">↑</kbd>
               <kbd className="rounded border border-[var(--border)] bg-white px-1 py-px font-mono">↓</kbd>
@@ -409,11 +415,11 @@ export function Navbar() {
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-white/95 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
           {/* Logo */}
           <Link
             href="/"
-            className="text-xl font-extrabold text-[var(--text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
+            className="shrink-0 text-lg font-extrabold text-[var(--text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)] sm:text-xl"
             aria-label="FreeConvert home"
             onClick={closeAll}
           >
@@ -462,16 +468,17 @@ export function Navbar() {
           </nav>
 
           {/* Right side — search + badge + hamburger */}
-          <div className="flex items-center gap-2">
+          <div className="flex min-w-0 shrink-0 items-center gap-2">
             {/* Search trigger */}
             <button
-              className="flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-2 py-2 text-xs text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] sm:px-3"
+              aria-label="Search"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] text-xs text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] sm:w-auto sm:gap-2 sm:px-3"
               type="button"
               onClick={openSearch}
             >
               <Search className="h-3.5 w-3.5 shrink-0" />
-              <span className="w-16 text-left sm:w-24">Search...</span>
-              <kbd className="hidden rounded border border-[var(--border)] bg-white px-1.5 py-px font-mono text-[10px] sm:block">
+              <span className="hidden w-24 text-left sm:block">Search...</span>
+              <kbd className="hidden rounded border border-[var(--border)] bg-white px-1.5 py-px font-mono text-[10px] lg:block">
                 ⌘K
               </kbd>
             </button>

@@ -187,8 +187,14 @@ export async function resizeImage(
   let height = opts.height;
 
   if (opts.unit === "percent") {
-    width = image.width * ((opts.width || 100) / 100);
-    height = image.height * ((opts.height || opts.width || 100) / 100);
+    const widthPercent = opts.width || (opts.maintainAspectRatio && opts.height ? opts.height : 100);
+    const heightPercent = opts.height || (opts.maintainAspectRatio && opts.width ? opts.width : 100);
+    width = image.width * (widthPercent / 100);
+    height = image.height * (heightPercent / 100);
+  } else if (opts.unit === "cm") {
+    const dpi = clamp(opts.dpi || 300, 1, 1200);
+    width = opts.width ? (opts.width / 2.54) * dpi : 0;
+    height = opts.height ? (opts.height / 2.54) * dpi : 0;
   }
 
   if (!width && !height) {
@@ -202,6 +208,9 @@ export async function resizeImage(
     } else if (width && height) {
       height = width / aspect;
     }
+  } else {
+    width = width || image.width;
+    height = height || image.height;
   }
 
   const canvas = createCanvas(width, height);

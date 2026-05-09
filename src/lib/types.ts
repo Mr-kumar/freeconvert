@@ -19,7 +19,7 @@ export type WatermarkPosition =
   | "tile";
 
 export type MergeDirection = "horizontal" | "vertical" | "grid";
-export type ResizeUnit = "px" | "percent";
+export type ResizeUnit = "px" | "percent" | "cm";
 export type ToolSlug =
   | "resize"
   | "compress"
@@ -53,6 +53,7 @@ export interface ResizeOptions {
   height: number;
   maintainAspectRatio: boolean;
   unit: ResizeUnit;
+  dpi?: number;
   quality: number;
   outputFormat: ImageFormat;
   targetSizeKB?: number;

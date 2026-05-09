@@ -43,8 +43,8 @@ export const toolConfigs: Record<ToolSlug, ToolConfig> = {
     shortName: "Resize",
     title: "Resize Image Online Free - freeconvert.in",
     description:
-      "Set exact width and height in px or percent. JPEG, PNG, WebP and AVIF. Runs in your browser.",
-    homeDescription: "Set exact dimensions, px or percent",
+      "Set exact width and height in px, cm or percent. Includes exam photo presets and target KB export. Runs in your browser.",
+    homeDescription: "Set exact dimensions, cm, px or percent",
     href: "/resize-image",
     priority: 0.9,
     keywords: [
@@ -54,8 +54,9 @@ export const toolConfigs: Record<ToolSlug, ToolConfig> = {
       "resize jpg png webp free",
     ],
     features: [
-      "Resize by pixel or percentage",
-      "Maintain aspect ratio",
+      "Resize by pixel, cm or percentage",
+      "Government exam photo presets",
+      "Optional target size",
       "Export JPEG, PNG, WebP or AVIF",
       "Files stay on your device",
     ],
@@ -312,11 +313,12 @@ export function getToolDefaults(slug: ToolSlug, params: SearchParams) {
     resize: {
       width: safeNumber(params.w, 0, 0, 16000),
       height: safeNumber(params.h, 0, 0, 16000),
-      unit:
-        safeEnum(params.unit, ["px", "%", "percent"], "px") === "px"
-          ? "px"
-          : "percent",
-      maintainAspectRatio: safeBoolean(params.ar, true),
+      unit: (() => {
+        const unit = safeEnum(params.unit, ["px", "%", "percent", "cm"], "px");
+        return unit === "%" ? "percent" : unit;
+      })(),
+      dpi: safeNumber(params.dpi, 300, 1, 1200),
+      maintainAspectRatio: safeBoolean(params.ar, false),
       outputFormat: format,
       quality: q,
       targetSizeKB: safeNumber(params.target, 0, 0, 51200),

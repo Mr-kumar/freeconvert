@@ -81,11 +81,11 @@ export function useAvifSupport() {
 
 export function Panel({ children, title }: { children: ReactNode; title: string }) {
   return (
-    <section className="border-b border-[var(--border)] p-4">
+    <section className="w-full min-w-0 max-w-full overflow-hidden border-b border-[var(--border)] p-4">
       <h2 className="mb-4 text-sm font-bold text-[var(--accent)]">
         {title}
       </h2>
-      <div className="space-y-4">{children}</div>
+      <div className="w-full min-w-0 max-w-full space-y-4">{children}</div>
     </section>
   );
 }
@@ -108,7 +108,7 @@ export function RangeControl({
   onChange: (value: number) => void;
 }) {
   return (
-    <label className="field-label">
+    <label className="field-label min-w-0">
       <span className="flex items-center justify-between">
         {label}
         <span className="font-mono text-xs text-[var(--accent)]">
@@ -130,28 +130,56 @@ export function RangeControl({
 }
 
 export function NumberControl({
+  allowEmpty = false,
   label,
   value,
   min = 0,
   max,
+  step,
   onChange,
 }: {
+  allowEmpty?: false;
   label: string;
   value: number;
   min?: number;
   max?: number;
+  step?: number | string;
   onChange: (value: number) => void;
+} | {
+  allowEmpty: true;
+  label: string;
+  value: number | "";
+  min?: number;
+  max?: number;
+  step?: number | string;
+  onChange: (value: number | "") => void;
 }) {
+  const emitChange = onChange as (value: number | "") => void;
+
   return (
-    <label className="field-label">
+    <label className="field-label min-w-0">
       {label}
       <input
         className="field-input"
         max={max}
         min={min}
+        step={step}
         type="number"
         value={value}
-        onChange={(event) => onChange(Number(event.target.value))}
+        onChange={(event) => {
+          const nextValue = event.target.value;
+
+          if (nextValue === "") {
+            emitChange(allowEmpty ? "" : 0);
+            return;
+          }
+
+          const parsed = Number(nextValue);
+
+          if (Number.isFinite(parsed)) {
+            emitChange(parsed);
+          }
+        }}
       />
     </label>
   );
@@ -189,17 +217,19 @@ export function SelectControl<T extends string>({
 export function ToggleButton({
   active,
   children,
+  className,
   disabled = false,
   onClick,
 }: {
   active: boolean;
   children: ReactNode;
+  className?: string;
   disabled?: boolean;
   onClick: () => void;
 }) {
   return (
     <button
-      className={cn("segmented-button", active && "segmented-button-active")}
+      className={cn("segmented-button min-w-0", active && "segmented-button-active", className)}
       disabled={disabled}
       type="button"
       onClick={onClick}

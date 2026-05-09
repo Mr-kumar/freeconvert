@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, BookOpen, FileImage, Search, Wrench } from "lucide-react";
 import { tools } from "@/lib/tools";
 import {
@@ -9,7 +9,6 @@ import {
   searchSite,
   type SearchResult,
 } from "@/lib/search";
-import { cn } from "@/lib/utils";
 
 const iconMap: Record<SearchResult["category"], typeof Wrench> = {
   Tool: Wrench,
@@ -54,18 +53,10 @@ export default function SearchPageClient({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState(initialQuery);
-  const [results, setResults] = useState<SearchResult[]>(() =>
-    initialQuery ? searchSite(initialQuery) : [],
+  const results = useMemo(
+    () => (query.trim().length > 0 ? searchSite(query, 12) : []),
+    [query],
   );
-
-  /* Live search on every keystroke */
-  useEffect(() => {
-    if (query.trim().length > 0) {
-      setResults(searchSite(query, 12));
-    } else {
-      setResults([]);
-    }
-  }, [query]);
 
   /* Auto-focus input */
   useEffect(() => {

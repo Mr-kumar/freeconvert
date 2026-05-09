@@ -71,24 +71,24 @@ export function CookieConsentBanner() {
         </>
       ) : null}
       {visible ? (
-        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-[var(--border)] bg-white p-4 shadow-xl shadow-slate-300/50">
-          <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="max-w-3xl text-sm leading-6 text-[var(--muted)]">
+        <div className="fixed bottom-3 left-1/2 z-50 w-[min(358px,calc(100vw-2rem))] -translate-x-1/2 overflow-hidden rounded-2xl border border-[var(--border)] bg-white p-3 shadow-xl shadow-slate-300/50 sm:w-[calc(100vw-2rem)] sm:p-4">
+          <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="min-w-0 break-words text-xs leading-5 text-[var(--muted)] sm:max-w-3xl sm:text-sm sm:leading-6">
               We use cookies for analytics and ads. Your images are processed
               locally and never uploaded.{" "}
               <Link className="font-semibold text-[var(--accent)]" href="/cookie-policy">
                 Learn more
               </Link>
             </p>
-            <div className="flex shrink-0 gap-3">
+            <div className="grid w-full min-w-0 shrink-0 grid-cols-1 gap-2 sm:w-auto sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] sm:gap-3">
               <button
-                className="rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-bold text-[var(--muted)] hover:text-[var(--text)]"
+                className="min-h-11 w-full min-w-0 rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-bold text-[var(--muted)] hover:text-[var(--text)]"
                 type="button"
                 onClick={decline}
               >
                 Decline
               </button>
-              <button className="button-primary shrink-0" type="button" onClick={accept}>
+              <button className="button-primary w-full shrink-0 whitespace-nowrap px-4" type="button" onClick={accept}>
                 Accept all
               </button>
             </div>
