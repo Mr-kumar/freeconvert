@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">FreeConvert maskable app icon</title>
+  <rect width="512" height="512" fill="#e5322d"/>
+  <circle cx="256" cy="256" r="206" fill="#ffffff"/>
+  <path fill="#e5322d" d="M134 142h244v64H208v64h144v61H208v110h-74V142Z"/>
+  <path fill="#33333b" d="M332 302c-42 0-73-31-73-74s31-74 73-74c31 0 56 15 68 40l-54 28c-3-9-8-14-15-14-12 0-20 8-20 20s8 20 20 20c8 0 13-5 16-14l55 27c-13 26-37 41-70 41Z"/>
+</svg>
