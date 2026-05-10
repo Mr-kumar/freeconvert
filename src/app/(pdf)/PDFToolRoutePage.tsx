@@ -4,6 +4,7 @@ import { AdSlot } from "@/components/AdSlot";
 import { ToolContentSections } from "@/components/ToolContentSections";
 import {
   getPDFToolDefaults,
+  pdfToolBreadcrumbJsonLd,
   pdfToolFaqJsonLd,
   pdfToolJsonLd,
 } from "@/lib/tools";
@@ -30,6 +31,10 @@ export async function PDFToolRoutePage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(pdfToolFaqJsonLd(slug)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(pdfToolBreadcrumbJsonLd(slug)) }}
       />
       <AdRailSlots
         leftSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RAIL_LEFT}

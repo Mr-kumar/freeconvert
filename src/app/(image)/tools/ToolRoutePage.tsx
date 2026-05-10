@@ -4,6 +4,7 @@ import { AdSlot } from "@/components/AdSlot";
 import { ToolContentSections } from "@/components/ToolContentSections";
 import {
   getToolDefaults,
+  toolBreadcrumbJsonLd,
   toolFaqJsonLd,
   toolJsonLd,
 } from "@/lib/tools";
@@ -30,6 +31,10 @@ export async function ToolRoutePage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(toolFaqJsonLd(slug)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(toolBreadcrumbJsonLd(slug)) }}
       />
       <AdRailSlots
         leftSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RAIL_LEFT}

@@ -6,9 +6,9 @@ import { allToolConfigs, BASE_URL } from "@/lib/tools";
 import { safeJsonLd } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Free Online Image & PDF Tools - FreeConvert",
+  title: "FreeConvert - Free Online Image & PDF Tools",
   description:
-    "Client-side image and PDF tools for resize, compress, convert, merge, split, rotate and watermark. No upload, no account and no limits.",
+    "Use free online image and PDF tools to compress, resize, convert, merge, split, rotate and watermark files in your browser. No upload or account required.",
   keywords: [
     "free online image tools",
     "free online pdf tools",
@@ -19,14 +19,16 @@ export const metadata: Metadata = {
     "split pdf online",
     "pdf to jpg converter",
     "jpg to pdf converter",
+    "free image tools no upload",
+    "free pdf tools no upload",
   ],
   alternates: {
     canonical: BASE_URL,
   },
   openGraph: {
-    title: "Free Online Image & PDF Tools - FreeConvert",
+    title: "Free Online Image & PDF Tools - No Upload Required | FreeConvert",
     description:
-      "Resize, compress and convert images. Merge, split, rotate and watermark PDFs. Everything runs in your browser.",
+      "Free online tools to resize, compress and convert images, plus merge, split, rotate and watermark PDFs in your browser.",
     url: BASE_URL,
     siteName: "FreeConvert",
     type: "website",
@@ -34,9 +36,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Online Image & PDF Tools - FreeConvert",
+    title: "Free Online Image & PDF Tools - No Upload Required | FreeConvert",
     description:
-      "Private browser-based image and PDF tools. No upload and no account required.",
+      "Free browser-based image and PDF tools. No upload and no account required.",
     images: ["/opengraph-image"],
   },
 };

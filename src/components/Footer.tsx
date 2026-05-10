@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandLogo } from "@/components/BrandLogo";
 import { pdfTools, tools } from "@/lib/tools";
 
 const legal = [
@@ -22,8 +23,8 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           <div className="col-span-2 md:col-span-1">
-            <Link className="text-xl font-extrabold text-[var(--text)]" href="/">
-              Free<span className="text-[var(--accent)]">Convert</span>.in
+            <Link className="inline-flex" href="/" aria-label="FreeConvert home">
+              <BrandLogo textClassName="text-xl" />
             </Link>
             <p className="mt-3 max-w-60 text-sm leading-6 text-[var(--muted)]">
               Free online image and PDF tools. 100% client-side. Your files

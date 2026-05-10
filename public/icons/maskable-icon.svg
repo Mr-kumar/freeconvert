@@ -1,7 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title" shape-rendering="geometricPrecision">
   <title id="title">FreeConvert maskable app icon</title>
-  <rect width="512" height="512" fill="#e5322d"/>
-  <circle cx="256" cy="256" r="206" fill="#ffffff"/>
-  <path fill="#e5322d" d="M134 142h244v64H208v64h144v61H208v110h-74V142Z"/>
-  <path fill="#33333b" d="M332 302c-42 0-73-31-73-74s31-74 73-74c31 0 56 15 68 40l-54 28c-3-9-8-14-15-14-12 0-20 8-20 20s8 20 20 20c8 0 13-5 16-14l55 27c-13 26-37 41-70 41Z"/>
+  <circle cx="256" cy="256" r="244" fill="#008ee9"/>
+  <path fill="#ffffff" d="M110 120h144l38 38v156H110V120Z"/>
+  <path fill="#bde7ff" d="M254 120v38h38l-38-38Z"/>
+  <path fill="#0063a8" d="M144 262h112l-37-48-29 34-20-22-26 36Zm32-80a22 22 0 1 0 0 44 22 22 0 0 0 0-44Z"/>
+  <path fill="#ffffff" d="M218 198h144l38 38v156H218V198Z"/>
+  <path fill="#bde7ff" d="M362 198v38h38l-38-38Z"/>
+  <path fill="#0063a8" d="M252 268h106v20H252v-20Zm0 48h106v20H252v-20Zm0 48h68v20h-68v-20Z"/>
+  <path fill="#043b63" d="M306 124h66l50 50-50 50h-66v-40h50l10-10-10-10h-50v-40Zm-100 366h-66l-50-50 50-50h66v40h-50l-10 10 10 10h50v40Z"/>
 </svg>

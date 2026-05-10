@@ -10,74 +10,36 @@ export const contentType = "image/png";
 export default function Icon() {
   return new ImageResponse(
     (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "transparent",
-        }}
+      <svg
+        height="512"
+        viewBox="0 0 512 512"
+        width="512"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <div
-          style={{
-            width: 460,
-            height: 460,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "#e5322d",
-            borderRadius: 100,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              position: "relative",
-              width: 240,
-              height: 240,
-            }}
-          >
-            {/* Main Photo Frame */}
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: 180,
-                height: 180,
-                border: "28px solid white",
-                borderRadius: 48,
-              }}
-            />
-            {/* Accent Element (representing edit/transform/magic) */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                width: 120,
-                height: 120,
-                background: "#ffffff",
-                borderRadius: 60,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  background: "#e5322d",
-                  borderRadius: 20,
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+        <circle cx="256" cy="256" fill="#008ee9" r="244" />
+        <path
+          d="M96 108h154l42 42v170H96V108Z"
+          fill="#ffffff"
+        />
+        <path d="M250 108v42h42l-42-42Z" fill="#bde7ff" />
+        <path
+          d="M132 266h124l-41-54-32 38-22-25-29 41Zm36-88a24 24 0 1 0 0 48 24 24 0 0 0 0-48Z"
+          fill="#0063a8"
+        />
+        <path
+          d="M220 192h154l42 42v170H220V192Z"
+          fill="#ffffff"
+        />
+        <path d="M374 192v42h42l-42-42Z" fill="#bde7ff" />
+        <path
+          d="M258 268h116v22H258v-22Zm0 52h116v22H258v-22Zm0 52h74v22h-74v-22Z"
+          fill="#0063a8"
+        />
+        <path
+          d="M308 114h72l56 56-56 56h-72v-44h54l12-12-12-12h-54v-44Zm-104 284h-72l-56-56 56-56h72v44h-54l-12 12 12 12h54v44Z"
+          fill="#043b63"
+        />
+      </svg>
     ),
     { ...size },
   );

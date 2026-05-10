@@ -38,6 +38,7 @@ import {
   Wrench,
   X,
 } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { pdfTools, tools, type PDFToolConfig, type ToolConfig } from "@/lib/tools";
 import { searchSite, popularSearches, type SearchResult } from "@/lib/search";
 import { cn } from "@/lib/utils";
@@ -442,11 +443,11 @@ export function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="shrink-0 text-lg font-extrabold text-[var(--text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)] sm:text-xl"
+            className="shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
             aria-label="FreeConvert home"
             onClick={closeAll}
           >
-            Free<span className="text-[var(--accent)]">Convert</span>
+            <BrandLogo textClassName="text-base sm:text-xl" />
           </Link>
 
           {/* Desktop nav */}
@@ -515,7 +516,7 @@ export function Navbar() {
               aria-controls="mobile-navigation"
               aria-expanded={mobileOpen}
               aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
-              className="icon-button md:hidden"
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface-2)] text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] md:hidden"
               type="button"
               onClick={() => setMobileOpen((v) => !v)}
             >

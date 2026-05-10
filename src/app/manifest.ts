@@ -8,11 +8,38 @@ export default function manifest(): MetadataRoute.Manifest {
       "Resize, compress, convert and edit images. Merge, split, rotate and watermark PDFs in your browser.",
     start_url: "/",
     display: "standalone",
-    background_color: "#f5f5fa",
-    theme_color: "#e5322d",
+    background_color: "#008ee9",
+    theme_color: "#008ee9",
     orientation: "portrait",
     scope: "/",
     icons: [
+      {
+        src: "/favicon.ico",
+        sizes: "any",
+        type: "image/x-icon",
+      },
+      {
+        src: "/favicon-48x48.png",
+        sizes: "48x48",
+        type: "image/png",
+      },
+      {
+        src: "/android-chrome-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/android-chrome-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
       {
         src: "/icons/icon.svg",
         sizes: "any",
@@ -24,17 +51,6 @@ export default function manifest(): MetadataRoute.Manifest {
         sizes: "any",
         type: "image/svg+xml",
         purpose: "maskable",
-      },
-      {
-        src: "/icon",
-        sizes: "512x512",
-        type: "image/png",
-        purpose: "any",
-      },
-      {
-        src: "/apple-icon",
-        sizes: "180x180",
-        type: "image/png",
       },
     ],
     categories: ["utilities", "productivity", "photo", "business"],

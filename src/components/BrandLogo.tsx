@@ -1,19 +1,25 @@
-import { ImageResponse } from "next/og";
+import { cn } from "@/lib/utils";
 
-export const size = {
-  width: 180,
-  height: 180,
-};
+interface BrandLogoProps {
+  className?: string;
+  markClassName?: string;
+  textClassName?: string;
+  dark?: boolean;
+}
 
-export const contentType = "image/png";
-
-export default function AppleIcon() {
-  return new ImageResponse(
-    (
+export function BrandLogo({
+  className,
+  markClassName,
+  textClassName,
+  dark = false,
+}: BrandLogoProps) {
+  return (
+    <span className={cn("inline-flex min-w-0 items-center gap-2", className)}>
       <svg
-        height="180"
+        aria-hidden="true"
+        className={cn("h-8 w-8 shrink-0", markClassName)}
+        fill="none"
         viewBox="0 0 512 512"
-        width="180"
         xmlns="http://www.w3.org/2000/svg"
       >
         <circle cx="256" cy="256" fill="#008ee9" r="244" />
@@ -40,7 +46,15 @@ export default function AppleIcon() {
           fill="#043b63"
         />
       </svg>
-    ),
-    { ...size },
+      <span
+        className={cn(
+          "min-w-0 whitespace-nowrap font-extrabold leading-none",
+          dark ? "text-white" : "text-[var(--text)]",
+          textClassName,
+        )}
+      >
+        Free<span className="text-[#008ee9]">Convert</span>
+      </span>
+    </span>
   );
 }

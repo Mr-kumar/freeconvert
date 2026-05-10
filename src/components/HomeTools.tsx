@@ -101,7 +101,7 @@ function ToolSection({
   category: "image" | "pdf";
 }) {
   return (
-    <section className="mt-10">
+    <section className="mt-10" id={`${category}-tools`}>
       <div className="mb-5 flex items-end justify-between gap-4">
         <div>
           <h2 className="font-display text-2xl font-extrabold text-[var(--text)]">

@@ -42,9 +42,14 @@ const websiteJsonLd = {
       url: BASE_URL,
       logo: {
         "@type": "ImageObject",
-        url: `${BASE_URL}/icon`,
+        "@id": `${BASE_URL}/#logo`,
+        url: `${BASE_URL}/android-chrome-512x512.png`,
         width: 512,
         height: 512,
+        caption: "FreeConvert Logo",
+      },
+      image: {
+        "@id": `${BASE_URL}/#logo`,
       },
     },
   ],
@@ -71,11 +76,11 @@ const googleSiteVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "FreeConvert - Free Online Image & PDF Tools. No Upload Required.",
-    template: "%s | FreeConvert.in",
+    default: "FreeConvert - Free Online Image & PDF Tools",
+    template: "%s | FreeConvert",
   },
   description:
-    "FreeConvert offers free online image and PDF tools to resize, compress, convert, merge, split, rotate, watermark and inspect files. Processing runs in your browser.",
+    "Use free online image and PDF tools to resize, compress, convert, merge, split, rotate, watermark and inspect files. No upload required.",
   keywords: [
     "free online tools india",
     "free image converter online india",
@@ -91,6 +96,8 @@ export const metadata: Metadata = {
     "image metadata viewer",
     "merge pdf online free",
     "compress pdf online free",
+    "free pdf tools no upload",
+    "free image tools no upload",
     "split pdf online free",
     "pdf to jpg converter",
     "jpg to pdf converter",
@@ -112,6 +119,7 @@ export const metadata: Metadata = {
       "x-default": BASE_URL,
     },
   },
+  manifest: "/manifest.webmanifest",
   openGraph: {
     type: "website",
     locale: "en_IN",
@@ -119,7 +127,7 @@ export const metadata: Metadata = {
     siteName: "FreeConvert",
     title: "FreeConvert - Free Online Image & PDF Tools",
     description:
-      "Resize, compress, convert and edit images. Merge, split, rotate and watermark PDFs. Files stay on your device.",
+      "Free online image and PDF tools for resize, compress, convert, merge, split, rotate and watermark. No upload required.",
     images: [
       {
         url: "/opengraph-image",
@@ -134,7 +142,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "FreeConvert - Free Online Image & PDF Tools",
     description:
-      "Free browser-based image and PDF tools. No upload, no signup.",
+      "Free browser-based image and PDF tools. No upload and no signup.",
     images: ["/opengraph-image"],
   },
   appleWebApp: {
@@ -154,8 +162,28 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: [{ url: "/favicon.ico" }, { url: "/icon", type: "image/png" }],
-    apple: "/apple-icon",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: "/favicon.ico",
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/safari-pinned-tab.svg",
+        color: "#008ee9",
+      },
+    ],
+  },
+  other: {
+    "msapplication-TileColor": "#008ee9",
+    "msapplication-TileImage": "/mstile-150x150.png",
+    "msapplication-config": "/browserconfig.xml",
   },
   ...(googleSiteVerification
     ? {
@@ -169,7 +197,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#111111" },
+    { media: "(prefers-color-scheme: dark)", color: "#008ee9" },
   ],
   width: "device-width",
   initialScale: 1,

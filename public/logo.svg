@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 160" role="img" aria-labelledby="title desc">
+  <title id="title">FreeConvert logo</title>
+  <desc id="desc">Blue file conversion symbol with FreeConvert wordmark.</desc>
+  <circle cx="80" cy="80" r="76" fill="#008ee9"/>
+  <path fill="#ffffff" d="M28 34h48l14 14v52H28V34Z"/>
+  <path fill="#bde7ff" d="M76 34v14h14L76 34Z"/>
+  <path fill="#0063a8" d="M40 84h38L65 68l-9 11-7-8-9 13Zm11-27a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z"/>
+  <path fill="#ffffff" d="M70 60h48l14 14v52H70V60Z"/>
+  <path fill="#bde7ff" d="M118 60v14h14l-14-14Z"/>
+  <path fill="#0063a8" d="M82 84h38v7H82v-7Zm0 18h38v7H82v-7Zm0 18h24v7H82v-7Z"/>
+  <path fill="#043b63" d="M106 36h21l16 16-16 16h-21V56h16l4-4-4-4h-16V36ZM54 124H33l-16-16 16-16h21v12H38l-4 4 4 4h16v12Z"/>
+  <text x="190" y="100" fill="#080808" font-family="Inter, Arial, Helvetica, sans-serif" font-size="58" font-weight="800">Free</text>
+  <text x="312" y="100" fill="#008ee9" font-family="Inter, Arial, Helvetica, sans-serif" font-size="58" font-weight="800">Convert</text>
+</svg>

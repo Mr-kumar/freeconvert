@@ -31,7 +31,7 @@ export async function generateMetadata({
       canonical: `${BASE_URL}/blog/${post.slug}`,
     },
     openGraph: {
-      title: `${post.title} | FreeConvert.in`,
+      title: `${post.title} | FreeConvert`,
       description: post.description,
       url: `${BASE_URL}/blog/${post.slug}`,
       type: "article",

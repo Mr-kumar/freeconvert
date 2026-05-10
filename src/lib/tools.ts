@@ -46,9 +46,9 @@ export const toolConfigs: Record<ToolSlug, ToolConfig> = {
     slug: "resize",
     name: "Resize Image",
     shortName: "Resize",
-    title: "Resize Image Online Free - freeconvert.in",
+    title: "Resize Image Online Free - Pixel, CM & Target KB",
     description:
-      "Set exact width and height in px, cm or percent. Includes exam photo presets and target KB export. Runs in your browser.",
+      "Resize images online free by pixels, centimeters or percent with exam photo presets and target KB export. Files stay in your browser.",
     homeDescription: "Set exact dimensions, cm, px or percent",
     href: "/resize-image",
     priority: 0.9,
@@ -70,9 +70,9 @@ export const toolConfigs: Record<ToolSlug, ToolConfig> = {
     slug: "compress",
     name: "Compress Image",
     shortName: "Compress",
-    title: "Compress Image Online Free - Reduce File Size",
+    title: "Compress Image Online Free - Reduce JPG PNG WebP Size",
     description:
-      "Reduce image file size without uploading. JPEG, PNG and WebP compression runs locally in your browser.",
+      "Compress JPG, PNG and WebP images online free with quality and target KB controls. No upload, no signup.",
     homeDescription: "Reduce file size, keep quality",
     href: "/compress-image",
     priority: 0.9,
@@ -93,9 +93,9 @@ export const toolConfigs: Record<ToolSlug, ToolConfig> = {
     slug: "convert",
     name: "Convert Image",
     shortName: "Convert",
-    title: "Convert Image Format Free - JPEG PNG WebP AVIF",
+    title: "Convert Image Online Free - JPG PNG WebP AVIF",
     description:
-      "Convert JPEG, PNG, WebP and AVIF images instantly in your browser. No signup and no upload.",
+      "Convert images online free between JPG, PNG, WebP and AVIF in your browser. No upload, no signup.",
     homeDescription: "JPEG, PNG, WebP, AVIF",
     href: "/convert-image",
     priority: 0.9,
@@ -116,9 +116,9 @@ export const toolConfigs: Record<ToolSlug, ToolConfig> = {
     slug: "crop",
     name: "Crop Image",
     shortName: "Crop",
-    title: "Crop Image Online Free - Any Size or Ratio",
+    title: "Crop Image Online Free - Any Size or Aspect Ratio",
     description:
-      "Crop images to freeform selections or fixed aspect ratios. Everything runs in the browser.",
+      "Crop images online free to custom selections or fixed ratios for forms, IDs, thumbnails and profiles. No upload.",
     homeDescription: "Crop to any size or ratio",
     href: "/crop-image",
     priority: 0.8,
@@ -139,16 +139,16 @@ export const toolConfigs: Record<ToolSlug, ToolConfig> = {
     slug: "rotate-flip",
     name: "Rotate & Flip Image",
     shortName: "Rotate",
-    title: "Rotate & Flip Image Online Free",
+    title: "Rotate Image Online Free - Rotate, Flip & Straighten",
     description:
-      "Rotate images by 90, 180, 270 degrees or a custom angle. Flip horizontal or vertical for free.",
+      "Rotate and flip images online free by 90, 180, 270 degrees or a custom angle. Files stay on your device.",
     homeDescription: "Rotate, mirror, straighten",
     href: "/rotate-image",
     priority: 0.8,
     keywords: [
-      "rotate image online",
-      "flip image online",
-      "mirror image free",
+      "rotate image online free",
+      "flip image online free",
+      "mirror image online free",
       "straighten photo online",
     ],
     features: [
@@ -162,9 +162,9 @@ export const toolConfigs: Record<ToolSlug, ToolConfig> = {
     slug: "background-removal",
     name: "Remove Background",
     shortName: "Remove BG",
-    title: "Remove Background from Image Free - AI Powered",
+    title: "Remove Background from Image Free Online",
     description:
-      "Remove image backgrounds with AI directly in your browser. Your image is not uploaded.",
+      "Remove image backgrounds online free with browser-based AI and export transparent PNG files. No upload required.",
     homeDescription: "AI background removal in browser",
     href: "/remove-background",
     priority: 0.9,
@@ -185,9 +185,9 @@ export const toolConfigs: Record<ToolSlug, ToolConfig> = {
     slug: "watermark",
     name: "Add Watermark",
     shortName: "Watermark",
-    title: "Add Watermark to Image Free - Text or Logo",
+    title: "Add Watermark to Image Online Free - Text or Logo",
     description:
-      "Add a text or image watermark with custom position, opacity, rotation and tiling.",
+      "Add text or logo watermarks to images online free with position, opacity, rotation and tiling controls.",
     homeDescription: "Text or image watermark",
     href: "/add-watermark-to-image",
     priority: 0.8,
@@ -210,13 +210,13 @@ export const toolConfigs: Record<ToolSlug, ToolConfig> = {
     shortName: "Merge",
     title: "Merge Images Online Free - Combine Photos",
     description:
-      "Combine multiple images side by side, vertically or in a grid. Runs locally with no upload.",
+      "Merge images online free side by side, vertically or in a grid. Combine photos and screenshots in your browser.",
     homeDescription: "Combine multiple images",
     href: "/merge-images",
     priority: 0.8,
     keywords: [
-      "merge images online",
-      "combine photos online",
+      "merge images online free",
+      "combine photos online free",
       "join images side by side",
       "image grid maker",
     ],
@@ -231,15 +231,15 @@ export const toolConfigs: Record<ToolSlug, ToolConfig> = {
     slug: "filters",
     name: "Image Filters",
     shortName: "Filters",
-    title: "Image Filters & Adjustments Free Online",
+    title: "Image Filters Online Free - Edit Photo Colors",
     description:
-      "Adjust brightness, contrast, saturation and apply presets to images in your browser.",
+      "Apply free online image filters and adjust brightness, contrast, saturation, hue and blur in your browser.",
     homeDescription: "Adjust and enhance photos",
     href: "/image-filters",
     priority: 0.7,
     keywords: [
-      "image filters online",
-      "photo adjustments online",
+      "image filters online free",
+      "photo adjustments online free",
       "brightness contrast saturation image",
       "free image editor online",
     ],
@@ -254,14 +254,14 @@ export const toolConfigs: Record<ToolSlug, ToolConfig> = {
     slug: "metadata",
     name: "Image Metadata",
     shortName: "Metadata",
-    title: "View Image Metadata & EXIF Data Free",
+    title: "Image Metadata Viewer Online Free - EXIF & File Info",
     description:
-      "View EXIF data, camera details, image dimensions and dominant color palette. Strip metadata locally.",
+      "View image metadata and EXIF data online free, including dimensions, camera details and color palette. Strip metadata locally.",
     homeDescription: "View EXIF, strip metadata, palette",
     href: "/image-metadata",
     priority: 0.7,
     keywords: [
-      "image metadata viewer",
+      "image metadata viewer online free",
       "exif data viewer online",
       "strip image metadata",
       "image color palette",
@@ -284,7 +284,7 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
     shortName: "Merge PDF",
     title: "Merge PDF Online Free - Combine PDF Files",
     description:
-      "Combine multiple PDF files into one document directly in your browser. No upload, no signup and no watermark.",
+      "Merge PDF files online free into one document directly in your browser. No upload, no signup and no watermark.",
     homeDescription: "Combine PDF files in order",
     href: "/merge-pdf",
     priority: 0.95,
@@ -306,9 +306,9 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
     slug: "compress-pdf",
     name: "Compress PDF",
     shortName: "Compress PDF",
-    title: "Compress PDF Online Free - Reduce PDF Size",
+    title: "Compress PDF Online Free - Reduce PDF Size to KB",
     description:
-      "Reduce PDF file size in your browser by rebuilding pages at a lower resolution, with an optional target KB size.",
+      "Compress PDF online free and reduce PDF size to a target KB in your browser. No upload and no account required.",
     homeDescription: "Reduce PDF size to target KB",
     href: "/compress-pdf",
     priority: 0.95,
@@ -331,9 +331,9 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
     slug: "split-pdf",
     name: "Split PDF",
     shortName: "Split PDF",
-    title: "Split PDF Online Free - Extract PDF Parts",
+    title: "Split PDF Online Free - Extract PDF Pages",
     description:
-      "Split a PDF into individual pages, fixed page ranges or custom page ranges. Download the results as a ZIP.",
+      "Split PDF online free into individual pages, fixed ranges or custom page ranges. Download results as PDF files or ZIP.",
     homeDescription: "Break PDFs into parts",
     href: "/split-pdf",
     priority: 0.9,
@@ -356,7 +356,7 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
     shortName: "PDF to Image",
     title: "PDF to JPG PNG Converter Online Free",
     description:
-      "Convert PDF pages to JPG, PNG or WebP images locally in your browser with page selection and DPI control.",
+      "Convert PDF to JPG, PNG or WebP online free with page selection and DPI control. Files stay in your browser.",
     homeDescription: "Export PDF pages as images",
     href: "/convert-pdf-to-image",
     priority: 0.92,
@@ -378,9 +378,9 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
     slug: "convert-image-to-pdf",
     name: "Convert Image to PDF",
     shortName: "Image to PDF",
-    title: "Image to PDF Online Free - JPG PNG to PDF",
+    title: "JPG to PDF Converter Online Free - Image to PDF",
     description:
-      "Convert JPG, PNG, WebP and AVIF images into a PDF with page size, margin and fit controls.",
+      "Convert JPG, PNG, WebP and AVIF images to PDF online free with page size, margin and fit controls.",
     homeDescription: "Turn images into a PDF",
     href: "/convert-image-to-pdf",
     priority: 0.9,
@@ -401,9 +401,9 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
     slug: "rotate-pdf",
     name: "Rotate PDF",
     shortName: "Rotate PDF",
-    title: "Rotate PDF Online Free",
+    title: "Rotate PDF Online Free - Rotate PDF Pages",
     description:
-      "Rotate all PDF pages or selected pages by 90, 180 or 270 degrees directly in your browser.",
+      "Rotate PDF pages online free by 90, 180 or 270 degrees. Rotate all pages or selected pages in your browser.",
     homeDescription: "Rotate selected pages",
     href: "/rotate-pdf",
     priority: 0.82,
@@ -424,9 +424,9 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
     slug: "add-watermark-to-pdf",
     name: "Add Watermark to PDF",
     shortName: "Watermark PDF",
-    title: "Add Watermark to PDF Online Free",
+    title: "Add Watermark to PDF Online Free - Text or Image",
     description:
-      "Add a text or image watermark to selected PDF pages with position, opacity and rotation controls.",
+      "Add text or image watermark to PDF online free with page range, position, opacity and rotation controls.",
     homeDescription: "Text or logo watermark",
     href: "/add-watermark-to-pdf",
     priority: 0.8,
@@ -447,16 +447,16 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
     slug: "protect-pdf",
     name: "Protect PDF",
     shortName: "Protect PDF",
-    title: "Protect PDF Online - Add Password",
+    title: "Protect PDF Online Free - Add Password",
     description:
-      "Add an open password and permissions to a PDF in your browser with qpdf WebAssembly encryption.",
+      "Password protect PDF online free with open password, permissions and qpdf WebAssembly encryption in your browser.",
     homeDescription: "Add a PDF password",
     href: "/protect-pdf",
     priority: 0.7,
     keywords: [
-      "protect pdf with password",
-      "password protect pdf",
-      "encrypt pdf online",
+      "protect pdf online free",
+      "password protect pdf online free",
+      "encrypt pdf online free",
       "secure pdf",
     ],
     features: [
@@ -470,16 +470,16 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
     slug: "unlock-pdf",
     name: "Unlock PDF",
     shortName: "Unlock PDF",
-    title: "Unlock PDF Online - Remove Known Password",
+    title: "Unlock PDF Online Free - Remove Known Password",
     description:
-      "Remove PDF password protection in your browser when you know the current password. This tool does not crack or bypass security.",
+      "Unlock PDF online free by removing a known password in your browser. This tool does not crack or bypass security.",
     homeDescription: "Remove a known PDF password",
     href: "/unlock-pdf",
     priority: 0.7,
     keywords: [
-      "remove pdf password online",
-      "unlock pdf",
-      "pdf password remove",
+      "unlock pdf online free",
+      "remove pdf password online free",
+      "pdf password remover free",
       "decrypt pdf with password",
     ],
     features: [
@@ -493,15 +493,15 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
     slug: "extract-pdf-pages",
     name: "Extract PDF Pages",
     shortName: "Extract Pages",
-    title: "Extract Pages from PDF Online Free",
+    title: "Extract PDF Pages Online Free - Save Selected Pages",
     description:
-      "Select specific pages visually or with a page range and export them as one PDF or separate PDF files.",
+      "Extract PDF pages online free by visual selection or page range, then save selected pages as one PDF or separate files.",
     homeDescription: "Pull selected pages out",
     href: "/extract-pdf-pages",
     priority: 0.84,
     keywords: [
-      "extract pages from pdf",
-      "extract pdf pages online",
+      "extract pdf pages online free",
+      "extract pages from pdf free",
       "save selected pdf pages",
       "pdf page extractor",
     ],
@@ -516,15 +516,15 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
     slug: "reorder-pdf-pages",
     name: "Reorder PDF Pages",
     shortName: "Reorder Pages",
-    title: "Reorder PDF Pages Online Free",
+    title: "Reorder PDF Pages Online Free - Organize PDF",
     description:
-      "Move PDF pages into a new order, reverse all pages or reset back to the original page order before download.",
+      "Reorder PDF pages online free, move pages into a new order, reverse pages or reset before download.",
     homeDescription: "Change page order",
     href: "/reorder-pdf-pages",
     priority: 0.76,
     keywords: [
-      "reorder pdf pages online",
-      "organize pdf pages",
+      "reorder pdf pages online free",
+      "organize pdf pages online free",
       "move pdf pages",
       "reverse pdf pages",
     ],
@@ -541,13 +541,13 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
     shortName: "Page Numbers",
     title: "Add Page Numbers to PDF Online Free",
     description:
-      "Add page numbers to a PDF with position, start number, prefix, suffix, font and margin controls.",
+      "Add page numbers to PDF online free with position, start number, prefix, suffix, font and margin controls.",
     homeDescription: "Number PDF pages",
     href: "/add-page-numbers-to-pdf",
     priority: 0.78,
     keywords: [
-      "add page numbers to pdf",
-      "number pdf pages",
+      "add page numbers to pdf online free",
+      "number pdf pages online free",
       "pdf page numbering",
       "add footer page number pdf",
     ],
@@ -562,15 +562,15 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
     slug: "view-pdf-metadata",
     name: "View PDF Metadata",
     shortName: "PDF Metadata",
-    title: "PDF Metadata Viewer Online Free",
+    title: "PDF Metadata Viewer Online Free - View PDF Properties",
     description:
-      "View PDF document metadata, page sizes, version, encryption status and strip or edit metadata locally.",
+      "View PDF metadata online free, including document properties, page sizes, PDF version and encryption status.",
     homeDescription: "View and clean PDF info",
     href: "/view-pdf-metadata",
     priority: 0.72,
     keywords: [
-      "pdf metadata viewer",
-      "view pdf properties",
+      "pdf metadata viewer online free",
+      "view pdf properties online free",
       "strip pdf metadata",
       "pdf info online",
     ],
@@ -592,11 +592,11 @@ export function buildToolMetadata(slug: ToolSlug): Metadata {
 
   return {
     title: tool.title,
-    description: `${tool.description} Free, private and client-side on freeconvert.in.`,
+    description: tool.description,
     keywords: tool.keywords,
     alternates: { canonical: url },
     openGraph: {
-      title: `${tool.name} | FreeConvert.in`,
+      title: `${tool.title} | FreeConvert`,
       description: tool.description,
       url,
       siteName: "FreeConvert",
@@ -605,7 +605,7 @@ export function buildToolMetadata(slug: ToolSlug): Metadata {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${tool.name} | FreeConvert.in`,
+      title: `${tool.title} | FreeConvert`,
       description: tool.description,
       images: ["/opengraph-image"],
     },
@@ -618,11 +618,11 @@ export function buildPDFToolMetadata(slug: PDFToolSlug): Metadata {
 
   return {
     title: tool.title,
-    description: `${tool.description} Free, private and client-side on freeconvert.in.`,
+    description: tool.description,
     keywords: tool.keywords,
     alternates: { canonical: url },
     openGraph: {
-      title: `${tool.name} | FreeConvert.in`,
+      title: `${tool.title} | FreeConvert`,
       description: tool.description,
       url,
       siteName: "FreeConvert",
@@ -631,7 +631,7 @@ export function buildPDFToolMetadata(slug: PDFToolSlug): Metadata {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${tool.name} | FreeConvert.in`,
+      title: `${tool.title} | FreeConvert`,
       description: tool.description,
       images: ["/opengraph-image"],
     },
@@ -902,4 +902,37 @@ export function pdfToolFaqJsonLd(slug: PDFToolSlug) {
 
 export function toolFaqJsonLd(slug: ToolSlug) {
   return faqItemsToJsonLd(getImageToolFaqs(slug));
+}
+
+function breadcrumbJsonLd(items: { name: string; url: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+
+export function toolBreadcrumbJsonLd(slug: ToolSlug) {
+  const tool = toolConfigs[slug];
+
+  return breadcrumbJsonLd([
+    { name: "FreeConvert", url: BASE_URL },
+    { name: "Free Image Tools", url: `${BASE_URL}/#image-tools` },
+    { name: tool.name, url: `${BASE_URL}${tool.href}` },
+  ]);
+}
+
+export function pdfToolBreadcrumbJsonLd(slug: PDFToolSlug) {
+  const tool = pdfToolConfigs[slug];
+
+  return breadcrumbJsonLd([
+    { name: "FreeConvert", url: BASE_URL },
+    { name: "Free PDF Tools", url: `${BASE_URL}/pdf-tools` },
+    { name: tool.name, url: `${BASE_URL}${tool.href}` },
+  ]);
 }

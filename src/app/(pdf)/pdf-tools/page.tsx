@@ -21,9 +21,9 @@ import type { PDFToolSlug } from "@/lib/types";
 import { safeJsonLd } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "PDF Tools Online Free - Private Browser PDF Tools",
+  title: "Free Online PDF Tools - Merge, Compress, Split & Convert",
   description:
-    "Merge, compress, split, convert, rotate, watermark and inspect PDFs in your browser. No upload and no account required.",
+    "Use free online PDF tools to merge, compress, split, convert, rotate, watermark, protect and inspect PDFs in your browser. No upload required.",
   keywords: [
     "pdf tools online free",
     "merge pdf online",
@@ -33,9 +33,9 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${BASE_URL}/pdf-tools` },
   openGraph: {
-    title: "PDF Tools | FreeConvert.in",
+    title: "Free Online PDF Tools - Merge, Compress, Split & Convert | FreeConvert",
     description:
-      "Free private PDF tools for merge, compress, split, convert, rotate and watermark.",
+      "Free private PDF tools for merge, compress, split, convert, rotate, watermark and more. No upload required.",
     url: `${BASE_URL}/pdf-tools`,
     siteName: "FreeConvert",
     type: "website",
@@ -43,9 +43,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PDF Tools Online Free - FreeConvert",
+    title: "Free Online PDF Tools - Merge, Compress, Split & Convert | FreeConvert",
     description:
-      "Merge, compress, split, convert, rotate and watermark PDFs in your browser.",
+      "Merge, compress, split, convert, rotate and watermark PDFs online free in your browser.",
     images: ["/opengraph-image"],
   },
 };
@@ -67,6 +67,25 @@ const pdfHubJsonLd = {
       url: `${BASE_URL}${tool.href}`,
     })),
   },
+};
+
+const pdfHubBreadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "FreeConvert",
+      item: BASE_URL,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Free PDF Tools",
+      item: `${BASE_URL}/pdf-tools`,
+    },
+  ],
 };
 
 const iconMap: Record<PDFToolSlug, typeof FileText> = {
@@ -136,6 +155,10 @@ export default function PDFHubPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(pdfHubJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(pdfHubBreadcrumbJsonLd) }}
       />
       <section className="bg-[var(--bg)]">
         <div className="mx-auto max-w-7xl px-4 py-14 text-center sm:px-6 sm:py-20">
