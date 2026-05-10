@@ -21,17 +21,6 @@ const maliciousPatterns = [
   /phpinfo/i,
 ];
 
-const blockedUserAgents = [
-  "sqlmap",
-  "nikto",
-  "nmap",
-  "masscan",
-  "zgrab",
-  "python-requests",
-  "go-http-client",
-  "curl/",
-];
-
 function isMalicious(url: URL) {
   const full = `${url.pathname}${url.search}`;
   let decoded = full;
@@ -126,13 +115,6 @@ function addSecurityHeaders(response: NextResponse, remaining: number) {
 export async function proxy(request: NextRequest) {
   if (isMalicious(request.nextUrl)) {
     return new NextResponse("Bad Request", { status: 400 });
-  }
-
-  const userAgent = request.headers.get("user-agent") || "";
-  const loweredUserAgent = userAgent.toLowerCase();
-
-  if (blockedUserAgents.some((value) => loweredUserAgent.includes(value))) {
-    return new NextResponse("Forbidden", { status: 403 });
   }
 
   const ip = getIp(request);
