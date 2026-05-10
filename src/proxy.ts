@@ -131,11 +131,7 @@ export async function proxy(request: NextRequest) {
   const userAgent = request.headers.get("user-agent") || "";
   const loweredUserAgent = userAgent.toLowerCase();
 
-  if (
-    !userAgent ||
-    userAgent.length < 10 ||
-    blockedUserAgents.some((value) => loweredUserAgent.includes(value))
-  ) {
+  if (blockedUserAgents.some((value) => loweredUserAgent.includes(value))) {
     return new NextResponse("Forbidden", { status: 403 });
   }
 
