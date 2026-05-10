@@ -868,7 +868,7 @@ export function Navbar() {
               </kbd>
             </button>
 
-            <div className="hidden rounded-full bg-sky-50 px-2 py-1.5 text-[10px] font-bold text-[var(--cyan)] min-[360px]:block sm:px-3 sm:py-2 sm:text-xs">
+            <div className="hidden rounded-full bg-sky-50 px-2 py-1.5 text-[10px] font-bold text-[var(--cyan)] min-[420px]:block sm:px-3 sm:py-2 sm:text-xs">
               No signup
             </div>
 
@@ -894,8 +894,8 @@ export function Navbar() {
         <div
           aria-hidden={!mobileOpen}
           className={cn(
-            "grid transition-[grid-template-rows] duration-200 ease-out md:hidden",
-            mobileOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+            "overflow-hidden transition-[max-height] duration-200 ease-out md:hidden",
+            mobileOpen ? "max-h-[calc(100vh-4rem)]" : "max-h-0",
           )}
           id="mobile-navigation"
           inert={!mobileOpen}

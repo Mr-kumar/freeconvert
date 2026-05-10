@@ -83,14 +83,14 @@ export default function Home() {
         rightSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RAIL_RIGHT}
       />
       <section className="bg-[var(--bg)]">
-        <div className="mx-auto max-w-7xl px-4 py-14 text-center sm:px-6 sm:py-20">
-          <p className="mb-5 inline-flex rounded-full bg-white px-4 py-2 text-sm font-semibold text-[var(--accent)] shadow-sm ring-1 ring-[var(--border)]">
+        <div className="mx-auto max-w-7xl px-4 pb-10 pt-9 text-center sm:px-6 sm:py-20">
+          <p className="mb-4 inline-flex max-w-full rounded-full bg-white px-3 py-2 text-xs font-semibold leading-5 text-[var(--accent)] shadow-sm ring-1 ring-[var(--border)] sm:mb-5 sm:px-4 sm:text-sm">
             100% client-side / no account / no upload
           </p>
-          <h1 className="mx-auto max-w-4xl font-display text-4xl font-extrabold leading-tight text-[var(--text)] sm:text-6xl">
+          <h1 className="mx-auto max-w-[21rem] font-display text-[2.15rem] font-extrabold leading-[1.08] text-[var(--text)] min-[380px]:text-4xl sm:max-w-4xl sm:text-6xl sm:leading-tight">
             Free Online Image, PDF & Utility Tools
           </h1>
-          <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-[var(--muted)]">
+          <p className="mx-auto mt-4 max-w-[22rem] text-base leading-7 text-[var(--muted)] sm:mt-5 sm:max-w-3xl sm:text-lg sm:leading-8">
             Resize images, merge PDFs, generate QR codes, count words, format
             JSON and use daily calculators. Everything runs directly in your browser.
           </p>
@@ -99,7 +99,9 @@ export default function Home() {
 
       <AdSlot
         className="pb-2"
+        format="horizontal"
         minHeight={96}
+        minViewportWidth={640}
         slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_TOP}
       />
 

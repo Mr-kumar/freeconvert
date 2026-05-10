@@ -199,19 +199,20 @@ export function HomeTools() {
   return (
     <div className="pb-16">
       <section className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+        <div className="mb-4 flex flex-col items-start gap-3 min-[420px]:mb-5 min-[420px]:flex-row min-[420px]:items-end min-[420px]:justify-between">
           <div>
             <p className="text-xs font-extrabold uppercase text-[var(--accent)]">
               Start fast
             </p>
-            <h2 className="mt-2 font-display text-2xl font-extrabold text-[var(--text)]">
+            <h2 className="mt-2 font-display text-2xl font-extrabold leading-tight text-[var(--text)]">
               Popular free tools
             </h2>
           </div>
           <Link
-            className="text-sm font-extrabold text-[var(--accent)]"
+            className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-3 text-sm font-extrabold text-[var(--accent)] shadow-sm transition-colors hover:border-[#f3b5b1] hover:bg-[#fff7f6]"
             href="/search"
           >
+            <Search className="h-4 w-4" />
             Search tools
           </Link>
         </div>

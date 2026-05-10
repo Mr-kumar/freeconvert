@@ -10,6 +10,7 @@ interface AdSlotProps {
   className?: string;
   format?: "auto" | "fluid" | "rectangle" | "horizontal" | "vertical";
   minHeight?: number;
+  minViewportWidth?: number;
 }
 
 function subscribeToHydration(callback: () => void) {
@@ -25,23 +26,38 @@ function useHydrated() {
   );
 }
 
+function subscribeToResize(callback: () => void) {
+  window.addEventListener("resize", callback);
+  return () => window.removeEventListener("resize", callback);
+}
+
+function useMinViewportWidth(minViewportWidth?: number) {
+  return useSyncExternalStore(
+    subscribeToResize,
+    () => !minViewportWidth || window.innerWidth >= minViewportWidth,
+    () => !minViewportWidth,
+  );
+}
+
 export function AdSlot({
   slot,
   className,
   format = "auto",
   minHeight = 96,
+  minViewportWidth,
 }: AdSlotProps) {
   const client = normalizeAdSenseClientId(process.env.NEXT_PUBLIC_ADSENSE_ID);
   const shellRef = useRef<HTMLDivElement>(null);
   const mounted = useHydrated();
+  const matchesViewport = useMinViewportWidth(minViewportWidth);
 
   useAdSenseSlot({
-    enabled: Boolean(client && slot && mounted),
+    enabled: Boolean(client && slot && mounted && matchesViewport),
     slotKey: `${client}:${slot}:${format}`,
     targetRef: shellRef,
   });
 
-  if (!client || !slot) {
+  if (!client || !slot || !matchesViewport) {
     return null;
   }
 
