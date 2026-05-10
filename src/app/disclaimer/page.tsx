@@ -4,7 +4,7 @@ import { BASE_URL } from "@/lib/tools";
 
 export const metadata: Metadata = {
   title: "Disclaimer",
-  description: "Disclaimer for FreeConvert image tools and advertising.",
+  description: "Disclaimer for FreeConvert image and PDF tools and advertising.",
   alternates: {
     canonical: `${BASE_URL}/disclaimer`,
   },
@@ -21,7 +21,7 @@ export default function DisclaimerPage() {
       </LegalSection>
       <LegalSection title="User Responsibility">
         <p>
-          You are responsible for the images you process and how you use any
+          You are responsible for the files you process and how you use any
           outputs. Review important files before publishing or sharing them.
         </p>
       </LegalSection>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ArrowLeft } from "lucide-react";
+import { AdSlot } from "@/components/AdSlot";
 
 interface ToolLayoutProps {
   title: string;
@@ -41,6 +42,13 @@ export function ToolLayout({
           </div>
         </div>
       </section>
+
+      <AdSlot
+        className="pb-5"
+        format="horizontal"
+        minHeight={90}
+        slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOOL_TOP}
+      />
 
       <section className="mx-auto grid w-full min-w-0 max-w-7xl grid-cols-1 gap-5 overflow-hidden px-0 pb-10 sm:px-6 lg:grid-cols-[340px_minmax(0,1fr)]">
         <aside className="mx-auto w-[min(358px,calc(100vw-2rem))] min-w-0 max-w-full overflow-visible rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-sm sm:mx-0 sm:w-full lg:min-h-[calc(100vh-238px)] lg:overflow-hidden">

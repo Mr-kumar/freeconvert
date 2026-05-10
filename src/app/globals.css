@@ -181,6 +181,54 @@ a {
   font-weight: 700;
 }
 
+.ad-shell {
+  min-height: 96px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.ad-label {
+  padding: 0.5rem 0.75rem 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.adsbygoogle {
+  width: 100%;
+}
+
+.ad-rail {
+  display: none;
+}
+
+@media (min-width: 1900px) {
+  .ad-rail {
+    position: fixed;
+    top: 112px;
+    z-index: 15;
+    display: block;
+    width: min(300px, calc((100vw - 80rem) / 2 - 40px));
+    max-width: 300px;
+  }
+
+  .ad-rail-left {
+    left: 20px;
+  }
+
+  .ad-rail-right {
+    right: 20px;
+  }
+
+  .ad-rail-shell {
+    min-height: min(600px, calc(100vh - 140px));
+  }
+}
+
 .cropper-container,
 .cropper-wrap-box,
 .cropper-canvas,

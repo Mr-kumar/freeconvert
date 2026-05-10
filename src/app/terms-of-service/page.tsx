@@ -4,7 +4,7 @@ import { BASE_URL } from "@/lib/tools";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description: "Terms of Service for using FreeConvert image tools.",
+  description: "Terms of Service for using FreeConvert image and PDF tools.",
   alternates: {
     canonical: `${BASE_URL}/terms-of-service`,
   },
@@ -21,14 +21,14 @@ export default function TermsPage() {
       </LegalSection>
       <LegalSection title="Service">
         <p>
-          FreeConvert provides free browser-based image tools including resize,
-          compression, conversion, crop, background removal, watermarking, merge,
-          filters and metadata viewing.
+          FreeConvert provides free browser-based image and PDF tools including
+          resize, compression, conversion, crop, background removal,
+          watermarking, merge, split, rotate, filters and metadata viewing.
         </p>
       </LegalSection>
       <LegalSection title="Ownership">
         <p>
-          You retain ownership of your images and outputs. FreeConvert owns the
+          You retain ownership of your files and outputs. FreeConvert owns the
           site design, code, brand and related intellectual property.
         </p>
       </LegalSection>

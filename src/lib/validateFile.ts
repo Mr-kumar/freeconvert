@@ -12,6 +12,7 @@ const ALLOWED_TYPES = [
 ];
 
 const MAX_FILE_SIZE_MB = 50;
+const MAX_PDF_FILE_SIZE_MB = 100;
 const suspiciousFileName = /[<>:"/\\|?*\x00-\x1F]/;
 
 export interface ValidationResult {
@@ -36,6 +37,34 @@ export function validateImageFile(file: File): ValidationResult {
     return {
       valid: false,
       error: `File is too large (${sizeMB.toFixed(1)}MB). Maximum is ${MAX_FILE_SIZE_MB}MB.`,
+    };
+  }
+
+  if (suspiciousFileName.test(file.name)) {
+    return {
+      valid: false,
+      error: "File name contains invalid characters.",
+    };
+  }
+
+  return { valid: true };
+}
+
+export function validatePDFFile(file: File): ValidationResult {
+  const hasPDFExtension = /\.pdf$/i.test(file.name);
+
+  if (file.type !== "application/pdf" && !hasPDFExtension) {
+    return {
+      valid: false,
+      error: `File type "${file.type || "unknown"}" is not a PDF.`,
+    };
+  }
+
+  const sizeMB = file.size / (1024 * 1024);
+  if (sizeMB > MAX_PDF_FILE_SIZE_MB) {
+    return {
+      valid: false,
+      error: `PDF is too large (${sizeMB.toFixed(1)}MB). Maximum is ${MAX_PDF_FILE_SIZE_MB}MB for browser processing.`,
     };
   }
 
@@ -97,4 +126,11 @@ export async function verifyMagicBytes(file: File) {
   }
 
   return false;
+}
+
+export async function verifyPDFMagicBytes(file: File) {
+  const buffer = await file.slice(0, 8).arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+
+  return String.fromCharCode(...bytes.slice(0, 5)) === "%PDF-";
 }

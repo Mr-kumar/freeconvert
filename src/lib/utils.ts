@@ -127,3 +127,58 @@ export function getBoolean(value: unknown, fallback = false) {
 
   return fallback;
 }
+
+export function parsePageRange(input: string, totalPages: number): number[] {
+  if (!input.trim() || totalPages < 1) {
+    return [];
+  }
+
+  const pages = new Set<number>();
+  const parts = input
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  for (const part of parts) {
+    const match = part.match(/^(\d+)(?:\s*-\s*(\d+))?$/);
+
+    if (!match) {
+      throw new Error(`"${part}" is not a valid page range.`);
+    }
+
+    const start = Number(match[1]);
+    const end = Number(match[2] ?? match[1]);
+
+    if (start < 1 || end < 1) {
+      throw new Error("Page numbers must be 1 or higher.");
+    }
+
+    if (start > totalPages || end > totalPages) {
+      throw new Error(`Page range "${part}" exceeds ${totalPages} pages.`);
+    }
+
+    const from = Math.min(start, end);
+    const to = Math.max(start, end);
+
+    for (let page = from; page <= to; page += 1) {
+      pages.add(page);
+    }
+  }
+
+  return Array.from(pages).sort((a, b) => a - b);
+}
+
+export function parsePageRangeGroups(input: string, totalPages: number) {
+  if (!input.trim()) {
+    return [];
+  }
+
+  return input
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => ({
+      label: part,
+      pages: parsePageRange(part, totalPages),
+    }));
+}

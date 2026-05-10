@@ -74,8 +74,8 @@ export default function SearchPageClient({
           Search FreeConvert
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[var(--muted)]">
-          Find image tools and guides for size, format, compression, background
-          removal and editing.
+          Find image and PDF tools for size, format, compression, background
+          removal, merging, splitting and editing.
         </p>
 
         <div className="relative mx-auto mt-8 max-w-2xl">
@@ -131,7 +131,8 @@ export default function SearchPageClient({
                 No results for &ldquo;{query}&rdquo;
               </p>
               <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-                Try shorter terms like compress, resize, or background removal.
+                Try shorter terms like compress, resize, merge PDF or background
+                removal.
               </p>
               <div className="mt-5 flex flex-wrap justify-center gap-2">
                 {popularSearches.map((term) => (

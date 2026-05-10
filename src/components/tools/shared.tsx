@@ -389,12 +389,17 @@ export function ToolActions({
   return (
     <Panel title="Export">
       {children}
-      {progress > 0 && isProcessing ? (
-        <div className="h-2 bg-[var(--surface-2)]">
-          <div
-            className="h-full bg-[var(--accent)] transition-all"
-            style={{ width: `${clamp(progress, 0, 100)}%` }}
-          />
+      {isProcessing ? (
+        <div className="space-y-2">
+          <div className="h-2 bg-[var(--surface-2)]">
+            <div
+              className="h-full bg-[var(--accent)] transition-all"
+              style={{ width: `${clamp(progress || 8, 0, 100)}%` }}
+            />
+          </div>
+          <p className="text-xs font-semibold text-[var(--muted)]">
+            Processing your image... {progress > 0 ? `${Math.round(progress)}%` : ""}
+          </p>
         </div>
       ) : null}
       {error ? (

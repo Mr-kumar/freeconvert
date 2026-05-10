@@ -1,5 +1,5 @@
 import { blogPosts } from "@/lib/blog";
-import { tools } from "@/lib/tools";
+import { pdfTools, tools } from "@/lib/tools";
 
 type SearchCategory = "Tool" | "Guide" | "Page";
 
@@ -56,21 +56,51 @@ const toolAliases: Record<string, string[]> = {
   metadata: ["exif", "camera data", "strip metadata", "privacy"],
 };
 
+const pdfToolAliases: Record<string, string[]> = {
+  "merge-pdf": ["combine pdf", "join pdf", "pdf merge", "pdf merge free india"],
+  "compress-pdf": [
+    "reduce pdf size",
+    "pdf compressor",
+    "pdf size kam",
+    "pdf compress kaise kare",
+  ],
+  "split-pdf": ["separate pdf", "break pdf", "pdf splitter", "split pages"],
+  "convert-pdf-to-image": ["pdf to jpg", "pdf to png", "convert pdf pages"],
+  "convert-image-to-pdf": ["jpg to pdf", "png to pdf", "image to pdf banana"],
+  "rotate-pdf": ["turn pdf", "rotate pages", "pdf rotate"],
+  "add-watermark-to-pdf": ["pdf watermark", "confidential", "draft watermark"],
+  "protect-pdf": ["password protect", "secure pdf", "encrypt pdf"],
+  "unlock-pdf": ["remove password", "decrypt pdf", "unlock pdf"],
+  "extract-pdf-pages": ["extract page", "save selected pages", "pull pages"],
+  "reorder-pdf-pages": ["organize pages", "move pages", "reverse pdf"],
+  "add-page-numbers-to-pdf": ["number pages", "footer page number", "page numbering"],
+  "view-pdf-metadata": ["pdf properties", "strip metadata", "pdf info"],
+};
+
 const pageResults: SearchResult[] = [
   {
-    title: "All Image Tools",
-    description: "Browse every FreeConvert image tool in one place.",
+    title: "All Image and PDF Tools",
+    description: "Browse every FreeConvert image and PDF tool in one place.",
     href: "/",
     category: "Page",
-    keywords: ["home", "freeconvert", "image tools", "online tools"],
+    keywords: ["home", "freeconvert", "image tools", "pdf tools", "online tools"],
+    priority: 0.5,
+  },
+  {
+    title: "PDF Tools",
+    description: "Browse all FreeConvert PDF tools in one place.",
+    href: "/pdf-tools",
+    category: "Page",
+    keywords: ["pdf", "pdf tools", "merge pdf", "compress pdf", "split pdf"],
     priority: 0.5,
   },
   {
     title: "About FreeConvert",
-    description: "Learn how FreeConvert processes images locally in your browser.",
+    description:
+      "Learn how FreeConvert processes image and PDF files locally in your browser.",
     href: "/about",
     category: "Page",
-    keywords: ["about", "privacy", "client side", "no upload"],
+    keywords: ["about", "privacy", "client side", "no upload", "pdf tools"],
     priority: 0.35,
   },
   {
@@ -106,6 +136,20 @@ export const searchIndex: SearchResult[] = [
     ],
     priority: tool.priority + 1,
   })),
+  ...pdfTools.map((tool) => ({
+    title: tool.name,
+    description: tool.description,
+    href: tool.href,
+    category: "Tool" as const,
+    keywords: [
+      tool.shortName,
+      tool.homeDescription,
+      ...tool.keywords,
+      ...tool.features,
+      ...(pdfToolAliases[tool.slug] ?? []),
+    ],
+    priority: tool.priority + 1,
+  })),
   ...blogPosts.map((post) => ({
     title: post.title,
     description: post.description,
@@ -124,6 +168,10 @@ export const searchIndex: SearchResult[] = [
 ];
 
 export const popularSearches = [
+  "merge pdf",
+  "compress pdf",
+  "pdf to jpg",
+  "jpg to pdf",
   "compress image to 35 kb",
   "resize image in pixels",
   "jpg to png converter",

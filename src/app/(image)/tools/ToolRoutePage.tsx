@@ -1,4 +1,7 @@
 import { ToolPageClient } from "@/components/tools/ToolPageClient";
+import { AdRailSlots } from "@/components/AdRailSlots";
+import { AdSlot } from "@/components/AdSlot";
+import { ToolContentSections } from "@/components/ToolContentSections";
 import {
   getToolDefaults,
   toolFaqJsonLd,
@@ -26,9 +29,19 @@ export async function ToolRoutePage({
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: safeJsonLd(toolFaqJsonLd()) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(toolFaqJsonLd(slug)) }}
+      />
+      <AdRailSlots
+        leftSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RAIL_LEFT}
+        rightSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RAIL_RIGHT}
       />
       <ToolPageClient defaults={defaults} slug={slug} />
+      <AdSlot
+        className="pb-2"
+        minHeight={96}
+        slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOOL_BOTTOM}
+      />
+      <ToolContentSections kind="image" slug={slug} />
     </>
   );
 }

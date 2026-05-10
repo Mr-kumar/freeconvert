@@ -15,20 +15,30 @@ import {
   ChevronDown,
   Crop,
   Eraser,
+  FileArchive,
   FileImage,
+  FileLock2,
+  FileSearch,
   Grid3X3,
   ImageDown,
   ImagePlus,
+  Layers,
+  ListOrdered,
   Maximize,
   Menu,
+  Minimize2,
   RefreshCw,
+  RotateCw,
   Search,
+  Scissors,
+  ShieldCheck,
   SlidersHorizontal,
   Sparkles,
+  Stamp,
   Wrench,
   X,
 } from "lucide-react";
-import { tools, type ToolConfig } from "@/lib/tools";
+import { pdfTools, tools, type PDFToolConfig, type ToolConfig } from "@/lib/tools";
 import { searchSite, popularSearches, type SearchResult } from "@/lib/search";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +55,19 @@ const toolIconMap: Record<string, ComponentType<{ className?: string }>> = {
   merge: Grid3X3,
   filters: SlidersHorizontal,
   metadata: FileImage,
+  "merge-pdf": Layers,
+  "compress-pdf": Minimize2,
+  "split-pdf": Scissors,
+  "convert-pdf-to-image": FileImage,
+  "convert-image-to-pdf": ImagePlus,
+  "rotate-pdf": RotateCw,
+  "add-watermark-to-pdf": Stamp,
+  "protect-pdf": ShieldCheck,
+  "unlock-pdf": FileLock2,
+  "extract-pdf-pages": FileArchive,
+  "reorder-pdf-pages": Layers,
+  "add-page-numbers-to-pdf": ListOrdered,
+  "view-pdf-metadata": FileSearch,
 };
 
 const categoryIconMap: Record<string, ComponentType<{ className?: string }>> = {
@@ -59,7 +82,7 @@ function ToolMenuItem({
   tool,
   onNavigate,
 }: {
-  tool: ToolConfig;
+  tool: ToolConfig | PDFToolConfig;
   onNavigate?: () => void;
 }) {
   const Icon = toolIconMap[tool.slug] || Sparkles;
@@ -125,10 +148,10 @@ function ToolsDialog({
               className="text-lg font-extrabold text-[var(--text)] sm:text-xl"
               id="tools-dialog-title"
             >
-              All image tools
+              All tools
             </h2>
             <p className="mt-1 text-sm leading-6 text-[var(--muted)]">
-              Choose a tool. Everything runs locally in your browser.
+              Choose an image or PDF tool. Everything runs locally in your browser.
             </p>
           </div>
           <button
@@ -142,8 +165,8 @@ function ToolsDialog({
         </div>
         <div className="max-h-[calc(100vh-10rem)] overflow-y-auto overscroll-contain p-4 sm:p-5">
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3" role="menu">
-            {tools.map((tool) => (
-              <ToolMenuItem key={tool.slug} tool={tool} onNavigate={onClose} />
+            {[...tools, ...pdfTools].map((tool) => (
+              <ToolMenuItem key={tool.href} tool={tool} onNavigate={onClose} />
             ))}
           </div>
         </div>
@@ -280,11 +303,11 @@ function SearchDialog({
                 Quick links
               </p>
               <div className="grid grid-cols-2 gap-1.5">
-                {tools.slice(0, 6).map((tool) => {
+                {[...tools.slice(0, 4), ...pdfTools.slice(0, 2)].map((tool) => {
                   const Icon = toolIconMap[tool.slug] || Sparkles;
                   return (
                     <button
-                      key={tool.slug}
+                      key={tool.href}
                       className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-[var(--text)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--accent)]"
                       type="button"
                       onClick={() => go(tool.href)}

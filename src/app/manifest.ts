@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "FreeConvert - Free Online Image Tools",
+    name: "FreeConvert - Free Online Image & PDF Tools",
     short_name: "FreeConvert",
     description:
-      "Resize, compress, convert, crop, remove background and more. Free browser-based image tools.",
+      "Resize, compress, convert and edit images. Merge, split, rotate and watermark PDFs in your browser.",
     start_url: "/",
     display: "standalone",
     background_color: "#f5f5fa",
@@ -37,6 +37,6 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/png",
       },
     ],
-    categories: ["utilities", "productivity", "photo"],
+    categories: ["utilities", "productivity", "photo", "business"],
   };
 }

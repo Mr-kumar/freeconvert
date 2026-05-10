@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "FreeConvert - Free Online Image Tools";
+export const alt = "FreeConvert - Free Online Image and PDF Tools";
 export const size = {
   width: 1200,
   height: 630,
@@ -40,7 +40,7 @@ export default function OpenGraphImage() {
               maxWidth: 920,
             }}
           >
-            Every image tool. Zero uploads.
+            Image and PDF tools. Zero uploads.
           </div>
           <div
             style={{
@@ -49,8 +49,8 @@ export default function OpenGraphImage() {
               maxWidth: 800,
             }}
           >
-            Resize, compress, convert, crop, watermark, merge and inspect images
-            in your browser.
+            Resize, compress and convert images. Merge, split, rotate and
+            watermark PDFs in your browser.
           </div>
         </div>
         <div

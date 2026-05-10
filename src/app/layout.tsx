@@ -23,7 +23,8 @@ const websiteJsonLd = {
       "@id": `${BASE_URL}/#website`,
       url: BASE_URL,
       name: "FreeConvert",
-      description: "Free online image tools. No upload required.",
+      description:
+        "Free online image and PDF tools. Files stay on your device.",
       inLanguage: "en-IN",
       potentialAction: {
         "@type": "SearchAction",
@@ -49,15 +50,34 @@ const websiteJsonLd = {
   ],
 };
 
+const hasGoogleMeasurement =
+  Boolean(process.env.NEXT_PUBLIC_ADSENSE_ID) ||
+  Boolean(process.env.NEXT_PUBLIC_GA_ID);
+
+const googleConsentDefaults = `
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied',
+    wait_for_update: 500
+  });
+`;
+
+const googleSiteVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
+
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "FreeConvert - Free Online Image Tools. No Upload Required.",
+    default: "FreeConvert - Free Online Image & PDF Tools. No Upload Required.",
     template: "%s | FreeConvert.in",
   },
   description:
-    "FreeConvert offers free online image tools to resize, compress, convert, crop, remove background, add watermark and more. Processing runs in your browser.",
+    "FreeConvert offers free online image and PDF tools to resize, compress, convert, merge, split, rotate, watermark and inspect files. Processing runs in your browser.",
   keywords: [
+    "free online tools india",
     "free image converter online india",
     "image resizer online free",
     "compress image online free",
@@ -69,6 +89,14 @@ export const metadata: Metadata = {
     "jpeg to png converter",
     "png to webp converter",
     "image metadata viewer",
+    "merge pdf online free",
+    "compress pdf online free",
+    "split pdf online free",
+    "pdf to jpg converter",
+    "jpg to pdf converter",
+    "rotate pdf online",
+    "add watermark to pdf",
+    "pdf metadata viewer",
   ],
   authors: [{ name: "FreeConvert", url: BASE_URL }],
   creator: "FreeConvert",
@@ -89,24 +117,24 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: BASE_URL,
     siteName: "FreeConvert",
-    title: "FreeConvert - Free Online Image Tools",
+    title: "FreeConvert - Free Online Image & PDF Tools",
     description:
-      "Resize, compress, convert, crop and edit images free. Processing runs in your browser.",
+      "Resize, compress, convert and edit images. Merge, split, rotate and watermark PDFs. Files stay on your device.",
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "FreeConvert - Free Online Image Tools",
+        alt: "FreeConvert - Free Online Image and PDF Tools",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "FreeConvert - Free Online Image Tools",
+    title: "FreeConvert - Free Online Image & PDF Tools",
     description:
-      "Resize, compress, convert, crop and remove image backgrounds free. No uploads.",
+      "Free browser-based image and PDF tools. No upload, no signup.",
     images: ["/opengraph-image"],
   },
   appleWebApp: {
@@ -129,6 +157,13 @@ export const metadata: Metadata = {
     icon: [{ url: "/favicon.ico" }, { url: "/icon", type: "image/png" }],
     apple: "/apple-icon",
   },
+  ...(googleSiteVerification
+    ? {
+        verification: {
+          google: googleSiteVerification,
+        },
+      }
+    : {}),
 };
 
 export const viewport: Viewport = {
@@ -152,6 +187,12 @@ export default function RootLayout({
       className={`${inter.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-[var(--bg)] text-[var(--text)]">
+        {hasGoogleMeasurement ? (
+          <script
+            id="google-consent-defaults"
+            dangerouslySetInnerHTML={{ __html: googleConsentDefaults }}
+          />
+        ) : null}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: safeJsonLd(websiteJsonLd) }}

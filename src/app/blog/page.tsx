@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AdRailSlots } from "@/components/AdRailSlots";
 import { blogPosts } from "@/lib/blog";
 import { BASE_URL } from "@/lib/tools";
 
 export const metadata: Metadata = {
-  title: "Image Editing Guides",
+  title: "Image and PDF Editing Guides",
   description:
-    "Simple guides for resizing, compressing and converting images for web uploads, online forms and everyday use.",
+    "Simple guides for resizing, compressing and converting images and PDFs for web uploads, online forms and everyday use.",
   alternates: {
     canonical: `${BASE_URL}/blog`,
   },
@@ -15,14 +16,18 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   return (
     <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+      <AdRailSlots
+        leftSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RAIL_LEFT}
+        rightSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RAIL_RIGHT}
+      />
       <section className="max-w-3xl">
         <p className="text-sm font-bold text-[var(--accent)]">Guides</p>
         <h1 className="mt-3 font-display text-4xl font-extrabold text-[var(--text)] sm:text-5xl">
-          Image editing guides
+          Image and PDF editing guides
         </h1>
         <p className="mt-4 text-lg leading-8 text-[var(--muted)]">
-          Practical notes for reducing file size, choosing formats and preparing
-          images for forms without uploading your files.
+          Practical notes for reducing file size, choosing formats, merging PDFs
+          and preparing files for forms without uploading your documents.
         </p>
       </section>
 

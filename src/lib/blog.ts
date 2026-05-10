@@ -4,6 +4,10 @@ export interface BlogPost {
   description: string;
   publishedAt: string;
   readTime: string;
+  relatedTools?: {
+    label: string;
+    href: string;
+  }[];
   sections: {
     heading: string;
     body: string[];
@@ -18,6 +22,11 @@ export const blogPosts: BlogPost[] = [
       "Practical settings for reducing image file size while keeping photos and graphics sharp.",
     publishedAt: "2026-05-09",
     readTime: "4 min read",
+    relatedTools: [
+      { label: "Compress Image", href: "/compress-image" },
+      { label: "Resize Image", href: "/resize-image" },
+      { label: "Convert Image", href: "/convert-image" },
+    ],
     sections: [
       {
         heading: "Start with the right format",
@@ -48,6 +57,11 @@ export const blogPosts: BlogPost[] = [
       "A simple checklist for resizing photos for exams, applications, IDs and government portals.",
     publishedAt: "2026-05-09",
     readTime: "3 min read",
+    relatedTools: [
+      { label: "Resize Image", href: "/resize-image" },
+      { label: "Compress Image", href: "/compress-image" },
+      { label: "Crop Image", href: "/crop-image" },
+    ],
     sections: [
       {
         heading: "Check both dimensions and file size",
@@ -77,6 +91,11 @@ export const blogPosts: BlogPost[] = [
       "Understand common image formats and choose the best output for photos, screenshots and web uploads.",
     publishedAt: "2026-05-09",
     readTime: "5 min read",
+    relatedTools: [
+      { label: "Convert Image", href: "/convert-image" },
+      { label: "Compress Image", href: "/compress-image" },
+      { label: "Image Metadata", href: "/image-metadata" },
+    ],
     sections: [
       {
         heading: "JPEG",
@@ -95,6 +114,114 @@ export const blogPosts: BlogPost[] = [
         body: [
           "WebP is a strong default for web use because it supports both lossy compression and transparency.",
           "AVIF can be even smaller, but browser and platform support can vary, so always test before using it for strict upload portals.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "merge-pdf-files-online",
+    title: "How to Merge PDF Files Online in the Right Order",
+    description:
+      "A practical checklist for combining PDFs, arranging pages and keeping the final file easy to share.",
+    publishedAt: "2026-05-10",
+    readTime: "4 min read",
+    relatedTools: [
+      { label: "Merge PDF", href: "/merge-pdf" },
+      { label: "Compress PDF", href: "/compress-pdf" },
+      { label: "Reorder PDF Pages", href: "/reorder-pdf-pages" },
+    ],
+    sections: [
+      {
+        heading: "Prepare the files first",
+        body: [
+          "Rename source PDFs in the order you want them to appear. This makes it easier to check the final sequence before creating the merged file.",
+          "Remove duplicate or outdated documents before merging so the output stays clean and smaller.",
+        ],
+      },
+      {
+        heading: "Check the final order",
+        body: [
+          "After adding PDFs, review the order before export. Certificates, invoices and application documents are easiest to read when supporting documents follow the main form.",
+          "If scanned pages are mixed up inside one PDF, reorder those pages before or after merging.",
+        ],
+      },
+      {
+        heading: "Compress when needed",
+        body: [
+          "Merged PDFs can become large when they contain scanned pages or photos. Use compression when a portal or email has a strict file-size limit.",
+          "For important submissions, open the final PDF once after download and confirm every page is readable.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "compress-pdf-to-target-kb",
+    title: "How to Compress a PDF to a Target KB Size",
+    description:
+      "Understand when PDF compression works well and how to choose a target size without making pages unreadable.",
+    publishedAt: "2026-05-10",
+    readTime: "4 min read",
+    relatedTools: [
+      { label: "Compress PDF", href: "/compress-pdf" },
+      { label: "Merge PDF", href: "/merge-pdf" },
+      { label: "Convert PDF to Image", href: "/convert-pdf-to-image" },
+    ],
+    sections: [
+      {
+        heading: "Know what can be compressed",
+        body: [
+          "Scanned PDFs and image-heavy documents usually shrink more than clean text-only PDFs.",
+          "If the PDF already contains optimized text and vector content, the file may not reduce much without lowering visible quality.",
+        ],
+      },
+      {
+        heading: "Use target size carefully",
+        body: [
+          "A target KB value is best effort. The tool can lower image quality and resolution, but it cannot always hit an exact size without making pages too soft.",
+          "Start with a balanced setting, then use a lower target only if the result is still readable.",
+        ],
+      },
+      {
+        heading: "Check readability",
+        body: [
+          "After compression, zoom in on signatures, IDs, stamps and small text before submitting the file.",
+          "If readability drops too much, choose a higher target size or reduce only unnecessary image-heavy pages.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "convert-pdf-to-jpg-or-png",
+    title: "When to Convert PDF Pages to JPG or PNG",
+    description:
+      "Choose the right image format when exporting PDF pages for previews, thumbnails, forms or sharing.",
+    publishedAt: "2026-05-10",
+    readTime: "3 min read",
+    relatedTools: [
+      { label: "Convert PDF to Image", href: "/convert-pdf-to-image" },
+      { label: "Convert Image to PDF", href: "/convert-image-to-pdf" },
+      { label: "Compress Image", href: "/compress-image" },
+    ],
+    sections: [
+      {
+        heading: "Use JPG for photos and smaller files",
+        body: [
+          "JPG is usually a good choice for scanned pages, photo-based PDFs and previews where smaller file size matters.",
+          "Lower quality settings reduce size, but very low quality can make text or signatures hard to read.",
+        ],
+      },
+      {
+        heading: "Use PNG for sharp text",
+        body: [
+          "PNG is better for crisp text, screenshots, diagrams and pages where compression artifacts are distracting.",
+          "PNG files can be larger, so use it when clarity matters more than file size.",
+        ],
+      },
+      {
+        heading: "Export only needed pages",
+        body: [
+          "When a PDF has many pages, export only the page or range you need instead of creating images for the whole document.",
+          "Choose DPI based on the destination. Higher DPI creates larger but sharper images.",
         ],
       },
     ],
