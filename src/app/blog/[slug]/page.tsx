@@ -3,8 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdRailSlots } from "@/components/AdRailSlots";
 import { AdSlot } from "@/components/AdSlot";
-import { blogPosts, getBlogPost } from "@/lib/blog";
+import {
+  blogPostBreadcrumbJsonLd,
+  blogPostJsonLd,
+  blogPosts,
+  getBlogPost,
+} from "@/lib/blog";
 import { BASE_URL } from "@/lib/tools";
+import { safeJsonLd } from "@/lib/utils";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -27,6 +33,7 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.description,
+    authors: [{ name: "FreeConvert", url: BASE_URL }],
     alternates: {
       canonical: `${BASE_URL}/blog/${post.slug}`,
     },
@@ -37,7 +44,14 @@ export async function generateMetadata({
       type: "article",
       publishedTime: post.publishedAt,
       siteName: "FreeConvert",
-      images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+      images: [
+        {
+          url: "/opengraph-image",
+          width: 1200,
+          height: 630,
+          alt: "FreeConvert - Free Online Image, PDF and Utility Tools",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
@@ -58,6 +72,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(blogPostJsonLd(post)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLd(blogPostBreadcrumbJsonLd(post)),
+        }}
+      />
       <AdRailSlots
         leftSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RAIL_LEFT}
         rightSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RAIL_RIGHT}

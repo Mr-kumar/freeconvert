@@ -1,21 +1,30 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { normalizeAdSenseClientId } from "@/lib/adsense";
+import { useAdSenseSlot } from "@/components/useAdSenseSlot";
 
-declare global {
-  interface Window {
-    adsbygoogle?: unknown[];
-  }
-}
+const RAIL_MEDIA_QUERY = "(min-width: 1900px)";
 
-function pushAd() {
-  try {
-    window.adsbygoogle = window.adsbygoogle || [];
-    window.adsbygoogle.push({});
-  } catch {
-    // AdSense can throw before approval, during local preview, or with blockers.
-  }
+function useCanRenderRailAds() {
+  const [canRender, setCanRender] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia(RAIL_MEDIA_QUERY);
+
+    function update() {
+      setCanRender(query.matches);
+    }
+
+    update();
+    query.addEventListener("change", update);
+
+    return () => {
+      query.removeEventListener("change", update);
+    };
+  }, []);
+
+  return canRender;
 }
 
 function RailAd({
@@ -27,10 +36,19 @@ function RailAd({
   side: "left" | "right";
   slot: string;
 }) {
+  const railRef = useRef<HTMLElement>(null);
+
+  useAdSenseSlot({
+    enabled: Boolean(client && slot),
+    slotKey: `${client}:${slot}:${side}`,
+    targetRef: railRef,
+  });
+
   return (
     <aside
       aria-label={`${side} advertisement`}
       className={`ad-rail ad-rail-${side}`}
+      ref={railRef}
     >
       <div className="ad-shell ad-rail-shell">
         <p className="ad-label">Advertisement</p>
@@ -55,22 +73,9 @@ export function AdRailSlots({
   rightSlot?: string;
 }) {
   const client = normalizeAdSenseClientId(process.env.NEXT_PUBLIC_ADSENSE_ID);
+  const canRenderRailAds = useCanRenderRailAds();
 
-  useEffect(() => {
-    if (!client) {
-      return;
-    }
-
-    if (leftSlot) {
-      pushAd();
-    }
-
-    if (rightSlot) {
-      pushAd();
-    }
-  }, [client, leftSlot, rightSlot]);
-
-  if (!client || (!leftSlot && !rightSlot)) {
+  if (!canRenderRailAds || !client || (!leftSlot && !rightSlot)) {
     return null;
   }
 

@@ -311,11 +311,11 @@ export function FaqFooter({ slug }: { slug: ToolSlug }) {
   const tool = toolConfigs[slug];
 
   return (
-    <section className="mx-auto max-w-7xl border-x border-t border-[var(--border)] bg-[var(--surface)] px-4 py-8 sm:px-6">
+    <section className="mx-auto max-w-7xl overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-8 sm:px-6">
       <h2 className="font-display text-xl font-extrabold text-[var(--text)]">
         Questions
       </h2>
-      <div className="mt-5 grid gap-px border border-[var(--border)] bg-[var(--border)] md:grid-cols-3">
+      <div className="mt-5 grid gap-px overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--border)] md:grid-cols-3">
         {[
           ["Is FreeConvert free?", "Yes. You can use the image tools without an account."],
           [
@@ -391,9 +391,9 @@ export function ToolActions({
       {children}
       {isProcessing ? (
         <div className="space-y-2">
-          <div className="h-2 bg-[var(--surface-2)]">
+          <div className="h-2 overflow-hidden rounded-full bg-[var(--surface-2)]">
             <div
-              className="h-full bg-[var(--accent)] transition-all"
+              className="h-full rounded-full bg-[var(--accent)] transition-all"
               style={{ width: `${clamp(progress || 8, 0, 100)}%` }}
             />
           </div>
@@ -403,7 +403,7 @@ export function ToolActions({
         </div>
       ) : null}
       {error ? (
-        <p className="border border-[var(--danger)] p-3 text-sm leading-6 text-[var(--danger)]">
+        <p className="rounded-lg border border-[var(--danger)] p-3 text-sm leading-6 text-[var(--danger)]">
           {error}
         </p>
       ) : null}
@@ -427,7 +427,7 @@ export function AvifWarning({ show }: { show: boolean }) {
   }
 
   return (
-    <p className="flex gap-2 border border-[var(--warning)] p-3 text-xs leading-5 text-[var(--warning)]">
+    <p className="flex gap-2 rounded-lg border border-[var(--warning)] p-3 text-xs leading-5 text-[var(--warning)]">
       <AlertTriangle className="h-4 w-4 shrink-0" />
       AVIF export is not available in this browser.
     </p>

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blog";
 import { BASE_URL, pdfTools, tools } from "@/lib/tools";
+import { utilityTools } from "@/lib/utilityTools";
 
 const lastModified = new Date("2026-05-10T00:00:00.000Z");
 
@@ -12,6 +13,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: tool.priority,
   }));
   const pdfToolRoutes = pdfTools.map((tool) => ({
+    url: `${BASE_URL}${tool.href}`,
+    lastModified,
+    changeFrequency: "monthly" as const,
+    priority: tool.priority,
+  }));
+  const utilityToolRoutes = utilityTools.map((tool) => ({
     url: `${BASE_URL}${tool.href}`,
     lastModified,
     changeFrequency: "monthly" as const,
@@ -33,6 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.95,
     },
     ...pdfToolRoutes,
+    ...utilityToolRoutes,
     {
       url: `${BASE_URL}/about`,
       lastModified,

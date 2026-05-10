@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
 import { LegalPage, LegalSection } from "@/components/LegalPage";
-import { BASE_URL } from "@/lib/tools";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Cookie Policy",
   description:
     "Cookie Policy for FreeConvert, including local storage, analytics, advertising cookies and consent choices.",
-  alternates: {
-    canonical: `${BASE_URL}/cookie-policy`,
-  },
-};
+  path: "/cookie-policy",
+});
 
 export default function CookiePolicyPage() {
   return (

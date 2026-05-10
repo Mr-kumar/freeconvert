@@ -1,5 +1,6 @@
 import { blogPosts } from "@/lib/blog";
 import { pdfTools, tools } from "@/lib/tools";
+import { utilityTools } from "@/lib/utilityTools";
 
 type SearchCategory = "Tool" | "Guide" | "Page";
 
@@ -77,13 +78,38 @@ const pdfToolAliases: Record<string, string[]> = {
   "view-pdf-metadata": ["pdf properties", "strip metadata", "pdf info"],
 };
 
+const utilityToolAliases: Record<string, string[]> = {
+  "qr-code-generator": ["qr", "qr code", "create qr", "barcode", "scan code"],
+  "upi-qr-code-generator": ["upi qr", "payment qr", "upi id qr", "pay qr"],
+  "word-counter": ["word count", "character count", "reading time", "essay count"],
+  "text-case-converter": ["uppercase", "lowercase", "title case", "camelcase"],
+  "remove-duplicate-lines": ["unique lines", "dedupe", "remove duplicates", "list cleaner"],
+  "emi-calculator": ["loan emi", "monthly emi", "home loan", "personal loan"],
+  "gst-calculator": ["add gst", "remove gst", "tax calculator", "gst amount"],
+  "percentage-calculator": ["percent", "percentage change", "discount", "marks percent"],
+  "age-calculator": ["date of birth", "dob", "years months days", "birthday"],
+  "sip-calculator": ["mutual fund", "investment", "sip return", "future value"],
+  "color-picker": ["hex", "rgb", "hsl", "color converter"],
+  "color-contrast-checker": ["wcag", "accessibility", "contrast ratio", "aa aaa"],
+  "length-converter": ["meter to feet", "cm to inch", "unit converter"],
+  "weight-converter": ["kg to lbs", "grams", "pounds", "ounces"],
+  "area-converter": ["square feet", "acre", "hectare", "land area"],
+  "password-generator": ["random password", "strong password", "secure password"],
+  "password-strength-checker": ["password check", "entropy", "password security"],
+  "json-formatter": ["json validator", "json beautifier", "json minifier", "api json"],
+  "base64-encoder-decoder": ["base64 encode", "base64 decode", "b64"],
+  "url-encoder-decoder": ["url encode", "url decode", "percent encoding"],
+  "file-hash-checksum": ["sha256", "checksum", "file hash", "sha hash"],
+  "zip-extractor": ["unzip", "zip creator", "create zip", "extract zip"],
+};
+
 const pageResults: SearchResult[] = [
   {
-    title: "All Image and PDF Tools",
-    description: "Browse every FreeConvert image and PDF tool in one place.",
+    title: "All FreeConvert Tools",
+    description: "Browse FreeConvert image, PDF and utility tools in one place.",
     href: "/",
     category: "Page",
-    keywords: ["home", "freeconvert", "image tools", "pdf tools", "online tools"],
+    keywords: ["home", "freeconvert", "image tools", "pdf tools", "utility tools", "online tools"],
     priority: 0.5,
   },
   {
@@ -97,10 +123,10 @@ const pageResults: SearchResult[] = [
   {
     title: "About FreeConvert",
     description:
-      "Learn how FreeConvert processes image and PDF files locally in your browser.",
+      "Learn how FreeConvert processes image, PDF and utility tasks locally in your browser.",
     href: "/about",
     category: "Page",
-    keywords: ["about", "privacy", "client side", "no upload", "pdf tools"],
+    keywords: ["about", "privacy", "client side", "no upload", "pdf tools", "utility tools"],
     priority: 0.35,
   },
   {
@@ -150,6 +176,20 @@ export const searchIndex: SearchResult[] = [
     ],
     priority: tool.priority + 1,
   })),
+  ...utilityTools.map((tool) => ({
+    title: tool.name,
+    description: tool.description,
+    href: tool.href,
+    category: "Tool" as const,
+    keywords: [
+      tool.shortName,
+      tool.homeDescription,
+      ...tool.keywords,
+      ...tool.features,
+      ...(utilityToolAliases[tool.slug] ?? []),
+    ],
+    priority: tool.priority + 1,
+  })),
   ...blogPosts.map((post) => ({
     title: post.title,
     description: post.description,
@@ -172,6 +212,12 @@ export const popularSearches = [
   "compress pdf",
   "pdf to jpg",
   "jpg to pdf",
+  "qr code generator",
+  "upi qr code generator",
+  "word counter",
+  "json formatter",
+  "password generator",
+  "emi calculator",
   "compress image to 35 kb",
   "resize image in pixels",
   "jpg to png converter",

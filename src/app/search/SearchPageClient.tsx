@@ -74,8 +74,8 @@ export default function SearchPageClient({
           Search FreeConvert
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[var(--muted)]">
-          Find image and PDF tools for size, format, compression, background
-          removal, merging, splitting and editing.
+          Find image, PDF, QR, text, calculator, color, password and developer
+          tools for everyday browser-based work.
         </p>
 
         <div className="relative mx-auto mt-8 max-w-2xl">

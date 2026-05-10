@@ -3,15 +3,24 @@ import { AdRailSlots } from "@/components/AdRailSlots";
 import { AdSlot } from "@/components/AdSlot";
 import { HomeTools } from "@/components/HomeTools";
 import { allToolConfigs, BASE_URL } from "@/lib/tools";
+import { utilityTools } from "@/lib/utilityTools";
 import { safeJsonLd } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "FreeConvert - Free Online Image & PDF Tools",
+  title: "FreeConvert - Free Online Image, PDF & Utility Tools",
   description:
-    "Use free online image and PDF tools to compress, resize, convert, merge, split, rotate and watermark files in your browser. No upload or account required.",
+    "Use free online image, PDF, QR, text, calculator, color, password and developer tools in your browser. No upload or account required.",
   keywords: [
     "free online image tools",
     "free online pdf tools",
+    "free online tools",
+    "qr code generator free",
+    "upi qr code generator",
+    "word counter online",
+    "json formatter online",
+    "password generator free",
+    "emi calculator online",
+    "gst calculator online",
     "compress image online",
     "resize image online",
     "merge pdf online",
@@ -26,9 +35,9 @@ export const metadata: Metadata = {
     canonical: BASE_URL,
   },
   openGraph: {
-    title: "Free Online Image & PDF Tools - No Upload Required | FreeConvert",
+    title: "Free Online Image, PDF & Utility Tools | FreeConvert",
     description:
-      "Free online tools to resize, compress and convert images, plus merge, split, rotate and watermark PDFs in your browser.",
+      "Free browser-based tools for images, PDFs, QR codes, text, calculators, colors, passwords and developer utilities.",
     url: BASE_URL,
     siteName: "FreeConvert",
     type: "website",
@@ -36,9 +45,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Online Image & PDF Tools - No Upload Required | FreeConvert",
+    title: "Free Online Image, PDF & Utility Tools | FreeConvert",
     description:
-      "Free browser-based image and PDF tools. No upload and no account required.",
+      "Free browser-based image, PDF and utility tools. No upload and no account required.",
     images: ["/opengraph-image"],
   },
 };
@@ -47,13 +56,13 @@ const homeJsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "@id": `${BASE_URL}/#tools`,
-  name: "Free Online Image and PDF Tools",
+  name: "Free Online Image, PDF and Utility Tools",
   url: BASE_URL,
   description:
-    "Browse free browser-based tools for images and PDFs on FreeConvert.",
+    "Browse free browser-based tools for images, PDFs, QR codes, text, calculators and developer utilities on FreeConvert.",
   mainEntity: {
     "@type": "ItemList",
-    itemListElement: allToolConfigs.map((tool, index) => ({
+    itemListElement: [...allToolConfigs, ...utilityTools].map((tool, index) => ({
       "@type": "ListItem",
       position: index + 1,
       name: tool.name,
@@ -79,11 +88,11 @@ export default function Home() {
             100% client-side / no account / no upload
           </p>
           <h1 className="mx-auto max-w-4xl font-display text-4xl font-extrabold leading-tight text-[var(--text)] sm:text-6xl">
-            Free Online Image & PDF Tools
+            Free Online Image, PDF & Utility Tools
           </h1>
           <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-[var(--muted)]">
-            Resize, compress and convert images. Merge, split, rotate and
-            watermark PDFs. Everything runs directly in your browser.
+            Resize images, merge PDFs, generate QR codes, count words, format
+            JSON and use daily calculators. Everything runs directly in your browser.
           </p>
         </div>
       </section>

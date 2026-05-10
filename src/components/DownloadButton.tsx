@@ -129,7 +129,7 @@ export function DownloadButton({
           className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center"
           role="dialog"
         >
-          <div className="w-full max-w-md border border-[var(--border)] bg-white p-5 shadow-2xl">
+          <div className="w-full max-w-md overflow-hidden rounded-2xl border border-[var(--border)] bg-white p-5 shadow-2xl">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h2 className="text-lg font-extrabold text-[var(--text)]">

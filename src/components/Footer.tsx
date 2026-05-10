@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 import { pdfTools, tools } from "@/lib/tools";
+import { utilityTools } from "@/lib/utilityTools";
 
 const legal = [
   { label: "Privacy Policy", href: "/privacy-policy" },
@@ -21,14 +22,14 @@ export function Footer() {
   return (
     <footer className="mt-auto border-t border-[var(--border)] bg-white">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-          <div className="col-span-2 md:col-span-1">
+        <div className="grid grid-cols-2 gap-8 lg:grid-cols-5">
+          <div className="col-span-2 lg:col-span-1">
             <Link className="inline-flex" href="/" aria-label="FreeConvert home">
               <BrandLogo textClassName="text-xl" />
             </Link>
             <p className="mt-3 max-w-60 text-sm leading-6 text-[var(--muted)]">
-              Free online image and PDF tools. 100% client-side. Your files
-              never leave your device.
+              Free online image, PDF and utility tools. 100% client-side. Your
+              files and inputs stay on your device.
             </p>
             <div className="mt-4 flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-[var(--success)]" />
@@ -53,6 +54,14 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  className="text-sm font-semibold text-[var(--accent)]"
+                  href="/#image-tools"
+                >
+                  View all image tools
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -99,17 +108,43 @@ export function Footer() {
               ))}
             </ul>
           </div>
+
+          <div>
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-[var(--muted)]">
+              Utility Tools
+            </p>
+            <ul className="space-y-2.5">
+              {utilityTools.slice(0, 10).map((tool) => (
+                <li key={tool.href}>
+                  <Link
+                    className="text-sm text-[var(--muted)] transition-colors hover:text-[var(--accent)]"
+                    href={tool.href}
+                  >
+                    {tool.name}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  className="text-sm font-semibold text-[var(--accent)]"
+                  href="/#qr-tools"
+                >
+                  View all utility tools
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="mt-8 border-t border-[var(--border)] pt-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-[var(--muted)]">
             Legal
           </p>
-          <ul className="flex flex-wrap gap-x-5 gap-y-2">
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3 md:flex md:flex-wrap md:gap-x-5 md:gap-y-2">
             {legal.map((item) => (
               <li key={item.href}>
                 <Link
-                  className="text-sm text-[var(--muted)] transition-colors hover:text-[var(--accent)]"
+                  className="inline-flex min-h-9 items-center text-sm text-[var(--muted)] transition-colors hover:text-[var(--accent)]"
                   href={item.href}
                 >
                   {item.label}

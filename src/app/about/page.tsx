@@ -1,25 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage, LegalSection } from "@/components/LegalPage";
-import { BASE_URL } from "@/lib/tools";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "About FreeConvert",
   description:
-    "About FreeConvert, a free client-side image and PDF tools website built for private browser processing.",
-  alternates: {
-    canonical: `${BASE_URL}/about`,
-  },
-};
+    "About FreeConvert, a free client-side image, PDF and utility tools website built for private browser processing.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (
     <LegalPage title="About">
       <LegalSection title="What It Is">
         <p>
-          FreeConvert is a free collection of browser-based image and PDF tools
-          for resizing, compressing, converting, cropping, merging, splitting,
-          watermarking, background removal, filters and metadata inspection.
+          FreeConvert is a free collection of browser-based image, PDF and
+          utility tools for resizing, compressing, converting, cropping,
+          merging, splitting, QR generation, text cleanup, calculators,
+          developer utilities and metadata inspection.
         </p>
       </LegalSection>
       <LegalSection title="Why It Exists">

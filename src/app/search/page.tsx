@@ -15,8 +15,8 @@ export async function generateMetadata({
   return {
     title: query ? `Search results for "${query}"` : "Search FreeConvert",
     description: query
-      ? `Search FreeConvert image and PDF tools for ${query}.`
-      : "Search FreeConvert image and PDF tools for resizing, compression, conversion, background removal, merge PDF, split PDF and more.",
+      ? `Search FreeConvert image, PDF and utility tools for ${query}.`
+      : "Search FreeConvert image, PDF, QR, text, calculator, color, password and developer tools.",
     alternates: {
       canonical: `${BASE_URL}/search`,
     },
@@ -32,7 +32,7 @@ export async function generateMetadata({
     },
     openGraph: {
       title: "Search FreeConvert",
-      description: "Find image and PDF tools on FreeConvert.",
+      description: "Find image, PDF and utility tools on FreeConvert.",
       url: `${BASE_URL}/search`,
       siteName: "FreeConvert",
       type: "website",
@@ -41,7 +41,7 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       title: "Search FreeConvert",
-      description: "Find image and PDF tools on FreeConvert.",
+      description: "Find image, PDF and utility tools on FreeConvert.",
       images: ["/opengraph-image"],
     },
   };

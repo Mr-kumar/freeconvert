@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/ContactForm";
 import { LegalPage, LegalSection } from "@/components/LegalPage";
-import { BASE_URL } from "@/lib/tools";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Contact FreeConvert",
   description:
     "Contact FreeConvert for bug reports, feature requests, DMCA requests and business questions.",
-  alternates: {
-    canonical: `${BASE_URL}/contact`,
-  },
-};
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (

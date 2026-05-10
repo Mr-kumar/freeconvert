@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   useEffect,
   useState,
@@ -12,6 +12,8 @@ import {
 import {
   ArrowRight,
   BookOpen,
+  Braces,
+  Calculator,
   ChevronDown,
   Crop,
   Eraser,
@@ -22,12 +24,16 @@ import {
   Grid3X3,
   ImageDown,
   ImagePlus,
+  KeyRound,
   Layers,
   ListOrdered,
   Maximize,
   Menu,
   Minimize2,
+  Palette,
+  QrCode,
   RefreshCw,
+  Ruler,
   RotateCw,
   Search,
   Scissors,
@@ -35,12 +41,17 @@ import {
   SlidersHorizontal,
   Sparkles,
   Stamp,
+  Type,
   Wrench,
   X,
 } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { pdfTools, tools, type PDFToolConfig, type ToolConfig } from "@/lib/tools";
 import { searchSite, popularSearches, type SearchResult } from "@/lib/search";
+import {
+  utilityTools,
+  type UtilityToolConfig,
+} from "@/lib/utilityTools";
 import { cn } from "@/lib/utils";
 
 /* ── Icon maps ── */
@@ -69,6 +80,28 @@ const toolIconMap: Record<string, ComponentType<{ className?: string }>> = {
   "reorder-pdf-pages": Layers,
   "add-page-numbers-to-pdf": ListOrdered,
   "view-pdf-metadata": FileSearch,
+  "qr-code-generator": QrCode,
+  "upi-qr-code-generator": QrCode,
+  "word-counter": Type,
+  "text-case-converter": Type,
+  "remove-duplicate-lines": ListOrdered,
+  "emi-calculator": Calculator,
+  "gst-calculator": Calculator,
+  "percentage-calculator": Calculator,
+  "age-calculator": Calculator,
+  "sip-calculator": Calculator,
+  "color-picker": Palette,
+  "color-contrast-checker": Palette,
+  "length-converter": Ruler,
+  "weight-converter": Ruler,
+  "area-converter": Ruler,
+  "password-generator": KeyRound,
+  "password-strength-checker": ShieldCheck,
+  "json-formatter": Braces,
+  "base64-encoder-decoder": Braces,
+  "url-encoder-decoder": Braces,
+  "file-hash-checksum": FileSearch,
+  "zip-extractor": FileArchive,
 };
 
 const categoryIconMap: Record<string, ComponentType<{ className?: string }>> = {
@@ -77,99 +110,345 @@ const categoryIconMap: Record<string, ComponentType<{ className?: string }>> = {
   Page: FileImage,
 };
 
-/* ── Tool card for All‑Tools modal ── */
+type NavigationTool = ToolConfig | PDFToolConfig | UtilityToolConfig;
+type MegaMenuKey = "convert" | "compress" | "tools";
 
-function ToolMenuItem({
+interface MegaMenuColumnConfig {
+  title: string;
+  icon: ComponentType<{ className?: string }>;
+  tools: NavigationTool[];
+}
+
+interface MegaMenuNavItem {
+  key: MegaMenuKey;
+  label: string;
+}
+
+const toolPathSet = new Set<string>([
+  "/pdf-tools",
+  ...tools.map((tool) => tool.href),
+  ...pdfTools.map((tool) => tool.href),
+  ...utilityTools.map((tool) => tool.href),
+]);
+
+const convertPathSet = new Set<string>([
+  "/convert-image",
+  "/convert-pdf-to-image",
+  "/convert-image-to-pdf",
+  "/base64-encoder-decoder",
+  "/url-encoder-decoder",
+  "/length-converter",
+  "/weight-converter",
+  "/area-converter",
+]);
+
+const compressPathSet = new Set<string>([
+  "/compress-image",
+  "/compress-pdf",
+  "/resize-image",
+]);
+
+const megaMenuNavItems: MegaMenuNavItem[] = [
+  { key: "convert", label: "Convert" },
+  { key: "compress", label: "Compress" },
+  { key: "tools", label: "Tools" },
+];
+
+function pickTools<T extends NavigationTool>(
+  items: T[],
+  slugs: readonly string[],
+): NavigationTool[] {
+  return slugs
+    .map((slug) => items.find((tool) => tool.slug === slug))
+    .filter((tool): tool is T => Boolean(tool));
+}
+
+function utilityToolsFor(categories: readonly UtilityToolConfig["category"][]) {
+  return utilityTools.filter((tool) => categories.includes(tool.category));
+}
+
+const megaMenuColumns: Record<MegaMenuKey, MegaMenuColumnConfig[]> = {
+  convert: [
+    {
+      title: "Image",
+      icon: FileImage,
+      tools: pickTools(tools, ["convert", "resize", "crop", "rotate-flip"]),
+    },
+    {
+      title: "PDF & Documents",
+      icon: FileSearch,
+      tools: pickTools(pdfTools, [
+        "convert-pdf-to-image",
+        "convert-image-to-pdf",
+        "extract-pdf-pages",
+        "view-pdf-metadata",
+      ]),
+    },
+    {
+      title: "Others",
+      icon: Grid3X3,
+      tools: utilityToolsFor(["converter", "developer"]),
+    },
+  ],
+  compress: [
+    {
+      title: "Image",
+      icon: ImageDown,
+      tools: pickTools(tools, ["compress", "resize", "convert"]),
+    },
+    {
+      title: "PDF",
+      icon: Minimize2,
+      tools: pickTools(pdfTools, ["compress-pdf", "merge-pdf", "split-pdf"]),
+    },
+    {
+      title: "File Utilities",
+      icon: FileArchive,
+      tools: utilityToolsFor(["file"]),
+    },
+  ],
+  tools: [
+    {
+      title: "Image Tools",
+      icon: FileImage,
+      tools,
+    },
+    {
+      title: "PDF Tools",
+      icon: FileSearch,
+      tools: pdfTools.slice(0, 7),
+    },
+    {
+      title: "More PDF Tools",
+      icon: Layers,
+      tools: pdfTools.slice(7),
+    },
+    {
+      title: "QR & Text",
+      icon: Type,
+      tools: utilityToolsFor(["qr", "text"]),
+    },
+    {
+      title: "Daily & Developer",
+      icon: Calculator,
+      tools: utilityToolsFor([
+        "calculator",
+        "color",
+        "converter",
+        "password",
+        "developer",
+        "file",
+      ]),
+    },
+  ],
+};
+
+function megaGridClass(columnCount: number) {
+  if (columnCount >= 5) {
+    return "grid-cols-1 sm:grid-cols-2 xl:grid-cols-5";
+  }
+
+  if (columnCount === 4) {
+    return "grid-cols-1 sm:grid-cols-2 xl:grid-cols-4";
+  }
+
+  if (columnCount === 3) {
+    return "grid-cols-1 md:grid-cols-3";
+  }
+
+  return "grid-cols-1 md:grid-cols-2";
+}
+
+/* ── Mega menu ── */
+
+function MegaMenuLink({
   tool,
+  pathname,
   onNavigate,
 }: {
-  tool: ToolConfig | PDFToolConfig;
+  tool: NavigationTool;
+  pathname: string;
   onNavigate?: () => void;
 }) {
-  const Icon = toolIconMap[tool.slug] || Sparkles;
+  const active = pathname === tool.href;
 
   return (
     <Link
-      className="group flex items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 transition-all hover:border-[#f3b5b1] hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "block rounded-lg px-3 py-2.5 text-base font-semibold text-[var(--text)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--cyan)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--cyan)]",
+        active && "bg-sky-50 text-[var(--cyan)]",
+      )}
       href={tool.href}
       role="menuitem"
       onClick={onNavigate}
     >
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#fff1f0] text-[var(--accent)]">
-        <Icon className="h-4 w-4" />
-      </span>
-      <span className="min-w-0">
-        <span className="block text-sm font-bold text-[var(--text)]">
-          {tool.shortName}
-        </span>
-        <span className="mt-1 block text-xs leading-5 text-[var(--muted)]">
-          {tool.homeDescription}
-        </span>
-      </span>
+      {tool.name}
     </Link>
   );
 }
 
-/* ── All‑Tools centered modal ── */
-
-function ToolsDialog({
-  open,
+function MegaMenuOverlay({
+  activeMenu,
+  pathname,
+  onSelectMenu,
   onClose,
+  onOpenSearch,
 }: {
-  open: boolean;
+  activeMenu: MegaMenuKey | null;
+  pathname: string;
+  onSelectMenu: (menu: MegaMenuKey) => void;
   onClose: () => void;
+  onOpenSearch: () => void;
 }) {
   useEffect(() => {
-    if (!open) return;
+    if (!activeMenu) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prev;
     };
-  }, [open]);
+  }, [activeMenu]);
 
-  if (!open) return null;
+  if (!activeMenu) return null;
+
+  const columns = megaMenuColumns[activeMenu];
+  const gridClassName = megaGridClass(columns.length);
 
   return (
     <div
-      aria-labelledby="tools-dialog-title"
+      aria-labelledby="mega-menu-title"
       aria-modal="true"
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
-      id="tools-dialog"
+      className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-black/40 px-3 py-3 sm:px-5 sm:py-5"
+      id="mega-menu"
       role="dialog"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-4xl animate-[dialogIn_200ms_ease-out] overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-2xl shadow-slate-900/20"
+        className="w-full max-w-7xl animate-[dialogIn_180ms_ease-out] overflow-hidden rounded-xl border border-[var(--border)] bg-white shadow-2xl shadow-slate-950/25"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between gap-4 border-b border-[var(--border)] px-5 py-4 sm:px-6 sm:py-5">
-          <div>
-            <h2
-              className="text-lg font-extrabold text-[var(--text)] sm:text-xl"
-              id="tools-dialog-title"
-            >
-              All tools
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-[var(--muted)]">
-              Choose an image or PDF tool. Everything runs locally in your browser.
-            </p>
-          </div>
-          <button
-            aria-label="Close tools"
-            className="icon-button shrink-0"
-            type="button"
+        <div className="flex min-h-20 items-center justify-between gap-4 px-5 py-4 sm:px-6">
+          <Link
+            aria-label="FreeConvert home"
+            className="shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--cyan)]"
+            href="/"
             onClick={onClose}
           >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-        <div className="max-h-[calc(100vh-10rem)] overflow-y-auto overscroll-contain p-4 sm:p-5">
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3" role="menu">
-            {[...tools, ...pdfTools].map((tool) => (
-              <ToolMenuItem key={tool.href} tool={tool} onNavigate={onClose} />
+            <BrandLogo textClassName="text-lg sm:text-xl" />
+          </Link>
+
+          <nav className="hidden items-center gap-7 lg:flex" aria-label="Mega menu">
+            {megaMenuNavItems.map((item) => (
+              <button
+                aria-pressed={activeMenu === item.key}
+                className={cn(
+                  "inline-flex items-center gap-1 text-base font-semibold text-[var(--text)] transition-colors hover:text-[var(--cyan)]",
+                  activeMenu === item.key && "text-[var(--cyan)]",
+                )}
+                key={item.key}
+                type="button"
+                onClick={() => onSelectMenu(item.key)}
+                onMouseEnter={() => onSelectMenu(item.key)}
+              >
+                {item.label}
+                <ChevronDown className="h-4 w-4" />
+              </button>
             ))}
+            <Link
+              className="text-base font-semibold text-[var(--text)] transition-colors hover:text-[var(--cyan)]"
+              href="/blog"
+              onClick={onClose}
+            >
+              Blog
+            </Link>
+            <Link
+              className="text-base font-semibold text-[var(--text)] transition-colors hover:text-[var(--cyan)]"
+              href="/contact"
+              onClick={onClose}
+            >
+              Contact
+            </Link>
+          </nav>
+
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <button
+              aria-label="Search"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--surface-2)] text-[var(--text)] transition-colors hover:text-[var(--cyan)]"
+              type="button"
+              onClick={() => {
+                onClose();
+                onOpenSearch();
+              }}
+            >
+              <Search className="h-5 w-5" />
+            </button>
+            <div className="hidden rounded-full bg-sky-50 px-3 py-2 text-xs font-bold text-[var(--cyan)] sm:block">
+              No signup
+            </div>
+            <button
+              aria-label="Close tools menu"
+              className="icon-button lg:hidden"
+              type="button"
+              onClick={onClose}
+            >
+              <X className="h-5 w-5" />
+            </button>
           </div>
+        </div>
+
+        <h2 className="sr-only" id="mega-menu-title">
+          {megaMenuNavItems.find((item) => item.key === activeMenu)?.label} menu
+        </h2>
+
+        <div
+          className={cn(
+            "grid border-t border-[var(--border)]",
+            gridClassName,
+          )}
+          role="menu"
+        >
+          {columns.map((column, index) => {
+            const Icon = column.icon;
+
+            return (
+              <section
+                className={cn(
+                  "min-w-0 border-t border-[var(--border)] sm:border-t-0",
+                  index > 0 && "sm:border-l sm:border-[var(--border)]",
+                )}
+                key={column.title}
+              >
+                <div className="flex min-h-16 items-center gap-2.5 px-5 py-4">
+                  <Icon className="h-5 w-5 shrink-0 text-[var(--text)]" />
+                  <h3 className="text-base font-extrabold text-[var(--text)]">
+                    {column.title}
+                  </h3>
+                </div>
+                <div className="grid max-h-[calc(100vh-15rem)] gap-1 overflow-y-auto border-t border-[var(--border)] px-4 py-4">
+                  {column.tools.map((tool) => (
+                    <MegaMenuLink
+                      key={tool.href}
+                      pathname={pathname}
+                      tool={tool}
+                      onNavigate={onClose}
+                    />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border)] bg-[var(--surface-2)] px-5 py-3 text-xs font-semibold text-[var(--muted)]">
+          <span>Free browser tools. No upload. Direct SEO-friendly URLs.</span>
+          <button
+            className="font-bold text-[var(--cyan)]"
+            type="button"
+            onClick={() => onSelectMenu("tools")}
+          >
+            View all tools
+          </button>
         </div>
       </div>
     </div>
@@ -304,7 +583,11 @@ function SearchDialog({
                 Quick links
               </p>
               <div className="grid grid-cols-2 gap-1.5">
-                {[...tools.slice(0, 4), ...pdfTools.slice(0, 2)].map((tool) => {
+                {[
+                  ...tools.slice(0, 3),
+                  ...pdfTools.slice(0, 2),
+                  ...utilityTools.slice(0, 3),
+                ].map((tool) => {
                   const Icon = toolIconMap[tool.slug] || Sparkles;
                   return (
                     <button
@@ -401,25 +684,50 @@ function SearchDialog({
 /* ── Main Navbar ── */
 
 export function Navbar() {
-  const [toolsOpen, setToolsOpen] = useState(false);
+  const pathname = usePathname();
+  const [activeMegaMenu, setActiveMegaMenu] = useState<MegaMenuKey | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const isConvertActive = convertPathSet.has(pathname);
+  const isCompressActive = compressPathSet.has(pathname);
+  const isAnyToolActive = toolPathSet.has(pathname);
+  const isToolsActive = isAnyToolActive && !isConvertActive && !isCompressActive;
+  const isAboutActive = pathname === "/about";
+  const isBlogActive = pathname === "/blog" || pathname.startsWith("/blog/");
+  const isContactActive = pathname === "/contact";
+  const desktopMegaButtonClass = (active: boolean) =>
+    cn(
+      "inline-flex items-center gap-1 text-sm font-semibold text-[var(--text)] transition-colors hover:text-[var(--cyan)]",
+      active && "text-[var(--cyan)]",
+    );
+  const mobileLinkClass = (active: boolean, className?: string) =>
+    cn(
+      "segmented-button justify-center",
+      active && "segmented-button-active",
+      className,
+    );
 
   const closeAll = useCallback(() => {
-    setToolsOpen(false);
+    setActiveMegaMenu(null);
     setMobileOpen(false);
     setSearchOpen(false);
   }, []);
 
-  const openTools = useCallback(() => {
+  const openMegaMenu = useCallback((menu: MegaMenuKey) => {
     setMobileOpen(false);
     setSearchOpen(false);
-    setToolsOpen(true);
+    setActiveMegaMenu(menu);
+  }, []);
+
+  const toggleMegaMenu = useCallback((menu: MegaMenuKey) => {
+    setMobileOpen(false);
+    setSearchOpen(false);
+    setActiveMegaMenu((current) => (current === menu ? null : menu));
   }, []);
 
   const openSearch = useCallback(() => {
     setMobileOpen(false);
-    setToolsOpen(false);
+    setActiveMegaMenu(null);
     setSearchOpen(true);
   }, []);
 
@@ -443,7 +751,7 @@ export function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
+            className="shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--cyan)]"
             aria-label="FreeConvert home"
             onClick={closeAll}
           >
@@ -456,36 +764,89 @@ export function Navbar() {
             aria-label="Primary"
           >
             <button
-              aria-controls="tools-dialog"
-              aria-expanded={toolsOpen}
+              aria-controls="mega-menu"
+              aria-expanded={activeMegaMenu === "convert"}
               aria-haspopup="dialog"
-              className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--text)] transition-colors hover:text-[var(--accent)]"
+              className={desktopMegaButtonClass(
+                activeMegaMenu === "convert" || isConvertActive,
+              )}
               type="button"
-              onClick={openTools}
+              onClick={() => toggleMegaMenu("convert")}
+              onMouseEnter={() => openMegaMenu("convert")}
             >
-              All Tools
+              Convert
               <ChevronDown
                 className={cn(
                   "h-4 w-4 transition-transform",
-                  toolsOpen && "rotate-180",
+                  activeMegaMenu === "convert" && "rotate-180",
+                )}
+              />
+            </button>
+            <button
+              aria-controls="mega-menu"
+              aria-expanded={activeMegaMenu === "compress"}
+              aria-haspopup="dialog"
+              className={desktopMegaButtonClass(
+                activeMegaMenu === "compress" || isCompressActive,
+              )}
+              type="button"
+              onClick={() => toggleMegaMenu("compress")}
+              onMouseEnter={() => openMegaMenu("compress")}
+            >
+              Compress
+              <ChevronDown
+                className={cn(
+                  "h-4 w-4 transition-transform",
+                  activeMegaMenu === "compress" && "rotate-180",
+                )}
+              />
+            </button>
+            <button
+              aria-controls="mega-menu"
+              aria-expanded={activeMegaMenu === "tools"}
+              aria-haspopup="dialog"
+              className={desktopMegaButtonClass(
+                activeMegaMenu === "tools" || isToolsActive,
+              )}
+              type="button"
+              onClick={() => toggleMegaMenu("tools")}
+              onMouseEnter={() => openMegaMenu("tools")}
+            >
+              Tools
+              <ChevronDown
+                className={cn(
+                  "h-4 w-4 transition-transform",
+                  activeMegaMenu === "tools" && "rotate-180",
                 )}
               />
             </button>
             <Link
               href="/about"
-              className="text-sm font-semibold text-[var(--text)] transition-colors hover:text-[var(--accent)]"
+              aria-current={isAboutActive ? "page" : undefined}
+              className={cn(
+                "text-sm font-semibold text-[var(--text)] transition-colors hover:text-[var(--cyan)]",
+                isAboutActive && "text-[var(--cyan)]",
+              )}
             >
               About
             </Link>
             <Link
               href="/blog"
-              className="text-sm font-semibold text-[var(--text)] transition-colors hover:text-[var(--accent)]"
+              aria-current={isBlogActive ? "page" : undefined}
+              className={cn(
+                "text-sm font-semibold text-[var(--text)] transition-colors hover:text-[var(--cyan)]",
+                isBlogActive && "text-[var(--cyan)]",
+              )}
             >
               Blog
             </Link>
             <Link
               href="/contact"
-              className="text-sm font-semibold text-[var(--text)] transition-colors hover:text-[var(--accent)]"
+              aria-current={isContactActive ? "page" : undefined}
+              className={cn(
+                "text-sm font-semibold text-[var(--text)] transition-colors hover:text-[var(--cyan)]",
+                isContactActive && "text-[var(--cyan)]",
+              )}
             >
               Contact
             </Link>
@@ -496,7 +857,7 @@ export function Navbar() {
             {/* Search trigger */}
             <button
               aria-label="Search"
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] text-xs text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] sm:w-auto sm:gap-2 sm:px-3"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] text-xs text-[var(--muted)] transition-colors hover:border-[var(--cyan)] hover:text-[var(--cyan)] sm:w-auto sm:gap-2 sm:px-3"
               type="button"
               onClick={openSearch}
             >
@@ -507,7 +868,7 @@ export function Navbar() {
               </kbd>
             </button>
 
-            <div className="hidden rounded-full bg-[#fff1f0] px-3 py-2 text-xs font-bold text-[var(--accent)] sm:block">
+            <div className="hidden rounded-full bg-sky-50 px-2 py-1.5 text-[10px] font-bold text-[var(--cyan)] min-[360px]:block sm:px-3 sm:py-2 sm:text-xs">
               No signup
             </div>
 
@@ -516,7 +877,7 @@ export function Navbar() {
               aria-controls="mobile-navigation"
               aria-expanded={mobileOpen}
               aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
-              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface-2)] text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] md:hidden"
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface-2)] text-[var(--muted)] transition-colors hover:border-[var(--cyan)] hover:text-[var(--cyan)] md:hidden"
               type="button"
               onClick={() => setMobileOpen((v) => !v)}
             >
@@ -531,59 +892,96 @@ export function Navbar() {
 
         {/* Mobile slide-down nav */}
         <div
+          aria-hidden={!mobileOpen}
           className={cn(
-            "border-t border-[var(--border)] bg-white px-4 py-4 shadow-lg shadow-slate-200/60 md:hidden",
-            mobileOpen ? "block" : "hidden",
+            "grid transition-[grid-template-rows] duration-200 ease-out md:hidden",
+            mobileOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
           )}
           id="mobile-navigation"
+          inert={!mobileOpen}
         >
           <nav
             aria-label="Mobile primary"
-            className="mx-auto max-w-7xl space-y-3"
+            className="min-h-0 overflow-hidden border-t border-[var(--border)] bg-white px-4 py-4 shadow-lg shadow-slate-200/60"
           >
-            <div className="grid grid-cols-2 gap-2">
-              <Link
-                className="segmented-button justify-center"
-                href="/"
-                onClick={closeAll}
-              >
-                Home
-              </Link>
-              <button
-                className="segmented-button justify-center"
-                type="button"
-                onClick={openTools}
-              >
-                All Tools
-              </button>
-              <Link
-                className="segmented-button justify-center"
-                href="/about"
-                onClick={closeAll}
-              >
-                About
-              </Link>
-              <Link
-                className="segmented-button justify-center"
-                href="/blog"
-                onClick={closeAll}
-              >
-                Blog
-              </Link>
-              <Link
-                className="segmented-button col-span-2 justify-center"
-                href="/contact"
-                onClick={closeAll}
-              >
-                Contact
-              </Link>
+            <div className="mx-auto max-w-7xl space-y-3">
+              <div className="rounded-lg bg-sky-50 px-3 py-2 text-center text-xs font-bold text-[var(--cyan)]">
+                No signup / no upload
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  aria-current={pathname === "/" ? "page" : undefined}
+                  className={mobileLinkClass(pathname === "/")}
+                  href="/"
+                  onClick={closeAll}
+                >
+                  Home
+                </Link>
+                <button
+                  aria-controls="mega-menu"
+                  aria-expanded={activeMegaMenu === "convert"}
+                  className={mobileLinkClass(isConvertActive)}
+                  type="button"
+                  onClick={() => openMegaMenu("convert")}
+                >
+                  Convert
+                </button>
+                <button
+                  aria-controls="mega-menu"
+                  aria-expanded={activeMegaMenu === "compress"}
+                  className={mobileLinkClass(isCompressActive)}
+                  type="button"
+                  onClick={() => openMegaMenu("compress")}
+                >
+                  Compress
+                </button>
+                <button
+                  aria-controls="mega-menu"
+                  aria-expanded={activeMegaMenu === "tools"}
+                  className={mobileLinkClass(isAnyToolActive)}
+                  type="button"
+                  onClick={() => openMegaMenu("tools")}
+                >
+                  Tools
+                </button>
+                <Link
+                  aria-current={isAboutActive ? "page" : undefined}
+                  className={mobileLinkClass(isAboutActive)}
+                  href="/about"
+                  onClick={closeAll}
+                >
+                  About
+                </Link>
+                <Link
+                  aria-current={isBlogActive ? "page" : undefined}
+                  className={mobileLinkClass(isBlogActive)}
+                  href="/blog"
+                  onClick={closeAll}
+                >
+                  Blog
+                </Link>
+                <Link
+                  aria-current={isContactActive ? "page" : undefined}
+                  className={mobileLinkClass(isContactActive, "col-span-2")}
+                  href="/contact"
+                  onClick={closeAll}
+                >
+                  Contact
+                </Link>
+              </div>
             </div>
           </nav>
         </div>
       </header>
 
       {/* Modals — rendered OUTSIDE header */}
-      <ToolsDialog open={toolsOpen} onClose={() => setToolsOpen(false)} />
+      <MegaMenuOverlay
+        activeMenu={activeMegaMenu}
+        pathname={pathname}
+        onSelectMenu={setActiveMegaMenu}
+        onClose={() => setActiveMegaMenu(null)}
+        onOpenSearch={openSearch}
+      />
       <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );

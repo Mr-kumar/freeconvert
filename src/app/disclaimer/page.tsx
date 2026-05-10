@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import { LegalPage, LegalSection } from "@/components/LegalPage";
-import { BASE_URL } from "@/lib/tools";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Disclaimer",
-  description: "Disclaimer for FreeConvert image and PDF tools and advertising.",
-  alternates: {
-    canonical: `${BASE_URL}/disclaimer`,
-  },
-};
+  description: "Disclaimer for FreeConvert image, PDF and utility tools and advertising.",
+  path: "/disclaimer",
+});
 
 export default function DisclaimerPage() {
   return (

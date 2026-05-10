@@ -1,21 +1,26 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AdRailSlots } from "@/components/AdRailSlots";
-import { blogPosts } from "@/lib/blog";
-import { BASE_URL } from "@/lib/tools";
+import { blogCollectionJsonLd, blogPosts } from "@/lib/blog";
+import { buildPageMetadata } from "@/lib/seo";
+import { safeJsonLd } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "Image and PDF Editing Guides",
-  description:
-    "Simple guides for resizing, compressing and converting images and PDFs for web uploads, online forms and everyday use.",
-  alternates: {
-    canonical: `${BASE_URL}/blog`,
-  },
-};
+const description =
+  "Simple guides for resizing, compressing and converting images and PDFs, plus practical online tool tips for everyday use.";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "Image, PDF and Online Tool Guides",
+  description,
+  path: "/blog",
+});
 
 export default function BlogPage() {
   return (
     <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(blogCollectionJsonLd()) }}
+      />
       <AdRailSlots
         leftSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RAIL_LEFT}
         rightSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RAIL_RIGHT}
@@ -23,11 +28,11 @@ export default function BlogPage() {
       <section className="max-w-3xl">
         <p className="text-sm font-bold text-[var(--accent)]">Guides</p>
         <h1 className="mt-3 font-display text-4xl font-extrabold text-[var(--text)] sm:text-5xl">
-          Image and PDF editing guides
+          Image, PDF and online tool guides
         </h1>
         <p className="mt-4 text-lg leading-8 text-[var(--muted)]">
           Practical notes for reducing file size, choosing formats, merging PDFs
-          and preparing files for forms without uploading your documents.
+          and using browser-based tools without uploading your documents.
         </p>
       </section>
 

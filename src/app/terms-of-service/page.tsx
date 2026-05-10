@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import { LegalPage, LegalSection } from "@/components/LegalPage";
-import { BASE_URL } from "@/lib/tools";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Terms of Service",
-  description: "Terms of Service for using FreeConvert image and PDF tools.",
-  alternates: {
-    canonical: `${BASE_URL}/terms-of-service`,
-  },
-};
+  description: "Terms of Service for using FreeConvert image, PDF and utility tools.",
+  path: "/terms-of-service",
+});
 
 export default function TermsPage() {
   return (
@@ -21,9 +19,10 @@ export default function TermsPage() {
       </LegalSection>
       <LegalSection title="Service">
         <p>
-          FreeConvert provides free browser-based image and PDF tools including
-          resize, compression, conversion, crop, background removal,
-          watermarking, merge, split, rotate, filters and metadata viewing.
+          FreeConvert provides free browser-based image, PDF and utility tools
+          including resize, compression, conversion, crop, background removal,
+          watermarking, merge, split, rotate, QR generation, text tools,
+          calculators, developer utilities and metadata viewing.
         </p>
       </LegalSection>
       <LegalSection title="Ownership">

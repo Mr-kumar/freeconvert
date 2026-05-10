@@ -1,24 +1,22 @@
 import type { Metadata } from "next";
 import { LegalPage, LegalSection } from "@/components/LegalPage";
-import { BASE_URL } from "@/lib/tools";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Privacy Policy",
   description:
-    "Privacy Policy for FreeConvert, including client-side image and PDF processing, cookies, analytics and advertising disclosures.",
-  alternates: {
-    canonical: `${BASE_URL}/privacy-policy`,
-  },
-};
+    "Privacy Policy for FreeConvert, including client-side image, PDF and utility tool processing, cookies, analytics and advertising disclosures.",
+  path: "/privacy-policy",
+});
 
 export default function PrivacyPolicyPage() {
   return (
     <LegalPage title="Privacy Policy">
       <LegalSection title="Overview">
         <p>
-          FreeConvert is designed so image and PDF processing happens in your
-          browser. Your selected files are not uploaded to FreeConvert servers
-          for the tools provided on this site.
+          FreeConvert is designed so image, PDF and utility tool processing
+          happens in your browser. Your selected files and entered content are
+          not uploaded to FreeConvert servers for the tools provided on this site.
         </p>
       </LegalSection>
       <LegalSection title="Data We May Collect">
@@ -41,8 +39,10 @@ export default function PrivacyPolicyPage() {
       <LegalSection title="Files">
         <p>
           Images and PDFs are processed locally with browser APIs, Canvas,
-          WebAssembly and PDF libraries. Files remain on your device unless you
-          choose to send them elsewhere outside FreeConvert.
+          WebAssembly and PDF libraries. Text, QR, calculator, color, password,
+          developer and ZIP utilities also run locally where practical. Files
+          and inputs remain on your device unless you choose to send them
+          elsewhere outside FreeConvert.
         </p>
       </LegalSection>
       <LegalSection title="Cookies">

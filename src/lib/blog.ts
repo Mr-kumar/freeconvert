@@ -1,3 +1,5 @@
+import { BASE_URL } from "@/lib/tools";
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -230,4 +232,82 @@ export const blogPosts: BlogPost[] = [
 
 export function getBlogPost(slug: string) {
   return blogPosts.find((post) => post.slug === slug);
+}
+
+export function blogCollectionJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${BASE_URL}/blog#guides`,
+    name: "Image, PDF and Online Tool Guides",
+    url: `${BASE_URL}/blog`,
+    description:
+      "Simple guides for resizing, compressing and converting images and PDFs, plus practical online tool tips for everyday use.",
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: blogPosts.map((post, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: post.title,
+        url: `${BASE_URL}/blog/${post.slug}`,
+      })),
+    },
+  };
+}
+
+export function blogPostJsonLd(post: BlogPost) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": `${BASE_URL}/blog/${post.slug}#article`,
+    headline: post.title,
+    description: post.description,
+    image: [`${BASE_URL}/opengraph-image`],
+    datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
+    author: {
+      "@type": "Organization",
+      name: "FreeConvert",
+      url: BASE_URL,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "FreeConvert",
+      logo: {
+        "@type": "ImageObject",
+        url: `${BASE_URL}/android-chrome-512x512.png`,
+        width: 512,
+        height: 512,
+      },
+    },
+    mainEntityOfPage: `${BASE_URL}/blog/${post.slug}`,
+    articleSection: post.sections.map((section) => section.heading),
+  };
+}
+
+export function blogPostBreadcrumbJsonLd(post: BlogPost) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: BASE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Guides",
+        item: `${BASE_URL}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.title,
+        item: `${BASE_URL}/blog/${post.slug}`,
+      },
+    ],
+  };
 }

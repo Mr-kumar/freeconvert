@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { Footer } from "@/components/Footer";
@@ -24,7 +25,7 @@ const websiteJsonLd = {
       url: BASE_URL,
       name: "FreeConvert",
       description:
-        "Free online image and PDF tools. Files stay on your device.",
+        "Free online image, PDF and utility tools. Files and inputs stay on your device.",
       inLanguage: "en-IN",
       potentialAction: {
         "@type": "SearchAction",
@@ -76,12 +77,14 @@ const googleSiteVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "FreeConvert - Free Online Image & PDF Tools",
+    default: "FreeConvert - Free Online Image, PDF & Utility Tools",
     template: "%s | FreeConvert",
   },
   description:
-    "Use free online image and PDF tools to resize, compress, convert, merge, split, rotate, watermark and inspect files. No upload required.",
+    "Use free online image, PDF, QR, text, calculator, color, password and developer tools. No upload required.",
   keywords: [
+    "free online tools",
+    "free browser tools",
     "free online tools india",
     "free image converter online india",
     "image resizer online free",
@@ -104,6 +107,25 @@ export const metadata: Metadata = {
     "rotate pdf online",
     "add watermark to pdf",
     "pdf metadata viewer",
+    "qr code generator free",
+    "upi qr code generator",
+    "word counter online",
+    "text case converter",
+    "json formatter online",
+    "base64 encoder decoder",
+    "url encoder decoder",
+    "password generator free",
+    "password strength checker",
+    "emi calculator online",
+    "gst calculator online",
+    "percentage calculator",
+    "age calculator",
+    "sip calculator",
+    "color picker online",
+    "color contrast checker",
+    "unit converter online",
+    "file hash checksum",
+    "zip extractor online",
   ],
   authors: [{ name: "FreeConvert", url: BASE_URL }],
   creator: "FreeConvert",
@@ -125,24 +147,24 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: BASE_URL,
     siteName: "FreeConvert",
-    title: "FreeConvert - Free Online Image & PDF Tools",
+    title: "FreeConvert - Free Online Image, PDF & Utility Tools",
     description:
-      "Free online image and PDF tools for resize, compress, convert, merge, split, rotate and watermark. No upload required.",
+      "Free browser-based image, PDF, QR, text, calculator and developer tools. No upload required.",
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "FreeConvert - Free Online Image and PDF Tools",
+        alt: "FreeConvert - Free Online Image, PDF and Utility Tools",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "FreeConvert - Free Online Image & PDF Tools",
+    title: "FreeConvert - Free Online Image, PDF & Utility Tools",
     description:
-      "Free browser-based image and PDF tools. No upload and no signup.",
+      "Free browser-based image, PDF and utility tools. No upload and no signup.",
     images: ["/opengraph-image"],
   },
   appleWebApp: {
@@ -216,10 +238,12 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col bg-[var(--bg)] text-[var(--text)]">
         {hasGoogleMeasurement ? (
-          <script
+          <Script
             id="google-consent-defaults"
-            dangerouslySetInnerHTML={{ __html: googleConsentDefaults }}
-          />
+            strategy="beforeInteractive"
+          >
+            {googleConsentDefaults}
+          </Script>
         ) : null}
         <script
           type="application/ld+json"

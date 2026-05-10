@@ -24,11 +24,11 @@ export function ToolLayout({
         <div className="mx-auto flex w-[min(358px,calc(100vw-2rem))] max-w-7xl flex-col gap-4 px-0 py-5 sm:w-full sm:px-6 sm:py-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0">
             <Link
-              href="/"
+              href="/#image-tools"
               className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-[var(--muted)] hover:text-[var(--accent)]"
             >
               <ArrowLeft className="h-4 w-4" />
-              Tools
+              Image Tools
             </Link>
             <h1 className="break-words font-display text-3xl font-extrabold text-[var(--text)] sm:text-5xl">
               {title}

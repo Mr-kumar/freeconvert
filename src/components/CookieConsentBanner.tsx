@@ -6,6 +6,7 @@ import Link from "next/link";
 import { normalizeAdSenseClientId } from "@/lib/adsense";
 
 const CONSENT_KEY = "fc_cookie_consent";
+const ADSENSE_SCRIPT_ID = "google-adsense-script";
 
 type ConsentValue = "granted" | "denied";
 
@@ -65,6 +66,19 @@ export function CookieConsentBanner() {
     return () => cancelAnimationFrame(frame);
   }, []);
 
+  useEffect(() => {
+    if (!adsenseId || document.getElementById(ADSENSE_SCRIPT_ID)) {
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.crossOrigin = "anonymous";
+    script.id = ADSENSE_SCRIPT_ID;
+    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`;
+    document.head.appendChild(script);
+  }, [adsenseId]);
+
   function accept() {
     localStorage.setItem(CONSENT_KEY, "true");
     updateGoogleConsent("granted");
@@ -80,18 +94,9 @@ export function CookieConsentBanner() {
   }
 
   const showAnalytics = consented && analyticsId;
-  const showAds = Boolean(adsenseId);
 
   return (
     <>
-      {showAds ? (
-        <Script
-          async
-          crossOrigin="anonymous"
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
-          strategy="afterInteractive"
-        />
-      ) : null}
       {showAnalytics ? (
         <>
           <Script
@@ -118,7 +123,7 @@ export function CookieConsentBanner() {
                 Learn more
               </Link>
             </p>
-            <div className="grid w-full min-w-0 shrink-0 grid-cols-1 gap-2 sm:w-auto sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] sm:gap-3">
+            <div className="grid w-full min-w-0 shrink-0 grid-cols-2 gap-2 sm:w-auto sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] sm:gap-3">
               <button
                 className="min-h-11 w-full min-w-0 rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-bold text-[var(--muted)] hover:text-[var(--text)]"
                 type="button"
