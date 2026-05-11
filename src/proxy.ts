@@ -7,6 +7,16 @@ const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
 const RATE_LIMIT_WINDOW = 60 * 1000;
 const RATE_LIMIT_MAX = 60;
+const RATE_LIMIT_CLEANUP_EVERY = 100;
+
+let localRateLimitRequests = 0;
+let remoteRateLimiterPromise: Promise<{
+  limit: (identifier: string) => Promise<{
+    success: boolean;
+    remaining: number;
+    reset: number;
+  }>;
+}> | null = null;
 
 const maliciousPatterns = [
   /\.\.\//,
@@ -15,24 +25,27 @@ const maliciousPatterns = [
   /union.*select/i,
   /\x00/,
   /eval\(/i,
-  /\.env/i,
-  /\.git/i,
+  /(^|\/)\.env(?:[./?#]|$)/i,
+  /(^|\/)\.git(?:[/?#]|$)/i,
   /wp-admin/i,
   /phpinfo/i,
 ];
 
+function decodeURLPart(value: string) {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
 function isMalicious(url: URL) {
   const full = `${url.pathname}${url.search}`;
-  let decoded = full;
+  const decoded = decodeURLPart(full);
+  const doubleDecoded = decodeURLPart(decoded);
 
-  try {
-    decoded = decodeURIComponent(full);
-  } catch {
-    decoded = full;
-  }
-
-  return maliciousPatterns.some(
-    (pattern) => pattern.test(full) || pattern.test(decoded),
+  return [full, decoded, doubleDecoded].some((candidate) =>
+    maliciousPatterns.some((pattern) => pattern.test(candidate)),
   );
 }
 
@@ -49,6 +62,16 @@ function getLocalRateLimitInfo(ip: string) {
   // Local fallback only. Production should use Upstash so limits are shared
   // across serverless instances and survive cold starts.
   const now = Date.now();
+  localRateLimitRequests += 1;
+
+  if (localRateLimitRequests % RATE_LIMIT_CLEANUP_EVERY === 0) {
+    for (const [key, record] of rateLimitMap) {
+      if (now > record.resetTime) {
+        rateLimitMap.delete(key);
+      }
+    }
+  }
+
   const record = rateLimitMap.get(ip);
 
   if (!record || now > record.resetTime) {
@@ -76,16 +99,19 @@ async function getRateLimitInfo(ip: string) {
     process.env.UPSTASH_REDIS_REST_URL &&
     process.env.UPSTASH_REDIS_REST_TOKEN
   ) {
-    const [{ Ratelimit }, { Redis }] = await Promise.all([
+    remoteRateLimiterPromise ??= Promise.all([
       import("@upstash/ratelimit"),
       import("@upstash/redis"),
-    ]);
-    const ratelimit = new Ratelimit({
-      redis: Redis.fromEnv(),
-      limiter: Ratelimit.slidingWindow(RATE_LIMIT_MAX, "1 m"),
-      analytics: true,
-      prefix: "freeconvert_rl",
-    });
+    ]).then(([{ Ratelimit }, { Redis }]) =>
+      new Ratelimit({
+        redis: Redis.fromEnv(),
+        limiter: Ratelimit.slidingWindow(RATE_LIMIT_MAX, "1 m"),
+        analytics: true,
+        prefix: "freeconvert_rl",
+      }),
+    );
+
+    const ratelimit = await remoteRateLimiterPromise;
     const result = await ratelimit.limit(ip);
 
     return {

@@ -147,65 +147,71 @@ const pageResults: SearchResult[] = [
   },
 ];
 
-export const searchIndex: SearchResult[] = [
-  ...tools.map((tool) => ({
-    title: tool.name,
-    description: tool.description,
-    href: tool.href,
-    category: "Tool" as const,
-    keywords: [
-      tool.shortName,
-      tool.homeDescription,
-      ...tool.keywords,
-      ...tool.features,
-      ...(toolAliases[tool.slug] ?? []),
-    ],
-    priority: tool.priority + 1,
-  })),
-  ...pdfTools.map((tool) => ({
-    title: tool.name,
-    description: tool.description,
-    href: tool.href,
-    category: "Tool" as const,
-    keywords: [
-      tool.shortName,
-      tool.homeDescription,
-      ...tool.keywords,
-      ...tool.features,
-      ...(pdfToolAliases[tool.slug] ?? []),
-    ],
-    priority: tool.priority + 1,
-  })),
-  ...utilityTools.map((tool) => ({
-    title: tool.name,
-    description: tool.description,
-    href: tool.href,
-    category: "Tool" as const,
-    keywords: [
-      tool.shortName,
-      tool.homeDescription,
-      ...tool.keywords,
-      ...tool.features,
-      ...(utilityToolAliases[tool.slug] ?? []),
-    ],
-    priority: tool.priority + 1,
-  })),
-  ...blogPosts.map((post) => ({
-    title: post.title,
-    description: post.description,
-    href: `/blog/${post.slug}`,
-    category: "Guide" as const,
-    keywords: [
-      post.readTime,
-      ...post.sections.flatMap((section) => [
-        section.heading,
-        ...section.body,
-      ]),
-    ],
-    priority: 0.65,
-  })),
-  ...pageResults,
-];
+let searchIndexCache: SearchResult[] | null = null;
+
+function getSearchIndex() {
+  searchIndexCache ??= [
+    ...tools.map((tool) => ({
+      title: tool.name,
+      description: tool.description,
+      href: tool.href,
+      category: "Tool" as const,
+      keywords: [
+        tool.shortName,
+        tool.homeDescription,
+        ...tool.keywords,
+        ...tool.features,
+        ...(toolAliases[tool.slug] ?? []),
+      ],
+      priority: tool.priority + 1,
+    })),
+    ...pdfTools.map((tool) => ({
+      title: tool.name,
+      description: tool.description,
+      href: tool.href,
+      category: "Tool" as const,
+      keywords: [
+        tool.shortName,
+        tool.homeDescription,
+        ...tool.keywords,
+        ...tool.features,
+        ...(pdfToolAliases[tool.slug] ?? []),
+      ],
+      priority: tool.priority + 1,
+    })),
+    ...utilityTools.map((tool) => ({
+      title: tool.name,
+      description: tool.description,
+      href: tool.href,
+      category: "Tool" as const,
+      keywords: [
+        tool.shortName,
+        tool.homeDescription,
+        ...tool.keywords,
+        ...tool.features,
+        ...(utilityToolAliases[tool.slug] ?? []),
+      ],
+      priority: tool.priority + 1,
+    })),
+    ...blogPosts.map((post) => ({
+      title: post.title,
+      description: post.description,
+      href: `/blog/${post.slug}`,
+      category: "Guide" as const,
+      keywords: [
+        post.readTime,
+        ...post.sections.flatMap((section) => [
+          section.heading,
+          ...section.body,
+        ]),
+      ],
+      priority: 0.65,
+    })),
+    ...pageResults,
+  ];
+
+  return searchIndexCache;
+}
 
 export const popularSearches = [
   "merge pdf",
@@ -289,7 +295,7 @@ export function searchSite(query: string, limit = 12) {
     return [];
   }
 
-  return searchIndex
+  return getSearchIndex()
     .map((result) => ({
       result,
       score: scoreResult(result, terms, normalized),

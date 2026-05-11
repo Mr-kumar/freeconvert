@@ -1,8 +1,10 @@
 "use client";
 
-import type { ImgHTMLAttributes } from "react";
+import { forwardRef, type ImgHTMLAttributes } from "react";
 
 /* eslint-disable @next/next/no-img-element */
-export function RawImage(props: ImgHTMLAttributes<HTMLImageElement>) {
-  return <img {...props} alt={props.alt ?? ""} />;
-}
+export const RawImage = forwardRef<HTMLImageElement, ImgHTMLAttributes<HTMLImageElement>>(
+  function RawImage(props, ref) {
+    return <img ref={ref} {...props} alt={props.alt ?? ""} />;
+  },
+);

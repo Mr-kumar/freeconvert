@@ -8,6 +8,7 @@ interface PDFStore {
   inputPreviewUrl: string | null;
   inputInfo: PDFInfo | null;
   batchFiles: File[];
+  batchFileIds: string[];
   batchInfos: (PDFInfo | null)[];
   outputBlob: Blob | null;
   outputPreviewUrl: string | null;
@@ -48,6 +49,10 @@ function defaultPages(totalPages: number) {
   return Array.from({ length: totalPages }, (_, index) => index + 1);
 }
 
+function createBatchFileId() {
+  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
+}
+
 async function readPDFInfo(blob: Blob, fileName: string) {
   const { getPDFInfo } = await import("@/lib/pdfProcessor");
   const file =
@@ -66,6 +71,7 @@ export const usePDFStore = create<PDFStore>((set, get) => ({
   inputPreviewUrl: null,
   inputInfo: null,
   batchFiles: [],
+  batchFileIds: [],
   batchInfos: [],
   outputBlob: null,
   outputPreviewUrl: null,
@@ -149,8 +155,11 @@ export const usePDFStore = create<PDFStore>((set, get) => ({
   },
 
   addBatchFile: (file, readPDFInfo = true) => {
+    const fileId = createBatchFileId();
+
     set((state) => ({
       batchFiles: [...state.batchFiles, file],
+      batchFileIds: [...state.batchFileIds, fileId],
       batchInfos: [...state.batchInfos, null],
       error: null,
     }));
@@ -162,12 +171,7 @@ export const usePDFStore = create<PDFStore>((set, get) => ({
     import("@/lib/pdfProcessor")
       .then(({ getPDFInfo }) => getPDFInfo(file))
       .then((info) => {
-        const index = get().batchFiles.findIndex(
-          (item) =>
-            item.name === file.name &&
-            item.size === file.size &&
-            item.lastModified === file.lastModified,
-        );
+        const index = get().batchFileIds.indexOf(fileId);
 
         if (index < 0) {
           return;
@@ -192,6 +196,7 @@ export const usePDFStore = create<PDFStore>((set, get) => ({
   removeBatchFile: (index) => {
     set((state) => ({
       batchFiles: state.batchFiles.filter((_, itemIndex) => itemIndex !== index),
+      batchFileIds: state.batchFileIds.filter((_, itemIndex) => itemIndex !== index),
       batchInfos: state.batchInfos.filter((_, itemIndex) => itemIndex !== index),
     }));
   },
@@ -204,20 +209,23 @@ export const usePDFStore = create<PDFStore>((set, get) => ({
     }
 
     const batchFiles = [...state.batchFiles];
+    const batchFileIds = [...state.batchFileIds];
     const batchInfos = [...state.batchInfos];
     const [file] = batchFiles.splice(from, 1);
+    const [fileId] = batchFileIds.splice(from, 1);
     const [info] = batchInfos.splice(from, 1);
 
-    if (!file) {
+    if (!file || !fileId) {
       return;
     }
 
     batchFiles.splice(to, 0, file);
+    batchFileIds.splice(to, 0, fileId);
     batchInfos.splice(to, 0, info ?? null);
-    set({ batchFiles, batchInfos });
+    set({ batchFiles, batchFileIds, batchInfos });
   },
 
-  clearBatch: () => set({ batchFiles: [], batchInfos: [] }),
+  clearBatch: () => set({ batchFiles: [], batchFileIds: [], batchInfos: [] }),
 
   setOutputBlob: (blob, fileName = "freeconvert-output.pdf") => {
     const state = get();
@@ -278,6 +286,7 @@ export const usePDFStore = create<PDFStore>((set, get) => ({
       inputPreviewUrl: null,
       inputInfo: null,
       batchFiles: [],
+      batchFileIds: [],
       batchInfos: [],
       outputBlob: null,
       outputPreviewUrl: null,

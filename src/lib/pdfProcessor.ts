@@ -36,7 +36,17 @@ async function getPDFJS() {
   return pdfjs;
 }
 
+function assertQPDFSharedMemorySupport() {
+  if (typeof window !== "undefined" && !window.crossOriginIsolated) {
+    throw new Error(
+      "PDF password tools need cross-origin isolation. Open the page over HTTPS or localhost, refresh so the latest security headers apply, then try again.",
+    );
+  }
+}
+
 async function getQPDF() {
+  assertQPDFSharedMemorySupport();
+
   qpdfModulePromise ??= import("qpdf-wasm").then(({ default: init }) =>
     init({
       locateFile: (file) => (file.endsWith(".wasm") ? QPDF_WASM_SRC : QPDF_JS_SRC),

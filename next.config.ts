@@ -98,6 +98,14 @@ const nextConfig: NextConfig = {
     ];
   },
   async headers() {
+    const crossOriginIsolationHeaders = [
+      { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+      { key: "Cross-Origin-Embedder-Policy", value: "credentialless" },
+    ];
+    const sameOriginResourceHeaders = [
+      { key: "Cross-Origin-Embedder-Policy", value: "credentialless" },
+      { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
+    ];
     const securityHeaders = [
       { key: "X-Frame-Options", value: "SAMEORIGIN" },
       { key: "X-Content-Type-Options", value: "nosniff" },
@@ -130,6 +138,22 @@ const nextConfig: NextConfig = {
       {
         source: "/(.*)",
         headers: securityHeaders,
+      },
+      {
+        source: "/protect-pdf",
+        headers: crossOriginIsolationHeaders,
+      },
+      {
+        source: "/unlock-pdf",
+        headers: crossOriginIsolationHeaders,
+      },
+      {
+        source: "/qpdf.js",
+        headers: sameOriginResourceHeaders,
+      },
+      {
+        source: "/qpdf.wasm",
+        headers: sameOriginResourceHeaders,
       },
       {
         source: "/icons/(.*)",

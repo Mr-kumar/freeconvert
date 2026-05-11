@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { ArrowLeft, Loader2, Wand2 } from "lucide-react";
 import { AdSlot } from "@/components/AdSlot";
@@ -70,21 +70,35 @@ export function RangeControl({
   );
 }
 
-export function NumberControl({
-  label,
-  value,
-  min = 0,
-  max,
-  step,
-  onChange,
-}: {
+type NumberControlProps = {
   label: string;
-  value: number;
   min?: number;
   max?: number;
   step?: number | string;
-  onChange: (value: number) => void;
-}) {
+} & (
+  | {
+      allowEmpty?: false;
+      value: number;
+      onChange: (value: number) => void;
+    }
+  | {
+      allowEmpty: true;
+      value: number | null;
+      onChange: (value: number | null) => void;
+    }
+);
+
+export function NumberControl(props: NumberControlProps) {
+  const {
+    label,
+    value,
+    min = 0,
+    max,
+    step,
+  } = props;
+  const [draftValue, setDraftValue] = useState<string | null>(null);
+  const inputValue = draftValue ?? (value === null ? "" : String(value));
+
   return (
     <label className="field-label min-w-0">
       {label}
@@ -94,11 +108,22 @@ export function NumberControl({
         min={min}
         step={step}
         type="number"
-        value={value}
+        value={inputValue}
+        onBlur={() => setDraftValue(null)}
         onChange={(event) => {
-          const parsed = Number(event.target.value);
+          const nextValue = event.target.value;
+          setDraftValue(nextValue);
+
+          if (nextValue.trim() === "") {
+            if (props.allowEmpty) {
+              props.onChange(null);
+            }
+            return;
+          }
+
+          const parsed = Number(nextValue);
           if (Number.isFinite(parsed)) {
-            onChange(parsed);
+            props.onChange(parsed);
           }
         }}
       />

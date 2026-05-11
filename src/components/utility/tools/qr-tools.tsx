@@ -24,7 +24,23 @@ interface QrOptions {
 }
 
 function dataUrlToBlob(dataUrl: string) {
-  return fetch(dataUrl).then((response) => response.blob());
+  const separatorIndex = dataUrl.indexOf(",");
+  if (separatorIndex === -1) {
+    throw new Error("Could not prepare QR code download.");
+  }
+
+  const header = dataUrl.slice(0, separatorIndex);
+  const data = dataUrl.slice(separatorIndex + 1);
+  const mimeType = header.match(/^data:([^;,]+)/)?.[1] ?? "application/octet-stream";
+  const isBase64 = header.includes(";base64");
+  const binary = isBase64 ? atob(data) : decodeURIComponent(data);
+  const bytes = new Uint8Array(binary.length);
+
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+
+  return new Blob([bytes], { type: mimeType });
 }
 
 function useQrCode(value: string, options: QrOptions) {
@@ -66,7 +82,7 @@ function useQrCode(value: string, options: QrOptions) {
           ...qrOptions,
           type: "svg",
         });
-        const nextBlob = await dataUrlToBlob(nextDataUrl);
+        const nextBlob = dataUrlToBlob(nextDataUrl);
 
         if (!cancelled) {
           setDataUrl(nextDataUrl);

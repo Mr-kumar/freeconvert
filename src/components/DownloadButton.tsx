@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Download, Loader2, X } from "lucide-react";
+import { useDialogAccessibility } from "@/components/useDialogAccessibility";
 
 interface DownloadButtonProps {
   blob: Blob | null;
@@ -39,6 +40,12 @@ export function DownloadButton({
   const [draftName, setDraftName] = useState("");
   const [isPreparing, setIsPreparing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const closeDialog = useCallback(() => setIsOpen(false), []);
+  const dialogRef = useDialogAccessibility({
+    initialFocusRef: inputRef,
+    onClose: closeDialog,
+    open: isOpen,
+  });
   const disabled = !blob && (!batchBlobs || batchBlobs.length === 0);
   const defaultName = useMemo(() => {
     if (batchBlobs?.length === 1) {
@@ -125,9 +132,11 @@ export function DownloadButton({
 
       {isOpen ? (
         <div
+          ref={dialogRef}
           aria-modal="true"
           className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center"
           role="dialog"
+          tabIndex={-1}
         >
           <div className="w-full max-w-md overflow-hidden rounded-2xl border border-[var(--border)] bg-white p-5 shadow-2xl">
             <div className="flex items-start justify-between gap-4">
@@ -143,7 +152,7 @@ export function DownloadButton({
                 aria-label="Close"
                 className="icon-button"
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={closeDialog}
               >
                 <X className="h-4 w-4" />
               </button>
@@ -164,7 +173,7 @@ export function DownloadButton({
                 className="segmented-button justify-center"
                 disabled={isPreparing}
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={closeDialog}
               >
                 Cancel
               </button>
