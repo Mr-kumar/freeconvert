@@ -382,6 +382,238 @@ export function AgeCalculator({ tool }: { tool: UtilityToolConfig }) {
   );
 }
 
+export function BmiCalculator({ tool }: { tool: UtilityToolConfig }) {
+  const [unit, setUnit] = useState<"metric" | "imperial">("metric");
+  const [heightCm, setHeightCm] = useState(175);
+  const [weightKg, setWeightKg] = useState(72);
+  const [heightIn, setHeightIn] = useState(69);
+  const [weightLb, setWeightLb] = useState(160);
+
+  const result = useMemo(() => {
+    const heightMeters = unit === "metric" ? heightCm / 100 : heightIn * 0.0254;
+    const weight = unit === "metric" ? weightKg : weightLb * 0.45359237;
+    const bmi = heightMeters > 0 ? weight / heightMeters ** 2 : 0;
+    const healthyLow = 18.5 * heightMeters ** 2;
+    const healthyHigh = 24.9 * heightMeters ** 2;
+    const category =
+      bmi < 18.5
+        ? "Underweight"
+        : bmi < 25
+          ? "Healthy"
+          : bmi < 30
+            ? "Overweight"
+            : "Obesity";
+
+    return { bmi, category, healthyLow, healthyHigh };
+  }, [heightCm, heightIn, unit, weightKg, weightLb]);
+
+  return (
+    <UtilityToolLayout
+      controls={
+        <>
+          <ControlSection title="Units">
+            <SegmentedChoice
+              value={unit}
+              options={[
+                { label: "Metric", value: "metric" },
+                { label: "Imperial", value: "imperial" },
+              ]}
+              onChange={setUnit}
+            />
+          </ControlSection>
+          <ControlSection title="Body measurements">
+            {unit === "metric" ? (
+              <>
+                <Field label="Height (cm)">
+                  <input className="field-input" min={1} type="number" value={heightCm} onChange={(event) => setHeightCm(Number(event.target.value))} />
+                </Field>
+                <Field label="Weight (kg)">
+                  <input className="field-input" min={1} type="number" value={weightKg} onChange={(event) => setWeightKg(Number(event.target.value))} />
+                </Field>
+              </>
+            ) : (
+              <>
+                <Field label="Height (inches)">
+                  <input className="field-input" min={1} type="number" value={heightIn} onChange={(event) => setHeightIn(Number(event.target.value))} />
+                </Field>
+                <Field label="Weight (lb)">
+                  <input className="field-input" min={1} type="number" value={weightLb} onChange={(event) => setWeightLb(Number(event.target.value))} />
+                </Field>
+              </>
+            )}
+          </ControlSection>
+        </>
+      }
+      preview={
+        <PreviewShell title="BMI result">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <StatCard label="BMI" tone="accent" value={formatNumber(result.bmi, 1)} />
+            <StatCard label="Category" value={result.category} />
+            <StatCard
+              label="Healthy low"
+              value={unit === "metric" ? `${formatNumber(result.healthyLow, 1)} kg` : `${formatNumber(result.healthyLow / 0.45359237, 1)} lb`}
+            />
+            <StatCard
+              label="Healthy high"
+              value={unit === "metric" ? `${formatNumber(result.healthyHigh, 1)} kg` : `${formatNumber(result.healthyHigh / 0.45359237, 1)} lb`}
+            />
+          </div>
+          <p className="mt-5 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm leading-6 text-[var(--muted)]">
+            BMI is a general screening estimate. It does not measure body fat or replace professional medical advice.
+          </p>
+        </PreviewShell>
+      }
+      tool={tool}
+    />
+  );
+}
+
+const fallbackZones = [
+  "Asia/Kolkata",
+  "UTC",
+  "America/New_York",
+  "America/Los_Angeles",
+  "Europe/London",
+  "Europe/Berlin",
+  "Asia/Dubai",
+  "Asia/Singapore",
+  "Asia/Tokyo",
+  "Australia/Sydney",
+];
+
+function zoneOptions() {
+  if (typeof Intl.supportedValuesOf === "function") {
+    return Intl.supportedValuesOf("timeZone");
+  }
+
+  return fallbackZones;
+}
+
+function formatInZone(date: Date, timeZone: string, hour12: boolean) {
+  return new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    hour12,
+    timeZone,
+  }).format(date);
+}
+
+function partsInZone(date: Date, timeZone: string) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    hourCycle: "h23",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).formatToParts(date);
+  const value = (type: string) => Number(parts.find((part) => part.type === type)?.value || 0);
+
+  return {
+    year: value("year"),
+    month: value("month"),
+    day: value("day"),
+    hour: value("hour"),
+    minute: value("minute"),
+  };
+}
+
+function zonedLocalTimeToDate(
+  year: number,
+  month: number,
+  day: number,
+  hour: number,
+  minute: number,
+  timeZone: string,
+) {
+  const target = Date.UTC(year, month - 1, day, hour, minute);
+  let guess = target;
+
+  for (let index = 0; index < 3; index += 1) {
+    const parts = partsInZone(new Date(guess), timeZone);
+    const rendered = Date.UTC(
+      parts.year,
+      parts.month - 1,
+      parts.day,
+      parts.hour,
+      parts.minute,
+    );
+    guess += target - rendered;
+  }
+
+  return new Date(guess);
+}
+
+export function TimeZoneConverter({ tool }: { tool: UtilityToolConfig }) {
+  const [sourceZone, setSourceZone] = useState("Asia/Kolkata");
+  const [targetZone, setTargetZone] = useState("America/New_York");
+  const [date, setDate] = useState(todayInputValue());
+  const [time, setTime] = useState("10:00");
+  const [hour12, setHour12] = useState(true);
+  const zones = useMemo(() => zoneOptions(), []);
+  const selectedDate = useMemo(() => {
+    const [year, month, day] = date.split("-").map(Number);
+    const [hour, minute] = time.split(":").map(Number);
+    return zonedLocalTimeToDate(year, month, day, hour, minute, sourceZone);
+  }, [date, sourceZone, time]);
+
+  return (
+    <UtilityToolLayout
+      controls={
+        <>
+          <ControlSection title="Time">
+            <Field label="Date">
+              <input className="field-input" type="date" value={date} onChange={(event) => setDate(event.target.value)} />
+            </Field>
+            <Field label="Time">
+              <input className="field-input" type="time" value={time} onChange={(event) => setTime(event.target.value)} />
+            </Field>
+            <Field label="From time zone">
+              <select className="field-input" value={sourceZone} onChange={(event) => setSourceZone(event.target.value)}>
+                {zones.map((zone) => <option key={zone} value={zone}>{zone}</option>)}
+              </select>
+            </Field>
+            <Field label="To time zone">
+              <select className="field-input" value={targetZone} onChange={(event) => setTargetZone(event.target.value)}>
+                {zones.map((zone) => <option key={zone} value={zone}>{zone}</option>)}
+              </select>
+            </Field>
+            <SegmentedChoice
+              value={hour12 ? "12" : "24"}
+              options={[
+                { label: "12 hour", value: "12" },
+                { label: "24 hour", value: "24" },
+              ]}
+              onChange={(value) => setHour12(value === "12")}
+            />
+          </ControlSection>
+        </>
+      }
+      preview={
+        <PreviewShell title="Converted times">
+          <div className="grid gap-4 md:grid-cols-2">
+            <StatCard label={sourceZone} value={formatInZone(selectedDate, sourceZone, hour12)} />
+            <StatCard label={targetZone} tone="accent" value={formatInZone(selectedDate, targetZone, hour12)} />
+          </div>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {[sourceZone, targetZone, "UTC", "Europe/London", "Asia/Singapore", "Australia/Sydney"].filter((zone, index, list) => list.indexOf(zone) === index).map((zone) => (
+              <div className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-4" key={zone}>
+                <p className="text-xs font-bold uppercase text-[var(--muted)]">{zone}</p>
+                <p className="mt-2 text-sm font-extrabold text-[var(--text)]">{formatInZone(selectedDate, zone, hour12)}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-5 text-sm leading-6 text-[var(--muted)]">
+            This uses your browser time-zone database, including daylight saving rules where available.
+          </p>
+        </PreviewShell>
+      }
+      tool={tool}
+    />
+  );
+}
+
 export function SipCalculator({ tool }: { tool: UtilityToolConfig }) {
   const [monthly, setMonthly] = useState(5000);
   const [rate, setRate] = useState(12);

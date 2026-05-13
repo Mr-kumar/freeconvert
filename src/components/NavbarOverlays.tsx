@@ -41,6 +41,7 @@ import {
   Sparkles,
   Stamp,
   Type,
+  Video,
   Wrench,
   X,
 } from "lucide-react";
@@ -73,6 +74,15 @@ const toolIconMap: Record<string, ComponentType<{ className?: string }>> = {
   resize: Maximize,
   compress: ImageDown,
   convert: RefreshCw,
+  "webp-to-jpg": RefreshCw,
+  "png-to-jpg": RefreshCw,
+  "jpg-to-png": RefreshCw,
+  "avif-to-jpg": RefreshCw,
+  "png-to-webp": RefreshCw,
+  "compress-jpg": ImageDown,
+  "compress-png": ImageDown,
+  "heic-to-jpg": FileImage,
+  "heic-to-png": FileImage,
   crop: Crop,
   "rotate-flip": RefreshCw,
   "background-removal": Eraser,
@@ -80,29 +90,46 @@ const toolIconMap: Record<string, ComponentType<{ className?: string }>> = {
   merge: Grid3X3,
   filters: SlidersHorizontal,
   metadata: FileImage,
+  "image-to-text": Type,
+  "svg-to-png": FileImage,
+  "favicon-generator": Sparkles,
+  "blur-image": Eraser,
+  "image-collage-maker": Grid3X3,
   "merge-pdf": Layers,
   "compress-pdf": Minimize2,
   "split-pdf": Scissors,
   "convert-pdf-to-image": FileImage,
   "convert-image-to-pdf": ImagePlus,
+  "jpg-to-pdf": ImagePlus,
+  "png-to-pdf": ImagePlus,
+  "heic-to-pdf": ImagePlus,
   "rotate-pdf": RotateCw,
   "add-watermark-to-pdf": Stamp,
   "protect-pdf": ShieldCheck,
   "unlock-pdf": FileLock2,
   "extract-pdf-pages": FileArchive,
+  "delete-pages-from-pdf": Scissors,
   "reorder-pdf-pages": Layers,
+  "edit-pdf": FileSearch,
+  "sign-pdf": Stamp,
+  "crop-pdf": Crop,
+  "pdf-to-text": Type,
+  "redact-pdf": ShieldCheck,
   "add-page-numbers-to-pdf": ListOrdered,
   "view-pdf-metadata": FileSearch,
   "qr-code-generator": QrCode,
   "upi-qr-code-generator": QrCode,
   "word-counter": Type,
+  "character-counter": Type,
   "text-case-converter": Type,
   "remove-duplicate-lines": ListOrdered,
+  "bmi-calculator": Calculator,
   "emi-calculator": Calculator,
   "gst-calculator": Calculator,
   "percentage-calculator": Calculator,
   "age-calculator": Calculator,
   "sip-calculator": Calculator,
+  "time-zone-converter": Calculator,
   "color-picker": Palette,
   "color-contrast-checker": Palette,
   "length-converter": Ruler,
@@ -115,6 +142,10 @@ const toolIconMap: Record<string, ComponentType<{ className?: string }>> = {
   "url-encoder-decoder": Braces,
   "file-hash-checksum": FileSearch,
   "zip-extractor": FileArchive,
+  "video-compressor": Video,
+  "mp4-to-mp3": Video,
+  "mp4-to-gif": Video,
+  "audio-converter": Video,
 };
 
 const categoryIconMap: Record<string, ComponentType<{ className?: string }>> = {
@@ -147,7 +178,13 @@ const megaMenuColumns: Record<MegaMenuKey, MegaMenuColumnConfig[]> = {
     {
       title: "Image",
       icon: FileImage,
-      tools: pickTools(tools, ["convert", "resize", "crop", "rotate-flip"]),
+      tools: pickTools(tools, [
+        "convert",
+        "webp-to-jpg",
+        "png-to-jpg",
+        "jpg-to-png",
+        "svg-to-png",
+      ]),
     },
     {
       title: "PDF & Documents",
@@ -155,8 +192,19 @@ const megaMenuColumns: Record<MegaMenuKey, MegaMenuColumnConfig[]> = {
       tools: pickTools(pdfTools, [
         "convert-pdf-to-image",
         "convert-image-to-pdf",
-        "extract-pdf-pages",
-        "view-pdf-metadata",
+        "jpg-to-pdf",
+        "png-to-pdf",
+        "heic-to-pdf",
+        "pdf-to-text",
+      ]),
+    },
+    {
+      title: "Media",
+      icon: Video,
+      tools: pickTools(utilityTools, [
+        "mp4-to-mp3",
+        "mp4-to-gif",
+        "audio-converter",
       ]),
     },
     {
@@ -169,12 +217,22 @@ const megaMenuColumns: Record<MegaMenuKey, MegaMenuColumnConfig[]> = {
     {
       title: "Image",
       icon: ImageDown,
-      tools: pickTools(tools, ["compress", "resize", "convert"]),
+      tools: pickTools(tools, [
+        "compress",
+        "compress-jpg",
+        "compress-png",
+        "resize",
+      ]),
     },
     {
       title: "PDF",
       icon: Minimize2,
       tools: pickTools(pdfTools, ["compress-pdf", "merge-pdf", "split-pdf"]),
+    },
+    {
+      title: "Media",
+      icon: Video,
+      tools: pickTools(utilityTools, ["video-compressor"]),
     },
     {
       title: "File Utilities",
@@ -184,41 +242,76 @@ const megaMenuColumns: Record<MegaMenuKey, MegaMenuColumnConfig[]> = {
   ],
   tools: [
     {
-      title: "Image Tools",
+      title: "Image Essentials",
       icon: FileImage,
-      tools,
+      tools: pickTools(tools, [
+        "resize",
+        "compress",
+        "convert",
+        "crop",
+        "rotate-flip",
+        "background-removal",
+        "watermark",
+        "merge",
+        "filters",
+        "metadata",
+      ]),
     },
     {
       title: "PDF Tools",
       icon: FileSearch,
-      tools: pdfTools.slice(0, 7),
+      tools: pdfTools.slice(0, 11),
     },
     {
       title: "More PDF Tools",
       icon: Layers,
-      tools: pdfTools.slice(7),
+      tools: pdfTools.slice(11),
     },
     {
-      title: "QR & Text",
+      title: "Image Convert & Create",
+      icon: ImagePlus,
+      tools: pickTools(tools, [
+        "webp-to-jpg",
+        "png-to-jpg",
+        "jpg-to-png",
+        "avif-to-jpg",
+        "png-to-webp",
+        "compress-jpg",
+        "compress-png",
+        "heic-to-jpg",
+        "heic-to-png",
+        "image-to-text",
+        "svg-to-png",
+        "favicon-generator",
+        "blur-image",
+        "image-collage-maker",
+      ]),
+    },
+    {
+      title: "QR, Text & Calculators",
       icon: Type,
-      tools: utilityToolsFor(["qr", "text"]),
+      tools: utilityToolsFor(["qr", "text", "calculator"]),
     },
     {
-      title: "Daily & Developer",
+      title: "Developer, File & Media",
       icon: Calculator,
       tools: utilityToolsFor([
-        "calculator",
         "color",
         "converter",
         "password",
         "developer",
         "file",
+        "media",
       ]),
     },
   ],
 };
 
 function megaGridClass(columnCount: number) {
+  if (columnCount >= 6) {
+    return "grid-cols-1 sm:grid-cols-2 xl:grid-cols-6";
+  }
+
   if (columnCount >= 5) {
     return "grid-cols-1 sm:grid-cols-2 xl:grid-cols-5";
   }
@@ -393,7 +486,7 @@ export function MegaMenuOverlay({
                     {column.title}
                   </h3>
                 </div>
-                <div className="grid max-h-[calc(100vh-15rem)] gap-1 overflow-y-auto border-t border-[var(--border)] px-4 py-4">
+                <div className="grid gap-1 border-t border-[var(--border)] px-4 py-4 lg:max-h-[calc(100vh-15rem)] lg:overflow-y-auto">
                   {column.tools.map((tool) => (
                     <MegaMenuLink
                       key={tool.href}

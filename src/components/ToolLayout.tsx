@@ -8,6 +8,9 @@ interface ToolLayoutProps {
   description: string;
   controls: ReactNode;
   preview: ReactNode;
+  backHref?: string;
+  backLabel?: string;
+  badgeLabel?: string;
   footer?: ReactNode;
 }
 
@@ -16,6 +19,9 @@ export function ToolLayout({
   description,
   controls,
   preview,
+  backHref = "/#image-tools",
+  backLabel = "Image Tools",
+  badgeLabel = "Browser only",
   footer,
 }: ToolLayoutProps) {
   return (
@@ -24,11 +30,11 @@ export function ToolLayout({
         <div className="mx-auto flex w-[min(358px,calc(100vw-2rem))] max-w-7xl flex-col gap-4 px-0 py-5 sm:w-full sm:px-6 sm:py-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0">
             <Link
-              href="/#image-tools"
+              href={backHref}
               className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-[var(--muted)] hover:text-[var(--accent)]"
             >
               <ArrowLeft className="h-4 w-4" />
-              Image Tools
+              {backLabel}
             </Link>
             <h1 className="break-words font-display text-3xl font-extrabold text-[var(--text)] sm:text-5xl">
               {title}
@@ -38,7 +44,7 @@ export function ToolLayout({
             </p>
           </div>
           <div className="self-start rounded-full bg-white px-4 py-2 text-sm font-bold text-[var(--accent)] shadow-sm ring-1 ring-[var(--border)] lg:self-auto">
-            Browser only
+            {badgeLabel}
           </div>
         </div>
       </section>
@@ -47,6 +53,7 @@ export function ToolLayout({
         className="pb-5"
         format="horizontal"
         minHeight={90}
+        minViewportWidth={640}
         slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOOL_TOP}
       />
 

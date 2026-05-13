@@ -98,7 +98,7 @@ button:disabled {
 
 .segmented-button {
   display: inline-flex;
-  min-height: 42px;
+  min-height: 44px;
   min-width: 0;
   align-items: center;
   justify-content: center;

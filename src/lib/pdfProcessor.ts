@@ -62,6 +62,35 @@ async function fileToArrayBuffer(file: File | Blob) {
   return file.arrayBuffer();
 }
 
+function fileName(file: File | Blob) {
+  return file instanceof File ? file.name.toLowerCase() : "";
+}
+
+function isHeicImage(file: File | Blob) {
+  const name = fileName(file);
+  return (
+    file.type === "image/heic" ||
+    file.type === "image/heif" ||
+    name.endsWith(".heic") ||
+    name.endsWith(".heif")
+  );
+}
+
+async function decodeHeicImageIfNeeded(file: File | Blob): Promise<File | Blob> {
+  if (!isHeicImage(file)) {
+    return file;
+  }
+
+  const { default: heic2any } = await import("heic2any");
+  const converted = await heic2any({
+    blob: file,
+    toType: "image/png",
+    quality: 0.92,
+  });
+
+  return Array.isArray(converted) ? converted[0] : converted;
+}
+
 function blobFromBytes(bytes: Uint8Array) {
   const arrayBuffer = bytes.buffer.slice(
     bytes.byteOffset,
@@ -437,7 +466,8 @@ async function runQPDF(
 }
 
 async function loadImage(file: File) {
-  const url = URL.createObjectURL(file);
+  const decoded = await decodeHeicImageIfNeeded(file);
+  const url = URL.createObjectURL(decoded);
 
   try {
     const image = await new Promise<HTMLImageElement>((resolve, reject) => {
@@ -866,6 +896,243 @@ export async function reorderPages(file: File, newOrder: number[]) {
   const copied = await doc.copyPages(source, pageIndices);
   copied.forEach((page) => doc.addPage(page));
 
+  return blobFromBytes(await doc.save());
+}
+
+export async function deletePDFPages(file: File, pagesToDelete: number[]) {
+  const { PDFDocument } = await getPDFLib();
+  const source = await PDFDocument.load(await fileToArrayBuffer(file));
+  const totalPages = source.getPageCount();
+  const deleteSet = new Set(
+    pagesToDelete.filter((page) => page >= 1 && page <= totalPages),
+  );
+  const keepPages = allPages(totalPages).filter((page) => !deleteSet.has(page));
+
+  if (!keepPages.length) {
+    throw new Error("At least one page must remain in the PDF.");
+  }
+
+  const doc = await PDFDocument.create();
+  const copied = await doc.copyPages(source, keepPages.map((page) => page - 1));
+  copied.forEach((page) => doc.addPage(page));
+
+  return blobFromBytes(await doc.save());
+}
+
+export async function cropPDFPages(
+  file: File,
+  opts: {
+    pages: "all" | number[];
+    topMM: number;
+    rightMM: number;
+    bottomMM: number;
+    leftMM: number;
+  },
+) {
+  const { PDFDocument } = await getPDFLib();
+  const doc = await PDFDocument.load(await fileToArrayBuffer(file));
+  const pages = selectedPages(opts.pages, doc.getPageCount());
+  const top = Math.max(0, opts.topMM) * MM_TO_PT;
+  const right = Math.max(0, opts.rightMM) * MM_TO_PT;
+  const bottom = Math.max(0, opts.bottomMM) * MM_TO_PT;
+  const left = Math.max(0, opts.leftMM) * MM_TO_PT;
+
+  for (const pageNumber of pages) {
+    const page = doc.getPage(pageNumber - 1);
+    const { width, height } = page.getSize();
+    const cropWidth = Math.max(width - left - right, 36);
+    const cropHeight = Math.max(height - top - bottom, 36);
+
+    page.setCropBox(left, bottom, cropWidth, cropHeight);
+  }
+
+  return blobFromBytes(await doc.save());
+}
+
+export async function extractPDFText(
+  file: File,
+  onProgress?: ProgressCallback,
+) {
+  const { pdf, loadingTask } = await getPDFJSDocument(file);
+  const pages: string[] = [];
+
+  try {
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+      onProgress?.(
+        ((pageNumber - 1) / pdf.numPages) * 100,
+        `Reading page ${pageNumber} of ${pdf.numPages}...`,
+      );
+      const page = (await pdf.getPage(pageNumber)) as {
+        getTextContent: () => Promise<{
+          items: Array<{ str?: string; hasEOL?: boolean }>;
+        }>;
+      };
+      const content = await page.getTextContent();
+      const text = content.items
+        .map((item) => `${item.str || ""}${item.hasEOL ? "\n" : " "}`)
+        .join("")
+        .replace(/[ \t]+\n/g, "\n")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+      pages.push(`--- Page ${pageNumber} ---\n${text}`);
+    }
+  } finally {
+    await loadingTask.destroy();
+  }
+
+  onProgress?.(100, "Text extracted.");
+  return pages.join("\n\n");
+}
+
+export async function annotatePDF(
+  file: File,
+  opts: {
+    pages: "all" | number[];
+    mode: "text" | "highlight" | "box" | "signature";
+    text?: string;
+    signatureFile?: File | Blob | null;
+    xPercent: number;
+    yPercent: number;
+    widthPercent: number;
+    heightPercent: number;
+    fontSize: number;
+    color: string;
+    opacity: number;
+  },
+) {
+  const { PDFDocument, StandardFonts, rgb } = await getPDFLib();
+  const doc = await PDFDocument.load(await fileToArrayBuffer(file));
+  const pages = selectedPages(opts.pages, doc.getPageCount());
+  const color = hexToRgb(opts.color);
+  const opacity = clampNumber(opts.opacity, 0, 1);
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  let signatureImage:
+    | Awaited<ReturnType<typeof doc.embedPng>>
+    | Awaited<ReturnType<typeof doc.embedJpg>>
+    | null = null;
+
+  if (opts.mode === "signature" && opts.signatureFile) {
+    const bytes = new Uint8Array(await opts.signatureFile.arrayBuffer());
+    const name = fileName(opts.signatureFile);
+    signatureImage =
+      opts.signatureFile.type === "image/jpeg" ||
+      name.endsWith(".jpg") ||
+      name.endsWith(".jpeg")
+        ? await doc.embedJpg(bytes)
+        : await doc.embedPng(bytes);
+  }
+
+  for (const pageNumber of pages) {
+    const page = doc.getPage(pageNumber - 1);
+    const { width, height } = page.getSize();
+    const x = (width * clampNumber(opts.xPercent, 0, 100)) / 100;
+    const yTop = (height * clampNumber(opts.yPercent, 0, 100)) / 100;
+    const boxWidth = (width * clampNumber(opts.widthPercent, 1, 100)) / 100;
+    const boxHeight = (height * clampNumber(opts.heightPercent, 1, 100)) / 100;
+    const y = height - yTop - boxHeight;
+
+    if (opts.mode === "text") {
+      page.drawText(opts.text || "Text", {
+        x,
+        y: y + Math.max(0, boxHeight - opts.fontSize),
+        size: opts.fontSize,
+        font,
+        color: rgb(color.r, color.g, color.b),
+        opacity,
+        maxWidth: boxWidth,
+      });
+    } else if (opts.mode === "signature" && signatureImage) {
+      page.drawImage(signatureImage, {
+        x,
+        y,
+        width: boxWidth,
+        height: boxHeight,
+        opacity,
+      });
+    } else {
+      page.drawRectangle({
+        x,
+        y,
+        width: boxWidth,
+        height: boxHeight,
+        borderColor: rgb(color.r, color.g, color.b),
+        borderWidth: opts.mode === "box" ? 2 : 0,
+        color: rgb(color.r, color.g, color.b),
+        opacity: opts.mode === "highlight" ? Math.min(opacity, 0.45) : opacity,
+      });
+    }
+  }
+
+  return blobFromBytes(await doc.save());
+}
+
+export async function redactPDF(
+  file: File,
+  opts: {
+    pages: "all" | number[];
+    xPercent: number;
+    yPercent: number;
+    widthPercent: number;
+    heightPercent: number;
+    fillColor: string;
+    dpi: number;
+  },
+  onProgress?: ProgressCallback,
+) {
+  const { PDFDocument, rgb } = await getPDFLib();
+  const { pdf, loadingTask } = await getPDFJSDocument(file);
+  const source = await PDFDocument.load(await fileToArrayBuffer(file));
+  const doc = await PDFDocument.create();
+  const redactSet = new Set(selectedPages(opts.pages, source.getPageCount()));
+  const fill = hexToRgb(opts.fillColor || "#000000");
+
+  try {
+    for (let pageNumber = 1; pageNumber <= source.getPageCount(); pageNumber += 1) {
+      onProgress?.(
+        ((pageNumber - 1) / source.getPageCount()) * 100,
+        `Redacting page ${pageNumber} of ${source.getPageCount()}...`,
+      );
+
+      if (!redactSet.has(pageNumber)) {
+        const [copied] = await doc.copyPages(source, [pageNumber - 1]);
+        doc.addPage(copied);
+        continue;
+      }
+
+      const sourcePage = source.getPage(pageNumber - 1);
+      const { width, height } = sourcePage.getSize();
+      const canvas = await renderPDFPageToCanvas(pdf, pageNumber, opts.dpi / 72);
+      const context = canvas.getContext("2d");
+
+      if (!context) {
+        throw new Error("Canvas rendering is not available in this browser.");
+      }
+
+      context.fillStyle = opts.fillColor || "#000000";
+      context.fillRect(
+        (canvas.width * clampNumber(opts.xPercent, 0, 100)) / 100,
+        (canvas.height * clampNumber(opts.yPercent, 0, 100)) / 100,
+        (canvas.width * clampNumber(opts.widthPercent, 1, 100)) / 100,
+        (canvas.height * clampNumber(opts.heightPercent, 1, 100)) / 100,
+      );
+
+      const imageBlob = await canvasToBlob(canvas, "image/jpeg", 0.9);
+      const image = await doc.embedJpg(new Uint8Array(await imageBlob.arrayBuffer()));
+      const page = doc.addPage([width, height]);
+      page.drawRectangle({
+        x: 0,
+        y: 0,
+        width,
+        height,
+        color: rgb(fill.r, fill.g, fill.b),
+      });
+      page.drawImage(image, { x: 0, y: 0, width, height });
+    }
+  } finally {
+    await loadingTask.destroy();
+  }
+
+  onProgress?.(100, "Redacted PDF ready.");
   return blobFromBytes(await doc.save());
 }
 

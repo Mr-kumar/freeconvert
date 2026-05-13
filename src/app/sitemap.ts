@@ -3,7 +3,7 @@ import { blogPosts } from "@/lib/blog";
 import { BASE_URL, pdfTools, tools } from "@/lib/tools";
 import { utilityTools } from "@/lib/utilityTools";
 
-const lastModified = new Date("2026-05-10T00:00:00.000Z");
+const lastModified = new Date("2026-05-13T00:00:00.000Z");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolRoutes = tools.map((tool) => ({

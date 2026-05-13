@@ -16,6 +16,7 @@ import {
   Search,
   Sparkles,
   Type,
+  Video,
 } from "lucide-react";
 import { AdSlot } from "@/components/AdSlot";
 import { pdfTools, tools, type PDFToolConfig, type ToolConfig } from "@/lib/tools";
@@ -40,6 +41,7 @@ const categoryIconMap: Record<string, ComponentType<{ className?: string }>> = {
   password: KeyRound,
   developer: Braces,
   file: FileArchive,
+  media: Video,
 };
 
 const popularIconMap: Record<string, ComponentType<{ className?: string }>> = {
@@ -51,6 +53,12 @@ const popularIconMap: Record<string, ComponentType<{ className?: string }>> = {
   "json-formatter": Braces,
   "password-generator": KeyRound,
   "emi-calculator": Calculator,
+  "heic-to-jpg": FileImage,
+  "image-to-text": Type,
+  "video-compressor": Video,
+  "mp4-to-mp3": Video,
+  "bmi-calculator": Calculator,
+  "edit-pdf": FileText,
 };
 
 function toolKey(tool: AnyTool) {
@@ -159,15 +167,16 @@ function utilityCategoryCard(category: UtilityCategoryConfig) {
 export function HomeTools() {
   const popular = [
     pdfTools.find((tool) => tool.slug === "merge-pdf"),
+    tools.find((tool) => tool.slug === "heic-to-jpg"),
     tools.find((tool) => tool.slug === "compress"),
+    utilityTools.find((tool) => tool.slug === "character-counter"),
     utilityTools.find((tool) => tool.slug === "qr-code-generator"),
-    utilityTools.find((tool) => tool.slug === "word-counter"),
+    pdfTools.find((tool) => tool.slug === "edit-pdf"),
     pdfTools.find((tool) => tool.slug === "compress-pdf"),
     ...popularUtilityTools.filter(
       (tool) =>
-        tool.slug === "json-formatter" ||
-        tool.slug === "password-generator" ||
-        tool.slug === "emi-calculator",
+        tool.slug === "video-compressor" ||
+        tool.slug === "mp4-to-mp3",
     ),
   ].filter(Boolean) as AnyTool[];
 
@@ -194,6 +203,7 @@ export function HomeTools() {
     utilityCategoryCard(utilityCategoryConfigs.password),
     utilityCategoryCard(utilityCategoryConfigs.developer),
     utilityCategoryCard(utilityCategoryConfigs.file),
+    utilityCategoryCard(utilityCategoryConfigs.media),
   ];
 
   return (

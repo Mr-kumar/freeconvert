@@ -5,7 +5,7 @@ export interface ToolFaq {
   answer: string;
 }
 
-export const imageToolFaqs: Record<ToolSlug, ToolFaq[]> = {
+export const imageToolFaqs: Partial<Record<ToolSlug, ToolFaq[]>> = {
   resize: [
     {
       question: "Can I resize an image to exact pixels?",
@@ -148,7 +148,7 @@ export const imageToolFaqs: Record<ToolSlug, ToolFaq[]> = {
   ],
 };
 
-export const pdfToolFaqs: Record<PDFToolSlug, ToolFaq[]> = {
+export const pdfToolFaqs: Partial<Record<PDFToolSlug, ToolFaq[]>> = {
   "merge-pdf": [
     {
       question: "Can I merge PDF files in a custom order?",
@@ -334,9 +334,35 @@ export const pdfToolFaqs: Record<PDFToolSlug, ToolFaq[]> = {
 };
 
 export function getImageToolFaqs(slug: ToolSlug) {
-  return imageToolFaqs[slug];
+  return imageToolFaqs[slug] ?? [
+    {
+      question: "Will my image be uploaded?",
+      answer: "No. This tool runs in your browser and keeps the selected image on your device.",
+    },
+    {
+      question: "Is this tool free?",
+      answer: "Yes. You can use it without an account or watermark.",
+    },
+    {
+      question: "Does it change the original file?",
+      answer: "No. The original file stays unchanged and the result is saved as a new download.",
+    },
+  ];
 }
 
 export function getPdfToolFaqs(slug: PDFToolSlug) {
-  return pdfToolFaqs[slug];
+  return pdfToolFaqs[slug] ?? [
+    {
+      question: "Are my PDF files uploaded?",
+      answer: "No. This PDF tool runs in your browser and keeps the selected file on your device.",
+    },
+    {
+      question: "Is this PDF tool free?",
+      answer: "Yes. You can use it without an account or watermark.",
+    },
+    {
+      question: "Does it change the original PDF?",
+      answer: "No. The original file stays unchanged and the result is saved as a new download.",
+    },
+  ];
 }

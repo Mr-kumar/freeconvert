@@ -9,10 +9,12 @@ import {
 } from "@/lib/utilityTools";
 import {
   AgeCalculator,
+  BmiCalculator,
   EmiCalculator,
   GstCalculator,
   PercentageCalculator,
   SipCalculator,
+  TimeZoneConverter,
 } from "@/components/utility/tools/calculator-tools";
 import {
   ColorContrastChecker,
@@ -37,10 +39,12 @@ import {
   UpiQrCodeGenerator,
 } from "@/components/utility/tools/qr-tools";
 import {
+  CharacterCounter,
   RemoveDuplicateLines,
   TextCaseConverter,
   WordCounter,
 } from "@/components/utility/tools/text-tools";
+import { MediaTool } from "@/components/utility/tools/media-tools";
 
 const componentMap: Record<
   UtilityToolSlug,
@@ -49,13 +53,16 @@ const componentMap: Record<
   "qr-code-generator": QrCodeGenerator,
   "upi-qr-code-generator": UpiQrCodeGenerator,
   "word-counter": WordCounter,
+  "character-counter": CharacterCounter,
   "text-case-converter": TextCaseConverter,
   "remove-duplicate-lines": RemoveDuplicateLines,
   "emi-calculator": EmiCalculator,
   "gst-calculator": GstCalculator,
   "percentage-calculator": PercentageCalculator,
   "age-calculator": AgeCalculator,
+  "bmi-calculator": BmiCalculator,
   "sip-calculator": SipCalculator,
+  "time-zone-converter": TimeZoneConverter,
   "color-picker": ColorPickerTool,
   "color-contrast-checker": ColorContrastChecker,
   "length-converter": UnitConverterTool as ComponentType<{
@@ -74,6 +81,10 @@ const componentMap: Record<
   "url-encoder-decoder": UrlEncoderDecoder,
   "file-hash-checksum": FileHashChecksum,
   "zip-extractor": ZipExtractor,
+  "video-compressor": MediaTool,
+  "mp4-to-mp3": MediaTool,
+  "mp4-to-gif": MediaTool,
+  "audio-converter": MediaTool,
 };
 
 export function UtilityToolPageClient({ slug }: { slug: UtilityToolSlug }) {

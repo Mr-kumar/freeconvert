@@ -23,8 +23,38 @@ interface LoadedImage {
   height: number;
 }
 
+function blobName(file: Blob) {
+  return file instanceof File ? file.name.toLowerCase() : "";
+}
+
+function isHeicBlob(file: Blob) {
+  const name = blobName(file);
+  return (
+    file.type === "image/heic" ||
+    file.type === "image/heif" ||
+    name.endsWith(".heic") ||
+    name.endsWith(".heif")
+  );
+}
+
+async function decodeHeicIfNeeded(file: Blob): Promise<Blob> {
+  if (!isHeicBlob(file)) {
+    return file;
+  }
+
+  const { default: heic2any } = await import("heic2any");
+  const converted = await heic2any({
+    blob: file,
+    toType: "image/png",
+    quality: 0.92,
+  });
+
+  return Array.isArray(converted) ? converted[0] : converted;
+}
+
 async function loadImage(file: Blob): Promise<LoadedImage> {
-  const url = URL.createObjectURL(file);
+  const decoded = await decodeHeicIfNeeded(file);
+  const url = URL.createObjectURL(decoded);
 
   try {
     const img = await new Promise<HTMLImageElement>((resolve, reject) => {

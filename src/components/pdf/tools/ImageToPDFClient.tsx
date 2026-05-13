@@ -23,11 +23,18 @@ import type {
   PDFOrientation,
   PDFPageSize,
   PDFPosition,
+  PDFToolSlug,
   ToolDefaults,
 } from "@/lib/types";
 import { usePDFStore } from "@/store/usePDFStore";
 
-export function ImageToPDFClient({ defaults }: { defaults: ToolDefaults }) {
+export function ImageToPDFClient({
+  defaults,
+  slug = "convert-image-to-pdf",
+}: {
+  defaults: ToolDefaults;
+  slug?: PDFToolSlug;
+}) {
   const {
     batchFiles,
     clearOutput,
@@ -40,7 +47,7 @@ export function ImageToPDFClient({ defaults }: { defaults: ToolDefaults }) {
     setProgress,
   } = usePDFStore();
   const [outputName, setOutputName] = useState(
-    ensurePDFName("freeconvert-convert-image-to-pdf", "freeconvert-convert-image-to-pdf.pdf"),
+    ensurePDFName(`freeconvert-${slug}`, `freeconvert-${slug}.pdf`),
   );
   const [pageSize, setPageSize] = useState<PDFPageSize>(
     asPDFString(defaults.pageSize, "A4") as PDFPageSize,
@@ -199,7 +206,7 @@ export function ImageToPDFClient({ defaults }: { defaults: ToolDefaults }) {
       outputBatch={outputBatch}
       outputBlob={outputBlob}
       preview={preview}
-      slug="convert-image-to-pdf"
+      slug={slug}
       onProcess={processPDF}
     />
   );

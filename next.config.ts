@@ -122,7 +122,7 @@ const nextConfig: NextConfig = {
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
           "font-src 'self' https://fonts.gstatic.com",
           "img-src 'self' data: blob: https:",
-          "connect-src 'self' https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.googleadservices.com https://*.doubleclick.net https://fundingchoicesmessages.google.com https://www.google-analytics.com https://stats.g.doubleclick.net https://api.web3forms.com https://hcaptcha.com https://*.hcaptcha.com https://staticimgly.com",
+          "connect-src 'self' https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.googleadservices.com https://*.doubleclick.net https://fundingchoicesmessages.google.com https://www.google-analytics.com https://stats.g.doubleclick.net https://api.web3forms.com https://hcaptcha.com https://*.hcaptcha.com https://staticimgly.com https://tessdata.projectnaptha.com",
           "frame-src 'self' blob: https://googleads.g.doubleclick.net https://*.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com https://fundingchoicesmessages.google.com https://hcaptcha.com https://*.hcaptcha.com",
           "worker-src 'self' blob:",
           "wasm-src 'self' blob:",
@@ -153,6 +153,14 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/qpdf.wasm",
+        headers: sameOriginResourceHeaders,
+      },
+      {
+        source: "/ffmpeg/(.*)",
+        headers: sameOriginResourceHeaders,
+      },
+      {
+        source: "/tesseract/(.*)",
         headers: sameOriginResourceHeaders,
       },
       {

@@ -170,6 +170,86 @@ export function WordCounter({ tool }: { tool: UtilityToolConfig }) {
   );
 }
 
+export function CharacterCounter({ tool }: { tool: UtilityToolConfig }) {
+  const [text, setText] = useState(sampleText);
+  const stats = useMemo(() => {
+    const words = normalizeWords(text);
+    const graphemes = Array.from(text);
+
+    return {
+      characters: graphemes.length,
+      charactersNoSpaces: Array.from(text.replace(/\s/g, "")).length,
+      bytes: new Blob([text]).size,
+      words: words.length,
+      lines: text ? text.split(/\r\n|\r|\n/).length : 0,
+      keywords: keywordFrequency(text),
+    };
+  }, [text]);
+
+  return (
+    <UtilityToolLayout
+      controls={
+        <ControlSection title="Text">
+          <Field label="Paste or type text">
+            <textarea
+              className="field-input min-h-80 resize-y"
+              value={text}
+              onChange={(event) => setText(event.target.value)}
+            />
+          </Field>
+          <button
+            className="segmented-button justify-center"
+            type="button"
+            onClick={() => setText("")}
+          >
+            Clear text
+          </button>
+        </ControlSection>
+      }
+      preview={
+        <PreviewShell title="Character statistics">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <StatCard
+              label="Characters"
+              tone="accent"
+              value={formatNumber(stats.characters)}
+            />
+            <StatCard
+              label="Without spaces"
+              value={formatNumber(stats.charactersNoSpaces)}
+            />
+            <StatCard label="Words" value={formatNumber(stats.words)} />
+            <StatCard label="Lines" value={formatNumber(stats.lines)} />
+            <StatCard label="UTF-8 bytes" value={formatNumber(stats.bytes)} />
+          </div>
+          <section className="mt-5 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4">
+            <h3 className="text-sm font-extrabold text-[var(--text)]">
+              Top keywords
+            </h3>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {stats.keywords.length ? (
+                stats.keywords.map(([word, count]) => (
+                  <span
+                    className="rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[var(--text)] ring-1 ring-[var(--border)]"
+                    key={word}
+                  >
+                    {word} ({count})
+                  </span>
+                ))
+              ) : (
+                <p className="text-sm text-[var(--muted)]">
+                  Add text to see keyword frequency.
+                </p>
+              )}
+            </div>
+          </section>
+        </PreviewShell>
+      }
+      tool={tool}
+    />
+  );
+}
+
 export function TextCaseConverter({ tool }: { tool: UtilityToolConfig }) {
   const [input, setInput] = useState("free online tools for image pdf and text");
   const [output, setOutput] = useState(titleCase(input));

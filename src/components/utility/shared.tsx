@@ -54,6 +54,7 @@ export function UtilityToolLayout({
         className="pb-5"
         format="horizontal"
         minHeight={90}
+        minViewportWidth={640}
         slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOOL_TOP}
       />
 

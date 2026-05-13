@@ -29,7 +29,7 @@ export function PDFUploader({
   const { getInputProps, getRootProps, isDragActive } = useDropzone({
     accept: isPDF
       ? { "application/pdf": [".pdf"] }
-      : { "image/*": [".jpg", ".jpeg", ".png", ".webp", ".avif"] },
+      : { "image/*": [".jpg", ".jpeg", ".png", ".webp", ".avif", ".heic", ".heif"] },
     multiple,
     onDrop: async (files) => {
       async function validate(file: File) {

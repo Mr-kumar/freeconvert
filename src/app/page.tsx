@@ -7,9 +7,9 @@ import { utilityTools } from "@/lib/utilityTools";
 import { safeJsonLd } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "FreeConvert - Free Online Image, PDF & Utility Tools",
+  title: "FreeConvert - Free Online Image, PDF, Media & Utility Tools",
   description:
-    "Use free online image, PDF, QR, text, calculator, color, password and developer tools in your browser. No upload or account required.",
+    "Use free online image, PDF, media, QR, text, calculator, color, password and developer tools in your browser. No upload or account required.",
   keywords: [
     "free online image tools",
     "free online pdf tools",
@@ -25,6 +25,11 @@ export const metadata: Metadata = {
     "resize image online",
     "merge pdf online",
     "compress pdf online",
+    "heic to jpg online",
+    "video compressor online",
+    "mp4 to mp3 converter",
+    "pdf editor online",
+    "character counter online",
     "split pdf online",
     "pdf to jpg converter",
     "jpg to pdf converter",
@@ -35,9 +40,9 @@ export const metadata: Metadata = {
     canonical: BASE_URL,
   },
   openGraph: {
-    title: "Free Online Image, PDF & Utility Tools | FreeConvert",
+    title: "Free Online Image, PDF, Media & Utility Tools | FreeConvert",
     description:
-      "Free browser-based tools for images, PDFs, QR codes, text, calculators, colors, passwords and developer utilities.",
+      "Free browser-based tools for images, PDFs, media files, QR codes, text, calculators, colors, passwords and developer utilities.",
     url: BASE_URL,
     siteName: "FreeConvert",
     type: "website",
@@ -45,9 +50,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Online Image, PDF & Utility Tools | FreeConvert",
+    title: "Free Online Image, PDF, Media & Utility Tools | FreeConvert",
     description:
-      "Free browser-based image, PDF and utility tools. No upload and no account required.",
+      "Free browser-based image, PDF, media and utility tools. No upload and no account required.",
     images: ["/opengraph-image"],
   },
 };
@@ -56,10 +61,10 @@ const homeJsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "@id": `${BASE_URL}/#tools`,
-  name: "Free Online Image, PDF and Utility Tools",
+  name: "Free Online Image, PDF, Media and Utility Tools",
   url: BASE_URL,
   description:
-    "Browse free browser-based tools for images, PDFs, QR codes, text, calculators and developer utilities on FreeConvert.",
+    "Browse free browser-based tools for images, PDFs, media files, QR codes, text, calculators and developer utilities on FreeConvert.",
   mainEntity: {
     "@type": "ItemList",
     itemListElement: [...allToolConfigs, ...utilityTools].map((tool, index) => ({
@@ -88,11 +93,11 @@ export default function Home() {
             100% client-side / no account / no upload
           </p>
           <h1 className="mx-auto max-w-[21rem] font-display text-[2.15rem] font-extrabold leading-[1.08] text-[var(--text)] min-[380px]:text-4xl sm:max-w-4xl sm:text-6xl sm:leading-tight">
-            Free Online Image, PDF & Utility Tools
+            Free Online Image, PDF, Media & Utility Tools
           </h1>
           <p className="mx-auto mt-4 max-w-[22rem] text-base leading-7 text-[var(--muted)] sm:mt-5 sm:max-w-3xl sm:text-lg sm:leading-8">
-            Resize images, merge PDFs, generate QR codes, count words, format
-            JSON and use daily calculators. Everything runs directly in your browser.
+            Resize images, merge PDFs, compress videos, extract text, generate QR
+            codes and use daily calculators. Everything runs directly in your browser.
           </p>
         </div>
       </section>

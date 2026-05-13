@@ -35,6 +35,42 @@ const toolClients: Record<ToolSlug, ComponentType<ToolClientProps>> = {
     loading: ToolClientLoading,
     ssr: false,
   }),
+  "webp-to-jpg": dynamic(() => import("./ConvertClient").then((mod) => mod.ConvertClient), {
+    loading: ToolClientLoading,
+    ssr: false,
+  }),
+  "png-to-jpg": dynamic(() => import("./ConvertClient").then((mod) => mod.ConvertClient), {
+    loading: ToolClientLoading,
+    ssr: false,
+  }),
+  "jpg-to-png": dynamic(() => import("./ConvertClient").then((mod) => mod.ConvertClient), {
+    loading: ToolClientLoading,
+    ssr: false,
+  }),
+  "avif-to-jpg": dynamic(() => import("./ConvertClient").then((mod) => mod.ConvertClient), {
+    loading: ToolClientLoading,
+    ssr: false,
+  }),
+  "png-to-webp": dynamic(() => import("./ConvertClient").then((mod) => mod.ConvertClient), {
+    loading: ToolClientLoading,
+    ssr: false,
+  }),
+  "heic-to-jpg": dynamic(() => import("./ConvertClient").then((mod) => mod.ConvertClient), {
+    loading: ToolClientLoading,
+    ssr: false,
+  }),
+  "heic-to-png": dynamic(() => import("./ConvertClient").then((mod) => mod.ConvertClient), {
+    loading: ToolClientLoading,
+    ssr: false,
+  }),
+  "compress-jpg": dynamic(() => import("./CompressClient").then((mod) => mod.CompressClient), {
+    loading: ToolClientLoading,
+    ssr: false,
+  }),
+  "compress-png": dynamic(() => import("./CompressClient").then((mod) => mod.CompressClient), {
+    loading: ToolClientLoading,
+    ssr: false,
+  }),
   crop: dynamic(() => import("./CropClient").then((mod) => mod.CropClient), {
     loading: ToolClientLoading,
     ssr: false,
@@ -66,6 +102,26 @@ const toolClients: Record<ToolSlug, ComponentType<ToolClientProps>> = {
     ssr: false,
   }),
   metadata: dynamic(() => import("./MetadataClient").then((mod) => mod.MetadataClient), {
+    loading: ToolClientLoading,
+    ssr: false,
+  }),
+  "image-to-text": dynamic(() => import("./ImageOcrClient").then((mod) => mod.ImageOcrClient), {
+    loading: ToolClientLoading,
+    ssr: false,
+  }),
+  "svg-to-png": dynamic(() => import("./SvgToPngClient").then((mod) => mod.SvgToPngClient), {
+    loading: ToolClientLoading,
+    ssr: false,
+  }),
+  "favicon-generator": dynamic(() => import("./FaviconGeneratorClient").then((mod) => mod.FaviconGeneratorClient), {
+    loading: ToolClientLoading,
+    ssr: false,
+  }),
+  "blur-image": dynamic(() => import("./BlurImageClient").then((mod) => mod.BlurImageClient), {
+    loading: ToolClientLoading,
+    ssr: false,
+  }),
+  "image-collage-maker": dynamic(() => import("./ImageCollageClient").then((mod) => mod.ImageCollageClient), {
     loading: ToolClientLoading,
     ssr: false,
   }),

@@ -23,6 +23,7 @@ export interface ToolConfig {
   homeDescription: string;
   href: string;
   priority: number;
+  popular?: boolean;
   keywords: string[];
   features: string[];
 }
@@ -111,6 +112,125 @@ export const toolConfigs: Record<ToolSlug, ToolConfig> = {
       "Transparent PNG support",
       "Client-side export",
     ],
+  },
+  "webp-to-jpg": {
+    slug: "webp-to-jpg",
+    name: "WebP to JPG",
+    shortName: "WebP to JPG",
+    title: "WebP to JPG Converter Online Free",
+    description:
+      "Convert WebP to JPG online free in your browser with quality control. No upload, no signup and no watermark.",
+    homeDescription: "Convert WebP images to JPG",
+    href: "/webp-to-jpg",
+    priority: 0.92,
+    popular: true,
+    keywords: ["webp to jpg", "convert webp to jpg", "webp to jpeg", "webp converter"],
+    features: ["WebP input", "JPG output preset", "Quality control", "Browser-only conversion"],
+  },
+  "png-to-jpg": {
+    slug: "png-to-jpg",
+    name: "PNG to JPG",
+    shortName: "PNG to JPG",
+    title: "PNG to JPG Converter Online Free",
+    description:
+      "Convert PNG to JPG online free with a white background for transparent areas. Files stay in your browser.",
+    homeDescription: "Convert PNG images to JPG",
+    href: "/png-to-jpg",
+    priority: 0.88,
+    keywords: ["png to jpg", "png to jpeg", "convert png to jpg", "image converter"],
+    features: ["PNG input", "JPG output preset", "White transparency fill", "Quality control"],
+  },
+  "jpg-to-png": {
+    slug: "jpg-to-png",
+    name: "JPG to PNG",
+    shortName: "JPG to PNG",
+    title: "JPG to PNG Converter Online Free",
+    description:
+      "Convert JPG to PNG online free in your browser. Create a PNG copy without uploading the image.",
+    homeDescription: "Convert JPG images to PNG",
+    href: "/jpg-to-png",
+    priority: 0.86,
+    keywords: ["jpg to png", "jpeg to png", "convert jpg to png", "image converter"],
+    features: ["JPG and JPEG input", "PNG output preset", "Lossless PNG export", "No upload required"],
+  },
+  "avif-to-jpg": {
+    slug: "avif-to-jpg",
+    name: "AVIF to JPG",
+    shortName: "AVIF to JPG",
+    title: "AVIF to JPG Converter Online Free",
+    description:
+      "Convert AVIF to JPG online free where your browser can decode AVIF. Export compatible JPEG files locally.",
+    homeDescription: "Convert AVIF images to JPG",
+    href: "/avif-to-jpg",
+    priority: 0.84,
+    keywords: ["avif to jpg", "avif to jpeg", "convert avif", "avif converter"],
+    features: ["AVIF input", "JPG output preset", "Quality control", "Browser decode support check"],
+  },
+  "png-to-webp": {
+    slug: "png-to-webp",
+    name: "PNG to WebP",
+    shortName: "PNG to WebP",
+    title: "PNG to WebP Converter Online Free",
+    description:
+      "Convert PNG to WebP online free with quality control and transparency support. Processing stays in your browser.",
+    homeDescription: "Convert PNG images to WebP",
+    href: "/png-to-webp",
+    priority: 0.82,
+    keywords: ["png to webp", "convert png to webp", "webp converter", "png webp"],
+    features: ["PNG input", "WebP output preset", "Transparency support", "Quality control"],
+  },
+  "compress-jpg": {
+    slug: "compress-jpg",
+    name: "Compress JPG",
+    shortName: "Compress JPG",
+    title: "Compress JPG Online Free - Reduce JPEG Size",
+    description:
+      "Compress JPG images online free with quality, max dimension and target KB controls. No upload required.",
+    homeDescription: "Reduce JPG file size",
+    href: "/compress-jpg",
+    priority: 0.86,
+    keywords: ["compress jpg", "jpg compressor", "jpeg compressor", "reduce jpg size"],
+    features: ["JPG output preset", "Target KB option", "Quality slider", "Web Worker compression"],
+  },
+  "compress-png": {
+    slug: "compress-png",
+    name: "Compress PNG",
+    shortName: "Compress PNG",
+    title: "Compress PNG Online Free - Reduce PNG Size",
+    description:
+      "Compress PNG images online free in your browser with optional resizing and transparent PNG output.",
+    homeDescription: "Reduce PNG file size",
+    href: "/compress-png",
+    priority: 0.86,
+    keywords: ["compress png", "png compressor", "reduce png size", "png size reducer"],
+    features: ["PNG output preset", "Optional max dimension", "Local compression", "Transparency support"],
+  },
+  "heic-to-jpg": {
+    slug: "heic-to-jpg",
+    name: "HEIC to JPG",
+    shortName: "HEIC to JPG",
+    title: "HEIC to JPG Converter Online Free",
+    description:
+      "Convert iPhone HEIC photos to JPG online free with browser-based HEIC decoding. No upload or account required.",
+    homeDescription: "Convert iPhone HEIC to JPG",
+    href: "/heic-to-jpg",
+    priority: 0.94,
+    popular: true,
+    keywords: ["heic to jpg", "heic to jpeg", "iphone photo converter", "convert heic"],
+    features: ["HEIC and HEIF input", "JPG output preset", "Cross-browser decoder", "Quality control"],
+  },
+  "heic-to-png": {
+    slug: "heic-to-png",
+    name: "HEIC to PNG",
+    shortName: "HEIC to PNG",
+    title: "HEIC to PNG Converter Online Free",
+    description:
+      "Convert HEIC or HEIF photos to PNG online free in your browser. Useful for compatible image uploads and editing.",
+    homeDescription: "Convert HEIC photos to PNG",
+    href: "/heic-to-png",
+    priority: 0.86,
+    keywords: ["heic to png", "heif to png", "convert heic to png", "iphone heic converter"],
+    features: ["HEIC and HEIF input", "PNG output preset", "Cross-browser decoder", "No upload required"],
   },
   crop: {
     slug: "crop",
@@ -273,6 +393,72 @@ export const toolConfigs: Record<ToolSlug, ToolConfig> = {
       "Strip metadata by re-exporting",
     ],
   },
+  "image-to-text": {
+    slug: "image-to-text",
+    name: "Image to Text",
+    shortName: "Image OCR",
+    title: "Image to Text Converter Online Free - OCR",
+    description:
+      "Extract text from images online free with browser-based OCR. Copy or download recognized text without uploading the image.",
+    homeDescription: "Extract text with OCR",
+    href: "/image-to-text",
+    priority: 0.9,
+    popular: true,
+    keywords: ["image to text", "ocr online", "extract text from image", "photo to text"],
+    features: ["Browser OCR engine", "Language selection", "Copy text", "TXT download"],
+  },
+  "svg-to-png": {
+    slug: "svg-to-png",
+    name: "SVG to PNG",
+    shortName: "SVG to PNG",
+    title: "SVG to PNG Converter Online Free",
+    description:
+      "Convert SVG files to PNG, JPG or WebP online free with scale and background controls. Processing is local.",
+    homeDescription: "Rasterize SVG files",
+    href: "/svg-to-png",
+    priority: 0.84,
+    keywords: ["svg to png", "svg to jpg", "convert svg", "svg converter"],
+    features: ["PNG, JPG and WebP output", "Scale controls", "Background color", "SVG sanitization"],
+  },
+  "favicon-generator": {
+    slug: "favicon-generator",
+    name: "Favicon Generator",
+    shortName: "Favicon",
+    title: "Favicon Generator Online Free - ICO and App Icons",
+    description:
+      "Generate favicon files online free from one image. Create ICO, PNG app icons and a manifest-ready icon ZIP in your browser.",
+    homeDescription: "Create favicon icon packs",
+    href: "/favicon-generator",
+    priority: 0.82,
+    keywords: ["favicon generator", "ico generator", "app icon generator", "website icon maker"],
+    features: ["ICO output", "PNG icon sizes", "ZIP download", "Local canvas export"],
+  },
+  "blur-image": {
+    slug: "blur-image",
+    name: "Blur Image Areas",
+    shortName: "Blur Image",
+    title: "Blur Image Areas Online Free",
+    description:
+      "Blur selected areas of an image online free for privacy, screenshots and document sharing. Files stay in your browser.",
+    homeDescription: "Hide private image areas",
+    href: "/blur-image",
+    priority: 0.78,
+    keywords: ["blur image", "blur face online", "blur part of image", "hide image details"],
+    features: ["Manual blur boxes", "Pixelate mode", "Strength control", "PNG/JPG/WebP export"],
+  },
+  "image-collage-maker": {
+    slug: "image-collage-maker",
+    name: "Image Collage Maker",
+    shortName: "Collage Maker",
+    title: "Image Collage Maker Online Free",
+    description:
+      "Create image collages online free with grid, story, banner and comparison layouts. Combine photos locally in your browser.",
+    homeDescription: "Create photo collages",
+    href: "/image-collage-maker",
+    priority: 0.8,
+    keywords: ["image collage maker", "photo collage maker", "make collage online", "image grid maker"],
+    features: ["Grid and story layouts", "Gap and background controls", "Aspect presets", "Single image download"],
+  },
 };
 
 export const tools = Object.values(toolConfigs);
@@ -397,6 +583,46 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
       "Metadata fields",
     ],
   },
+  "jpg-to-pdf": {
+    slug: "jpg-to-pdf",
+    name: "JPG to PDF",
+    shortName: "JPG to PDF",
+    title: "JPG to PDF Converter Online Free",
+    description:
+      "Convert JPG images to PDF online free with page size, margin and fit controls. Files stay in your browser.",
+    homeDescription: "Turn JPG images into PDF",
+    href: "/jpg-to-pdf",
+    priority: 0.94,
+    popular: true,
+    keywords: ["jpg to pdf", "jpeg to pdf", "convert jpg to pdf", "image to pdf"],
+    features: ["Multiple JPG images", "A4 and Letter pages", "Margin controls", "Browser-only PDF export"],
+  },
+  "png-to-pdf": {
+    slug: "png-to-pdf",
+    name: "PNG to PDF",
+    shortName: "PNG to PDF",
+    title: "PNG to PDF Converter Online Free",
+    description:
+      "Convert PNG images to PDF online free with page size, margin, fit and background controls. No upload required.",
+    homeDescription: "Turn PNG images into PDF",
+    href: "/png-to-pdf",
+    priority: 0.86,
+    keywords: ["png to pdf", "convert png to pdf", "image to pdf", "png pdf converter"],
+    features: ["Multiple PNG images", "A4 and Letter pages", "Transparent image handling", "Local PDF export"],
+  },
+  "heic-to-pdf": {
+    slug: "heic-to-pdf",
+    name: "HEIC to PDF",
+    shortName: "HEIC to PDF",
+    title: "HEIC to PDF Converter Online Free",
+    description:
+      "Convert iPhone HEIC photos to PDF online free with browser-based HEIC decoding and PDF page controls.",
+    homeDescription: "Turn HEIC photos into PDF",
+    href: "/heic-to-pdf",
+    priority: 0.88,
+    keywords: ["heic to pdf", "iphone photo to pdf", "convert heic to pdf", "heif to pdf"],
+    features: ["HEIC and HEIF input", "PDF page settings", "Cross-browser decoder", "No upload required"],
+  },
   "rotate-pdf": {
     slug: "rotate-pdf",
     name: "Rotate PDF",
@@ -512,6 +738,19 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
       "ZIP download",
     ],
   },
+  "delete-pages-from-pdf": {
+    slug: "delete-pages-from-pdf",
+    name: "Delete Pages from PDF",
+    shortName: "Delete Pages",
+    title: "Delete Pages from PDF Online Free",
+    description:
+      "Delete pages from a PDF online free by visual page selection or page range. The PDF is processed in your browser.",
+    homeDescription: "Remove unwanted PDF pages",
+    href: "/delete-pages-from-pdf",
+    priority: 0.86,
+    keywords: ["delete pages from pdf", "remove pdf pages", "pdf page remover", "delete pdf pages"],
+    features: ["Visual page selection", "Page range input", "Keeps remaining pages", "No upload required"],
+  },
   "reorder-pdf-pages": {
     slug: "reorder-pdf-pages",
     name: "Reorder PDF Pages",
@@ -534,6 +773,72 @@ export const pdfToolConfigs: Record<PDFToolSlug, PDFToolConfig> = {
       "Reverse order",
       "Reset order",
     ],
+  },
+  "edit-pdf": {
+    slug: "edit-pdf",
+    name: "Edit PDF",
+    shortName: "Edit PDF",
+    title: "Edit PDF Online Free - Add Text, Shapes and Signatures",
+    description:
+      "Edit PDFs online free by adding text, highlights, boxes, drawings and signature images in your browser.",
+    homeDescription: "Annotate and fill PDFs",
+    href: "/edit-pdf",
+    priority: 0.92,
+    popular: true,
+    keywords: ["pdf editor", "edit pdf online", "annotate pdf", "fill pdf online"],
+    features: ["Add text", "Add highlights and boxes", "Add signature image", "Selected page controls"],
+  },
+  "sign-pdf": {
+    slug: "sign-pdf",
+    name: "Sign PDF",
+    shortName: "Sign PDF",
+    title: "Sign PDF Online Free - Add Signature to PDF",
+    description:
+      "Sign PDF files online free by drawing a signature or adding a signature image. Processing stays in your browser.",
+    homeDescription: "Add a signature to PDF",
+    href: "/sign-pdf",
+    priority: 0.86,
+    keywords: ["sign pdf", "add signature to pdf", "pdf signature online", "fill and sign pdf"],
+    features: ["Draw signature", "Upload signature image", "Place on selected pages", "Browser-only PDF export"],
+  },
+  "crop-pdf": {
+    slug: "crop-pdf",
+    name: "Crop PDF",
+    shortName: "Crop PDF",
+    title: "Crop PDF Online Free - Trim PDF Margins",
+    description:
+      "Crop PDF pages online free by trimming margins from all pages or selected page ranges. Files are processed locally.",
+    homeDescription: "Trim PDF page margins",
+    href: "/crop-pdf",
+    priority: 0.8,
+    keywords: ["crop pdf", "trim pdf margins", "pdf cropper", "crop pdf pages"],
+    features: ["Top, right, bottom and left crop", "Selected page ranges", "Apply to all pages", "No upload required"],
+  },
+  "pdf-to-text": {
+    slug: "pdf-to-text",
+    name: "PDF to Text",
+    shortName: "PDF to Text",
+    title: "PDF to Text Converter Online Free",
+    description:
+      "Extract selectable text from PDF files online free. Copy or download TXT output directly from your browser.",
+    homeDescription: "Extract selectable PDF text",
+    href: "/pdf-to-text",
+    priority: 0.82,
+    keywords: ["pdf to text", "extract text from pdf", "pdf text extractor", "convert pdf to txt"],
+    features: ["Selectable text extraction", "Page separators", "Copy output", "TXT download"],
+  },
+  "redact-pdf": {
+    slug: "redact-pdf",
+    name: "Redact PDF",
+    shortName: "Redact PDF",
+    title: "Redact PDF Online Free - Black Out PDF Text",
+    description:
+      "Redact PDF pages online free by covering selected areas and rasterizing redacted pages so hidden text is not recoverable.",
+    homeDescription: "Hide sensitive PDF areas",
+    href: "/redact-pdf",
+    priority: 0.78,
+    keywords: ["redact pdf", "black out pdf", "remove sensitive text pdf", "pdf redaction"],
+    features: ["Redaction rectangles", "Selected page ranges", "Rasterized redacted pages", "Browser-only processing"],
   },
   "add-page-numbers-to-pdf": {
     slug: "add-page-numbers-to-pdf",
@@ -669,8 +974,48 @@ export function getToolDefaults(slug: ToolSlug, params: SearchParams) {
       targetSizeKB: safeNumber(params.target, 0, 0, 51200),
       maxWidthOrHeight: safeNumber(params.maxwh, 0, 0, 16000),
     },
+    "compress-jpg": {
+      quality: q,
+      outputFormat: "image/jpeg",
+      targetSizeKB: safeNumber(params.target, 0, 0, 51200),
+      maxWidthOrHeight: safeNumber(params.maxwh, 0, 0, 16000),
+    },
+    "compress-png": {
+      quality: q,
+      outputFormat: "image/png",
+      targetSizeKB: safeNumber(params.target, 0, 0, 51200),
+      maxWidthOrHeight: safeNumber(params.maxwh, 0, 0, 16000),
+    },
     convert: {
       outputFormat: to,
+      quality: q,
+    },
+    "webp-to-jpg": {
+      outputFormat: "image/jpeg",
+      quality: q,
+    },
+    "png-to-jpg": {
+      outputFormat: "image/jpeg",
+      quality: q,
+    },
+    "jpg-to-png": {
+      outputFormat: "image/png",
+      quality: q,
+    },
+    "avif-to-jpg": {
+      outputFormat: "image/jpeg",
+      quality: q,
+    },
+    "png-to-webp": {
+      outputFormat: "image/webp",
+      quality: q,
+    },
+    "heic-to-jpg": {
+      outputFormat: "image/jpeg",
+      quality: q,
+    },
+    "heic-to-png": {
+      outputFormat: "image/png",
       quality: q,
     },
     crop: {
@@ -745,6 +1090,22 @@ export function getToolDefaults(slug: ToolSlug, params: SearchParams) {
       quality: q,
     },
     metadata: {},
+    "image-to-text": {},
+    "svg-to-png": {
+      outputFormat: mimeFromShortFormat(
+        safeEnum(params.format, ["jpeg", "jpg", "png", "webp", "avif"], "png"),
+      ),
+      quality: q,
+    },
+    "favicon-generator": {},
+    "blur-image": {
+      outputFormat: format,
+      quality: q,
+    },
+    "image-collage-maker": {
+      outputFormat: format,
+      quality: q,
+    },
   };
 
   return defaults[slug];
@@ -794,6 +1155,60 @@ export function getPDFToolDefaults(slug: PDFToolSlug, params: SearchParams) {
         "contain",
       ),
     },
+    "jpg-to-pdf": {
+      pageSize: safeEnum(
+        params.size,
+        ["A4", "A3", "A5", "Letter", "Legal", "Tabloid", "Match Image"],
+        "A4",
+      ),
+      orientation: safeEnum(
+        params.orientation,
+        ["portrait", "landscape", "auto"],
+        "portrait",
+      ),
+      margin: safeNumber(params.margin, 10, 0, 50),
+      fit: safeEnum(
+        params.fit,
+        ["contain", "cover", "fill", "actual-size"],
+        "contain",
+      ),
+    },
+    "png-to-pdf": {
+      pageSize: safeEnum(
+        params.size,
+        ["A4", "A3", "A5", "Letter", "Legal", "Tabloid", "Match Image"],
+        "A4",
+      ),
+      orientation: safeEnum(
+        params.orientation,
+        ["portrait", "landscape", "auto"],
+        "portrait",
+      ),
+      margin: safeNumber(params.margin, 10, 0, 50),
+      fit: safeEnum(
+        params.fit,
+        ["contain", "cover", "fill", "actual-size"],
+        "contain",
+      ),
+    },
+    "heic-to-pdf": {
+      pageSize: safeEnum(
+        params.size,
+        ["A4", "A3", "A5", "Letter", "Legal", "Tabloid", "Match Image"],
+        "A4",
+      ),
+      orientation: safeEnum(
+        params.orientation,
+        ["portrait", "landscape", "auto"],
+        "portrait",
+      ),
+      margin: safeNumber(params.margin, 10, 0, 50),
+      fit: safeEnum(
+        params.fit,
+        ["contain", "cover", "fill", "actual-size"],
+        "contain",
+      ),
+    },
     "rotate-pdf": {
       degrees: safeNumber(params.deg, 90, 90, 270),
     },
@@ -819,7 +1234,13 @@ export function getPDFToolDefaults(slug: PDFToolSlug, params: SearchParams) {
     "protect-pdf": {},
     "unlock-pdf": {},
     "extract-pdf-pages": {},
+    "delete-pages-from-pdf": {},
     "reorder-pdf-pages": {},
+    "edit-pdf": {},
+    "sign-pdf": {},
+    "crop-pdf": {},
+    "pdf-to-text": {},
+    "redact-pdf": {},
     "add-page-numbers-to-pdf": {
       position: safeEnum(
         params.pos,

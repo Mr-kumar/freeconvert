@@ -6,6 +6,7 @@ import type { PDFToolSlug, ToolDefaults } from "@/lib/types";
 
 interface PDFToolClientProps {
   defaults: ToolDefaults;
+  slug: PDFToolSlug;
 }
 
 interface PDFToolPageClientProps extends PDFToolClientProps {
@@ -46,6 +47,18 @@ const pdfToolClients: Record<PDFToolSlug, ComponentType<PDFToolClientProps>> = {
     loading: PDFToolClientLoading,
     ssr: false,
   }),
+  "jpg-to-pdf": dynamic(() => import("./tools/ImageToPDFClient").then((mod) => mod.ImageToPDFClient), {
+    loading: PDFToolClientLoading,
+    ssr: false,
+  }),
+  "png-to-pdf": dynamic(() => import("./tools/ImageToPDFClient").then((mod) => mod.ImageToPDFClient), {
+    loading: PDFToolClientLoading,
+    ssr: false,
+  }),
+  "heic-to-pdf": dynamic(() => import("./tools/ImageToPDFClient").then((mod) => mod.ImageToPDFClient), {
+    loading: PDFToolClientLoading,
+    ssr: false,
+  }),
   "rotate-pdf": dynamic(() => import("./tools/RotatePDFClient").then((mod) => mod.RotatePDFClient), {
     loading: PDFToolClientLoading,
     ssr: false,
@@ -66,7 +79,31 @@ const pdfToolClients: Record<PDFToolSlug, ComponentType<PDFToolClientProps>> = {
     loading: PDFToolClientLoading,
     ssr: false,
   }),
+  "delete-pages-from-pdf": dynamic(() => import("./tools/DeletePagesPDFClient").then((mod) => mod.DeletePagesPDFClient), {
+    loading: PDFToolClientLoading,
+    ssr: false,
+  }),
   "reorder-pdf-pages": dynamic(() => import("./tools/ReorderPDFPagesClient").then((mod) => mod.ReorderPDFPagesClient), {
+    loading: PDFToolClientLoading,
+    ssr: false,
+  }),
+  "edit-pdf": dynamic(() => import("./tools/AnnotatePDFClient").then((mod) => mod.AnnotatePDFClient), {
+    loading: PDFToolClientLoading,
+    ssr: false,
+  }),
+  "sign-pdf": dynamic(() => import("./tools/AnnotatePDFClient").then((mod) => mod.AnnotatePDFClient), {
+    loading: PDFToolClientLoading,
+    ssr: false,
+  }),
+  "crop-pdf": dynamic(() => import("./tools/CropPDFClient").then((mod) => mod.CropPDFClient), {
+    loading: PDFToolClientLoading,
+    ssr: false,
+  }),
+  "pdf-to-text": dynamic(() => import("./tools/PDFToTextClient").then((mod) => mod.PDFToTextClient), {
+    loading: PDFToolClientLoading,
+    ssr: false,
+  }),
+  "redact-pdf": dynamic(() => import("./tools/RedactPDFClient").then((mod) => mod.RedactPDFClient), {
     loading: PDFToolClientLoading,
     ssr: false,
   }),
@@ -82,5 +119,5 @@ const pdfToolClients: Record<PDFToolSlug, ComponentType<PDFToolClientProps>> = {
 
 export function PDFToolPageClient({ slug, defaults }: PDFToolPageClientProps) {
   const Client = pdfToolClients[slug];
-  return <Client defaults={defaults} />;
+  return <Client defaults={defaults} slug={slug} />;
 }

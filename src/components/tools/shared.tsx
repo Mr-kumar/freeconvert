@@ -352,6 +352,9 @@ export function ToolFrame({
 
   return (
     <ToolLayout
+      backHref="/#image-tools"
+      backLabel="Image Tools"
+      badgeLabel="Browser only"
       controls={controls}
       description={tool.description}
       footer={<FaqFooter slug={slug} />}

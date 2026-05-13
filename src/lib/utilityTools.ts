@@ -9,19 +9,23 @@ export type UtilityToolCategory =
   | "converter"
   | "password"
   | "developer"
-  | "file";
+  | "file"
+  | "media";
 
 export type UtilityToolSlug =
   | "qr-code-generator"
   | "upi-qr-code-generator"
   | "word-counter"
+  | "character-counter"
   | "text-case-converter"
   | "remove-duplicate-lines"
   | "emi-calculator"
   | "gst-calculator"
   | "percentage-calculator"
   | "age-calculator"
+  | "bmi-calculator"
   | "sip-calculator"
+  | "time-zone-converter"
   | "color-picker"
   | "color-contrast-checker"
   | "length-converter"
@@ -33,7 +37,11 @@ export type UtilityToolSlug =
   | "base64-encoder-decoder"
   | "url-encoder-decoder"
   | "file-hash-checksum"
-  | "zip-extractor";
+  | "zip-extractor"
+  | "video-compressor"
+  | "mp4-to-mp3"
+  | "mp4-to-gif"
+  | "audio-converter";
 
 export interface UtilityCategoryConfig {
   id: UtilityToolCategory;
@@ -120,6 +128,13 @@ export const utilityCategoryConfigs: Record<
     title: "Free File Tools",
     description: "Create ZIP archives, inspect ZIP files and calculate checksums locally.",
     anchor: "file-tools",
+  },
+  media: {
+    id: "media",
+    label: "Media Tools",
+    title: "Free Media Tools",
+    description: "Compress video and convert audio or short clips directly in the browser.",
+    anchor: "media-tools",
   },
 };
 
@@ -259,6 +274,48 @@ export const utilityToolConfigs: Record<UtilityToolSlug, UtilityToolConfig> = {
         question: "Can it count characters without spaces?",
         answer:
           "Yes. The results include both total characters and characters excluding spaces.",
+      },
+    ],
+  },
+  "character-counter": {
+    slug: "character-counter",
+    name: "Character Counter",
+    shortName: "Character Counter",
+    title: "Free Character Counter Online - Count Characters and Words",
+    description:
+      "Count characters online free with and without spaces, plus words, sentences, paragraphs and reading time. Everything runs in your browser.",
+    homeDescription: "Count characters with spaces",
+    href: "/character-counter",
+    category: "text",
+    priority: 0.91,
+    popular: true,
+    keywords: [
+      "character counter",
+      "count characters online",
+      "letter counter",
+      "character count with spaces",
+    ],
+    features: [
+      "Characters with and without spaces",
+      "Word, sentence and paragraph counts",
+      "Reading and speaking time",
+      "Keyword frequency",
+    ],
+    bestFor: [
+      "Checking form limits, meta descriptions, messages, posts and assignments before submitting.",
+      "Counting both visible characters and characters excluding spaces in pasted text.",
+    ],
+    notes: [
+      "Character limits can count spaces differently, so check both results when a platform is strict.",
+      "The text stays in your browser and is not sent to a server for counting.",
+    ],
+    faqs: [
+      privacyFaq,
+      freeFaq,
+      {
+        question: "Does it count spaces?",
+        answer:
+          "Yes. The result shows total characters, characters excluding spaces and words.",
       },
     ],
   },
@@ -461,6 +518,48 @@ export const utilityToolConfigs: Record<UtilityToolSlug, UtilityToolConfig> = {
     ],
     faqs: [privacyFaq, freeFaq],
   },
+  "bmi-calculator": {
+    slug: "bmi-calculator",
+    name: "BMI Calculator",
+    shortName: "BMI",
+    title: "Free BMI Calculator Online - Body Mass Index",
+    description:
+      "Calculate BMI online free using metric or imperial units. See body mass index, healthy weight range and category instantly in your browser.",
+    homeDescription: "Metric and imperial BMI",
+    href: "/bmi-calculator",
+    category: "calculator",
+    priority: 0.92,
+    popular: true,
+    keywords: [
+      "bmi calculator",
+      "body mass index calculator",
+      "bmi calculator online",
+      "healthy weight calculator",
+    ],
+    features: [
+      "Metric and imperial units",
+      "BMI category output",
+      "Healthy weight range",
+      "Instant recalculation",
+    ],
+    bestFor: [
+      "Quickly estimating BMI from height and weight without uploading or saving data.",
+      "Checking an approximate healthy weight range for the selected height.",
+    ],
+    notes: [
+      "BMI is a general screening number and does not measure body fat, muscle mass or health by itself.",
+      "Use medical advice for personal health decisions, especially for children, pregnancy or athletic body types.",
+    ],
+    faqs: [
+      privacyFaq,
+      freeFaq,
+      {
+        question: "Is BMI medical advice?",
+        answer:
+          "No. It is an informational calculation and should not replace advice from a qualified health professional.",
+      },
+    ],
+  },
   "sip-calculator": {
     slug: "sip-calculator",
     name: "SIP Calculator",
@@ -491,6 +590,40 @@ export const utilityToolConfigs: Record<UtilityToolSlug, UtilityToolConfig> = {
     notes: [
       "SIP results are estimates and actual returns can vary with market performance.",
       "Do not treat the output as financial advice or guaranteed returns.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "time-zone-converter": {
+    slug: "time-zone-converter",
+    name: "Time Zone Converter",
+    shortName: "Time Zone",
+    title: "Free Time Zone Converter Online",
+    description:
+      "Convert times between time zones online free. Compare meeting times across cities with browser time-zone data.",
+    homeDescription: "Compare city meeting times",
+    href: "/time-zone-converter",
+    category: "calculator",
+    priority: 0.9,
+    popular: true,
+    keywords: [
+      "time zone converter",
+      "world time converter",
+      "meeting time converter",
+      "convert time zones",
+    ],
+    features: [
+      "Searchable time zones",
+      "Meeting time comparison",
+      "12-hour and 24-hour display",
+      "Browser Intl API",
+    ],
+    bestFor: [
+      "Planning calls and meetings across countries without opening a calendar app.",
+      "Checking what a selected date and time means in multiple time zones.",
+    ],
+    notes: [
+      "The browser time-zone database handles daylight saving changes for supported zones.",
+      "Use a city or IANA time-zone name when a country has more than one time zone.",
     ],
     faqs: [privacyFaq, freeFaq],
   },
@@ -889,6 +1022,140 @@ export const utilityToolConfigs: Record<UtilityToolSlug, UtilityToolConfig> = {
     notes: [
       "Encrypted ZIP archives are not supported by the browser ZIP engine used here.",
       "Large archives may need more time and memory on low-powered devices.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "video-compressor": {
+    slug: "video-compressor",
+    name: "Video Compressor",
+    shortName: "Video Compressor",
+    title: "Video Compressor Online Free - Compress MP4 WebM",
+    description:
+      "Compress videos online free in your browser with size, width, FPS and quality controls. No upload or account required.",
+    homeDescription: "Compress short videos locally",
+    href: "/video-compressor",
+    category: "media",
+    priority: 0.9,
+    popular: true,
+    keywords: [
+      "video compressor",
+      "compress video online",
+      "compress mp4 online",
+      "reduce video size",
+    ],
+    features: [
+      "MP4 and WebM output",
+      "Target width and FPS controls",
+      "Quality/CRF control",
+      "50 MB browser file limit",
+    ],
+    bestFor: [
+      "Reducing short clips before uploading to chat apps, forms, websites or email.",
+      "Keeping video processing private when the clip is small enough for browser memory.",
+    ],
+    notes: [
+      "Large videos can exceed browser memory, so this tool limits files to 50 MB.",
+      "Lower width, FPS and quality create smaller files but can reduce detail and motion smoothness.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "mp4-to-mp3": {
+    slug: "mp4-to-mp3",
+    name: "MP4 to MP3 Converter",
+    shortName: "MP4 to MP3",
+    title: "MP4 to MP3 Converter Online Free",
+    description:
+      "Convert MP4 video to MP3 audio online free in your browser. Extract audio from short video files without uploading.",
+    homeDescription: "Extract MP3 from video",
+    href: "/mp4-to-mp3",
+    category: "media",
+    priority: 0.92,
+    popular: true,
+    keywords: [
+      "mp4 to mp3",
+      "mp4 to mp3 converter",
+      "video to audio converter",
+      "extract audio from mp4",
+    ],
+    features: [
+      "MP4, MOV and WebM inputs",
+      "MP3 output",
+      "Optional start and duration trim",
+      "50 MB browser file limit",
+    ],
+    bestFor: [
+      "Extracting audio from short recordings, lectures, clips and screen captures.",
+      "Creating a smaller audio-only download while keeping the source file on your device.",
+    ],
+    notes: [
+      "Only convert files you have the right to process.",
+      "Long videos can take time because audio extraction runs inside the browser.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "mp4-to-gif": {
+    slug: "mp4-to-gif",
+    name: "MP4 to GIF Converter",
+    shortName: "MP4 to GIF",
+    title: "MP4 to GIF Converter Online Free",
+    description:
+      "Convert short MP4 clips to GIF online free with trim, width and FPS controls. Processing happens locally in your browser.",
+    homeDescription: "Make GIFs from short clips",
+    href: "/mp4-to-gif",
+    category: "media",
+    priority: 0.88,
+    keywords: [
+      "mp4 to gif",
+      "video to gif",
+      "convert mp4 to gif",
+      "gif maker from video",
+    ],
+    features: [
+      "Start and duration trim",
+      "Width and FPS controls",
+      "GIF palette generation",
+      "50 MB browser file limit",
+    ],
+    bestFor: [
+      "Turning a short moment from a video into a looping GIF for documentation or sharing.",
+      "Creating lightweight visual examples from brief screen recordings.",
+    ],
+    notes: [
+      "GIF files can become large; keep clips short and reduce FPS when possible.",
+      "The file limit keeps browser memory usage reasonable on laptops and phones.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "audio-converter": {
+    slug: "audio-converter",
+    name: "Audio Converter",
+    shortName: "Audio Converter",
+    title: "Audio Converter Online Free - MP3 WAV M4A",
+    description:
+      "Convert audio online free between MP3, WAV, M4A and OGG formats in your browser. No upload or signup required.",
+    homeDescription: "Convert audio formats locally",
+    href: "/audio-converter",
+    category: "media",
+    priority: 0.82,
+    keywords: [
+      "audio converter",
+      "mp3 converter online",
+      "wav to mp3",
+      "m4a to mp3",
+    ],
+    features: [
+      "MP3, WAV, M4A and OGG output",
+      "Audio bitrate control",
+      "Optional trim controls",
+      "20 MB browser file limit",
+    ],
+    bestFor: [
+      "Converting short recordings, voice notes and audio exports into a compatible format.",
+      "Reducing audio file size before sharing while keeping files on your device.",
+    ],
+    notes: [
+      "Lossy formats such as MP3 and M4A reduce size by discarding some audio detail.",
+      "Use WAV only when compatibility or uncompressed output matters more than file size.",
     ],
     faqs: [privacyFaq, freeFaq],
   },

@@ -9,9 +9,44 @@ import { BrandLogo } from "@/components/BrandLogo";
 import type { MegaMenuKey } from "@/components/NavbarOverlays";
 import { cn } from "@/lib/utils";
 
+function MegaMenuLoading() {
+  return (
+    <div
+      aria-hidden="true"
+      className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-black/40 px-3 py-3 sm:px-5 sm:py-5"
+    >
+      <div className="w-full max-w-7xl overflow-hidden rounded-xl border border-[var(--border)] bg-white shadow-2xl shadow-slate-950/25">
+        <div className="flex min-h-20 items-center justify-between gap-4 px-5 py-4 sm:px-6">
+          <div className="h-8 w-44 animate-pulse rounded-lg bg-[var(--surface-2)]" />
+          <div className="hidden h-8 w-80 animate-pulse rounded-lg bg-[var(--surface-2)] lg:block" />
+          <div className="h-10 w-28 animate-pulse rounded-full bg-[var(--surface-2)]" />
+        </div>
+        <div className="grid border-t border-[var(--border)] sm:grid-cols-2 xl:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, columnIndex) => (
+            <section
+              className="border-t border-[var(--border)] p-5 sm:border-t-0 sm:border-l"
+              key={columnIndex}
+            >
+              <div className="mb-5 h-5 w-32 animate-pulse rounded bg-[var(--surface-2)]" />
+              <div className="space-y-3">
+                {Array.from({ length: 6 }).map((__, itemIndex) => (
+                  <div
+                    className="h-9 animate-pulse rounded-lg bg-[var(--surface-2)]"
+                    key={itemIndex}
+                  />
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const MegaMenuOverlay = dynamic(
   () => import("@/components/NavbarOverlays").then((mod) => mod.MegaMenuOverlay),
-  { ssr: false },
+  { loading: () => <MegaMenuLoading />, ssr: false },
 );
 
 const SearchDialog = dynamic(
@@ -24,6 +59,20 @@ const toolPathSet = new Set([
   "/resize-image",
   "/compress-image",
   "/convert-image",
+  "/webp-to-jpg",
+  "/png-to-jpg",
+  "/jpg-to-png",
+  "/avif-to-jpg",
+  "/png-to-webp",
+  "/compress-jpg",
+  "/compress-png",
+  "/heic-to-jpg",
+  "/heic-to-png",
+  "/image-to-text",
+  "/svg-to-png",
+  "/favicon-generator",
+  "/blur-image",
+  "/image-collage-maker",
   "/crop-image",
   "/rotate-image",
   "/remove-background",
@@ -36,19 +85,30 @@ const toolPathSet = new Set([
   "/split-pdf",
   "/convert-pdf-to-image",
   "/convert-image-to-pdf",
+  "/jpg-to-pdf",
+  "/png-to-pdf",
+  "/heic-to-pdf",
   "/rotate-pdf",
   "/add-watermark-to-pdf",
   "/protect-pdf",
   "/unlock-pdf",
   "/extract-pdf-pages",
+  "/delete-pages-from-pdf",
   "/reorder-pdf-pages",
+  "/edit-pdf",
+  "/sign-pdf",
+  "/crop-pdf",
+  "/pdf-to-text",
+  "/redact-pdf",
   "/add-page-numbers-to-pdf",
   "/view-pdf-metadata",
   "/qr-code-generator",
   "/upi-qr-code-generator",
   "/word-counter",
+  "/character-counter",
   "/text-case-converter",
   "/remove-duplicate-lines",
+  "/bmi-calculator",
   "/emi-calculator",
   "/gst-calculator",
   "/percentage-calculator",
@@ -59,6 +119,7 @@ const toolPathSet = new Set([
   "/length-converter",
   "/weight-converter",
   "/area-converter",
+  "/time-zone-converter",
   "/password-generator",
   "/password-strength-checker",
   "/json-formatter",
@@ -66,23 +127,44 @@ const toolPathSet = new Set([
   "/url-encoder-decoder",
   "/file-hash-checksum",
   "/zip-extractor",
+  "/video-compressor",
+  "/mp4-to-mp3",
+  "/mp4-to-gif",
+  "/audio-converter",
 ]);
 
 const convertPathSet = new Set([
   "/convert-image",
+  "/webp-to-jpg",
+  "/png-to-jpg",
+  "/jpg-to-png",
+  "/avif-to-jpg",
+  "/png-to-webp",
+  "/heic-to-jpg",
+  "/heic-to-png",
   "/convert-pdf-to-image",
   "/convert-image-to-pdf",
+  "/jpg-to-pdf",
+  "/png-to-pdf",
+  "/heic-to-pdf",
   "/base64-encoder-decoder",
   "/url-encoder-decoder",
   "/length-converter",
   "/weight-converter",
   "/area-converter",
+  "/time-zone-converter",
+  "/mp4-to-mp3",
+  "/mp4-to-gif",
+  "/audio-converter",
 ]);
 
 const compressPathSet = new Set([
   "/compress-image",
+  "/compress-jpg",
+  "/compress-png",
   "/compress-pdf",
   "/resize-image",
+  "/video-compressor",
 ]);
 
 const megaMenuNavItems: { key: MegaMenuKey; label: string }[] = [

@@ -15,7 +15,7 @@ interface ContentNotes {
   notes: string[];
 }
 
-const contentNotes: Record<ToolContentSlug, ContentNotes> = {
+const contentNotes: Partial<Record<ToolContentSlug, ContentNotes>> = {
   resize: {
     bestFor: [
       "Preparing photos for exam forms, job applications and profile uploads with exact width and height limits.",
@@ -253,6 +253,21 @@ function getRelatedTools(kind: "image" | "pdf", slug: ToolContentSlug) {
   return list.filter((tool) => tool.slug !== slug).slice(0, 4);
 }
 
+function fallbackNotes(kind: "image" | "pdf", tool: { name: string; features: string[] }) {
+  const label = kind === "pdf" ? "PDF" : "image";
+
+  return {
+    bestFor: [
+      `Completing ${tool.name.toLowerCase()} tasks quickly without installing desktop software.`,
+      `Handling ${label} files privately because the selected files stay in your browser.`,
+    ],
+    notes: [
+      tool.features[0] || "Check the preview or output before downloading the final file.",
+      tool.features[1] || "Large files can take longer because processing happens on your device.",
+    ],
+  };
+}
+
 export function ToolContentSections({
   kind,
   slug,
@@ -264,7 +279,7 @@ export function ToolContentSections({
   slug: PDFToolSlug;
 }) {
   const tool = kind === "pdf" ? pdfToolConfigs[slug] : toolConfigs[slug];
-  const notes = contentNotes[slug];
+  const notes = contentNotes[slug] ?? fallbackNotes(kind, tool);
   const faqs = kind === "pdf" ? getPdfToolFaqs(slug) : getImageToolFaqs(slug);
   const relatedTools = getRelatedTools(kind, slug);
   const categoryLabel = kind === "pdf" ? "PDF tool" : "Image tool";
