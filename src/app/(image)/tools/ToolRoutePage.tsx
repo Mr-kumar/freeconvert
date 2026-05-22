@@ -41,12 +41,12 @@ export async function ToolRoutePage({
         rightSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RAIL_RIGHT}
       />
       <ToolPageClient defaults={defaults} slug={slug} />
+      <ToolContentSections kind="image" slug={slug} />
       <AdSlot
-        className="pb-2"
+        className="pb-10"
         minHeight={96}
         slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOOL_BOTTOM}
       />
-      <ToolContentSections kind="image" slug={slug} />
     </>
   );
 }

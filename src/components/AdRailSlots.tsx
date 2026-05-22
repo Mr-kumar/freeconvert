@@ -75,9 +75,10 @@ export function AdRailSlots({
   const client = normalizeAdSenseClientId(process.env.NEXT_PUBLIC_ADSENSE_ID);
   const left = normalizeAdSenseSlotId(leftSlot);
   const right = normalizeAdSenseSlotId(rightSlot);
+  const railAdsEnabled = process.env.NEXT_PUBLIC_ENABLE_RAIL_ADS === "true";
   const canRenderRailAds = useCanRenderRailAds();
 
-  if (!canRenderRailAds || !client || (!left && !right)) {
+  if (!railAdsEnabled || !canRenderRailAds || !client || (!left && !right)) {
     return null;
   }
 

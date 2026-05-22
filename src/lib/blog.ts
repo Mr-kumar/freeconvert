@@ -1,5 +1,11 @@
 import { BASE_URL } from "@/lib/tools";
 
+export interface BlogTable {
+  caption: string;
+  headers: string[];
+  rows: string[][];
+}
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -18,6 +24,7 @@ export interface BlogPost {
   sections: {
     heading: string;
     body: string[];
+    table?: BlogTable;
   }[];
 }
 
@@ -1143,6 +1150,159 @@ const blogDepthNotes: Record<
   },
 };
 
+const blogReferenceTables: Record<string, BlogTable> = {
+  "compress-image-without-quality-loss": {
+    caption: "Image compression decision table",
+    headers: ["Source image", "Best first step", "Safer output", "Quality check"],
+    rows: [
+      ["Large camera photo", "Resize to required pixels", "JPG or WebP", "Faces and smooth backgrounds"],
+      ["Screenshot with text", "Keep dimensions if readable", "PNG or high-quality WebP", "Letters and thin lines"],
+      ["Transparent logo", "Preserve transparency", "PNG or WebP", "Edges on light and dark backgrounds"],
+      ["Strict form photo", "Crop and resize first", "JPG", "Exact pixels and target KB"],
+    ],
+  },
+  "resize-image-for-online-forms": {
+    caption: "Common online-form image checks",
+    headers: ["Requirement", "What to set", "What to verify"],
+    rows: [
+      ["Exact pixels", "Width and height in px", "Downloaded file dimensions"],
+      ["Physical size", "Centimeters plus DPI when given", "Portal instructions match output"],
+      ["Maximum KB", "Target KB after resizing", "File is below the limit"],
+      ["Portrait photo", "Crop before resize", "Face is centered and not stretched"],
+    ],
+  },
+  "jpeg-png-webp-avif-differences": {
+    caption: "Format comparison for everyday use",
+    headers: ["Format", "Best for", "Avoid when", "Transparency"],
+    rows: [
+      ["JPG", "Photos and strict portals", "Logos or transparent graphics", "No"],
+      ["PNG", "Screenshots, icons and signatures", "Large photos with size limits", "Yes"],
+      ["WebP", "Modern websites and smaller delivery files", "Older portals or unsupported apps", "Yes"],
+      ["AVIF", "Advanced web compression", "Maximum compatibility is needed", "Yes"],
+    ],
+  },
+  "merge-pdf-files-online": {
+    caption: "PDF merge ordering examples",
+    headers: ["Document packet", "Recommended order", "Final check"],
+    rows: [
+      ["Job application", "Form, resume, certificates, ID proof", "All pages readable"],
+      ["Invoice bundle", "Cover note, invoices by date, receipts", "No duplicates"],
+      ["Student submission", "Application, marksheets, certificates", "Portal order followed"],
+      ["Scanned records", "Index, documents, attachments", "Sideways pages rotated"],
+    ],
+  },
+  "compress-pdf-to-target-kb": {
+    caption: "PDF compression setting guide",
+    headers: ["PDF type", "Compression approach", "Review area"],
+    rows: [
+      ["Scanned pages", "Balanced DPI and image quality", "Small text and stamps"],
+      ["Text PDF", "Light compression first", "Selectable text"],
+      ["Certificate", "Higher quality target", "Seal, signature and registration number"],
+      ["Email attachment", "Remove pages, then compress", "File opens after download"],
+    ],
+  },
+  "convert-pdf-to-jpg-or-png": {
+    caption: "PDF page image export choices",
+    headers: ["Need", "Format", "Setting to review"],
+    rows: [
+      ["Small preview", "JPG", "Quality and file size"],
+      ["Crisp text", "PNG", "DPI and page margins"],
+      ["Many pages", "JPG or WebP", "ZIP output and naming"],
+      ["Print reference", "PNG", "Higher DPI"],
+    ],
+  },
+  "browser-based-file-tools-privacy": {
+    caption: "Privacy review by tool type",
+    headers: ["Tool type", "Private detail to check", "Safer habit"],
+    rows: [
+      ["Image tools", "Faces, addresses, metadata", "Preview and strip metadata when needed"],
+      ["PDF tools", "Pages, signatures, hidden text", "Open output in a PDF viewer"],
+      ["QR tools", "Encoded URL or payment URI", "Scan before printing"],
+      ["Text tools", "Copied private content", "Clear browser input after use"],
+    ],
+  },
+  "file-upload-size-limits-checklist": {
+    caption: "Upload failure troubleshooting",
+    headers: ["Portal error", "Likely cause", "Fix"],
+    rows: [
+      ["Invalid format", "Wrong real file type", "Convert, do not only rename"],
+      ["Too large", "KB/MB above limit", "Resize or compress"],
+      ["Wrong dimensions", "Pixels do not match", "Crop and resize"],
+      ["Upload failed", "Filename or browser issue", "Use a simple filename and retry"],
+    ],
+  },
+  "how-to-prepare-passport-photos-for-indian-government-forms": {
+    caption: "Passport photo preparation sequence",
+    headers: ["Step", "Action", "Reason"],
+    rows: [
+      ["1", "Read portal rule", "Requirements vary by form"],
+      ["2", "Crop portrait area", "Avoid stretching the face"],
+      ["3", "Resize to pixels", "Match upload validator"],
+      ["4", "Compress to KB", "Meet final size limit"],
+    ],
+  },
+  "understanding-pdf-encryption-passwords-permissions-and-security": {
+    caption: "PDF security options",
+    headers: ["Need", "Use", "Limitation"],
+    rows: [
+      ["Stop casual opening", "Open password", "Password must be shared safely"],
+      ["Discourage printing/copying", "Permissions", "Viewer enforcement varies"],
+      ["Hide specific text", "Redaction", "Must verify output"],
+      ["Faster personal access", "Unlock known password", "Only for authorized files"],
+    ],
+  },
+  "webp-vs-jpg-when-to-use-each-format": {
+    caption: "WebP vs JPG quick choice",
+    headers: ["Destination", "Choose", "Why"],
+    rows: [
+      ["Government/job portal", "JPG", "Most compatible"],
+      ["Modern website", "WebP", "Smaller delivery file"],
+      ["Transparent web graphic", "WebP or PNG", "Transparency support"],
+      ["Print shop", "JPG", "Broad software support"],
+    ],
+  },
+  "how-to-reduce-pdf-size-for-email-attachments": {
+    caption: "Email attachment reduction plan",
+    headers: ["Problem", "First fix", "Second fix"],
+    rows: [
+      ["Too many pages", "Delete unnecessary pages", "Split into separate files"],
+      ["Scanned PDF too large", "Compress images", "Lower DPI carefully"],
+      ["Still near limit", "Use secure link if allowed", "Ask recipient for limit"],
+      ["Unreadable output", "Increase quality", "Rescan poor pages"],
+    ],
+  },
+  "a-complete-guide-to-qr-codes-types-uses-and-best-practices": {
+    caption: "QR reliability checklist",
+    headers: ["Area", "Recommended check", "Risk if ignored"],
+    rows: [
+      ["Content", "Verify URL or UPI ID", "Wrong destination"],
+      ["Contrast", "Dark code on light background", "Scan failure"],
+      ["Margin", "Keep quiet space", "Scanner cannot find edges"],
+      ["Print", "Test with phone first", "Bad batch of printed material"],
+    ],
+  },
+  "how-ocr-works-extracting-text-from-images-explained": {
+    caption: "OCR accuracy checklist",
+    headers: ["Input issue", "Before OCR", "After OCR"],
+    rows: [
+      ["Tilted photo", "Rotate or retake", "Check line order"],
+      ["Small text", "Use sharper source", "Verify numbers"],
+      ["Mixed language", "Choose closest language", "Review names and terms"],
+      ["Tables", "Crop relevant area", "Fix layout manually"],
+    ],
+  },
+  "video-compression-basics-formats-bitrates-and-quality": {
+    caption: "Video compression decisions",
+    headers: ["Video type", "Best size reducer", "Review check"],
+    rows: [
+      ["Screen recording", "Lower resolution carefully", "Text readability"],
+      ["Talking head", "Lower bitrate", "Face detail and audio sync"],
+      ["Long clip", "Trim first", "Start and end points"],
+      ["Audio-only need", "Extract MP3", "Speech/music clarity"],
+    ],
+  },
+};
+
 function joinLabels(items: { label: string; href: string }[] | undefined) {
   const labels = items?.map((item) => item.label) ?? [];
 
@@ -1155,6 +1315,7 @@ function joinLabels(items: { label: string; href: string }[] | undefined) {
 
 function addEditorialDepth(post: BlogPost): BlogPost {
   const note = blogDepthNotes[post.slug];
+  const table = blogReferenceTables[post.slug];
   const tools = joinLabels(post.relatedTools);
 
   if (!note) {
@@ -1165,6 +1326,17 @@ function addEditorialDepth(post: BlogPost): BlogPost {
     ...post,
     sections: [
       ...post.sections,
+      ...(table
+        ? [
+            {
+              heading: "Quick reference table",
+              body: [
+                "Use this table as a fast decision aid before opening the related tool. It does not replace the destination requirements, but it helps you choose the safest next step for common cases.",
+              ],
+              table,
+            },
+          ]
+        : []),
       {
         heading: "Practical workflow",
         body: [
@@ -1219,7 +1391,17 @@ export function blogCollectionJsonLd() {
 
 export function blogPostJsonLd(post: BlogPost) {
   const articleBody = post.sections
-    .flatMap((section) => [section.heading, ...section.body])
+    .flatMap((section) => [
+      section.heading,
+      ...section.body,
+      ...(section.table
+        ? [
+            section.table.caption,
+            section.table.headers.join(" "),
+            ...section.table.rows.map((row) => row.join(" ")),
+          ]
+        : []),
+    ])
     .join("\n\n");
 
   return {
@@ -1233,8 +1415,8 @@ export function blogPostJsonLd(post: BlogPost) {
     dateModified: post.updatedAt ?? post.publishedAt,
     author: {
       "@type": "Organization",
-      name: "FreeConvert",
-      url: BASE_URL,
+      name: "FreeConvert Editorial Team",
+      url: `${BASE_URL}/editorial-policy`,
     },
     publisher: {
       "@type": "Organization",

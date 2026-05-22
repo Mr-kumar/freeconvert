@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, BookOpen, FileImage, Search, Wrench } from "lucide-react";
-import { tools } from "@/lib/tools";
+import { pdfTools, tools } from "@/lib/tools";
 import {
   popularSearches,
   searchSite,
   type SearchResult,
 } from "@/lib/search";
+import { utilityTools } from "@/lib/utilityTools";
 
 const iconMap: Record<SearchResult["category"], typeof Wrench> = {
   Tool: Wrench,
@@ -76,6 +77,12 @@ export default function SearchPageClient({
         <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[var(--muted)]">
           Find image, PDF, QR, text, calculator, color, password and developer
           tools for everyday browser-based work.
+        </p>
+        <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[var(--muted)]">
+          Search works best with short task words such as resize, compress,
+          merge, OCR, QR, password, JSON, PDF, video or calculator. Tool result
+          pages explain supported formats, privacy notes, common mistakes and
+          related guides before you select a file.
         </p>
 
         <div className="relative mx-auto mt-8 max-w-2xl">
@@ -174,10 +181,47 @@ export default function SearchPageClient({
             {/* Tools quick links */}
             <div className="rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm">
               <h2 className="text-lg font-extrabold text-[var(--text)]">
-                Tools
+                Image tools
               </h2>
               <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                {tools.map((tool) => (
+                {tools.slice(0, 8).map((tool) => (
+                  <Link
+                    className="flex items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-sm font-bold text-[var(--text)] transition-colors hover:border-[#f3b5b1] hover:text-[var(--accent)]"
+                    href={tool.href}
+                    key={tool.slug}
+                  >
+                    {tool.name}
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="mt-5 grid gap-5 lg:grid-cols-2">
+            <div className="rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm">
+              <h2 className="text-lg font-extrabold text-[var(--text)]">
+                PDF tools
+              </h2>
+              <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                {pdfTools.slice(0, 8).map((tool) => (
+                  <Link
+                    className="flex items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-sm font-bold text-[var(--text)] transition-colors hover:border-[#f3b5b1] hover:text-[var(--accent)]"
+                    href={tool.href}
+                    key={tool.slug}
+                  >
+                    {tool.name}
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm">
+              <h2 className="text-lg font-extrabold text-[var(--text)]">
+                Utility tools
+              </h2>
+              <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                {utilityTools.slice(0, 8).map((tool) => (
                   <Link
                     className="flex items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-sm font-bold text-[var(--text)] transition-colors hover:border-[#f3b5b1] hover:text-[var(--accent)]"
                     href={tool.href}

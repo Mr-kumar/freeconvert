@@ -13,6 +13,8 @@ const legal = [
 
 const company = [
   { label: "About", href: "/about" },
+  { label: "How It Works", href: "/how-it-works" },
+  { label: "Editorial Policy", href: "/editorial-policy" },
   { label: "Search", href: "/search" },
   { label: "Contact", href: "/contact" },
   { label: "Blog", href: "/blog" },
@@ -33,6 +35,9 @@ export function Footer() {
             </p>
             <p className="mt-4 text-xs font-medium leading-5 text-[#5f6368]">
               No required account. No file upload for supported browser tools.
+            </p>
+            <p className="mt-3 text-xs leading-5 text-[#5f6368]">
+              FreeConvert.in is an independent browser-based tools website.
             </p>
           </div>
 

@@ -33,6 +33,183 @@ interface ContentGuide {
   relatedGuideSlugs: string[];
 }
 
+interface WorkflowExample {
+  scenario: string;
+  settings: string;
+  review: string;
+}
+
+const workflowExamples: Partial<Record<ToolContentSlug, WorkflowExample[]>> = {
+  resize: [
+    {
+      scenario: "Exam or job application photo",
+      settings: "Crop portrait first, resize to the portal pixels, then use target KB.",
+      review: "Check face position, background, exact dimensions and final file size.",
+    },
+    {
+      scenario: "Profile image",
+      settings: "Use a square or portrait ratio and keep aspect ratio locked.",
+      review: "Confirm the face or logo is not stretched on mobile preview.",
+    },
+  ],
+  compress: [
+    {
+      scenario: "Photo over an upload limit",
+      settings: "Use JPG or WebP, set a realistic target KB and reduce dimensions only if needed.",
+      review: "Zoom into faces, signatures and small text before uploading.",
+    },
+    {
+      scenario: "Transparent graphic",
+      settings: "Keep PNG or WebP output instead of converting blindly to JPG.",
+      review: "Preview edges on a contrasting background.",
+    },
+  ],
+  convert: [
+    {
+      scenario: "Portal asks for JPG",
+      settings: "Convert the source image to JPG and choose a moderate quality level.",
+      review: "Check that transparency was not needed and the file extension is correct.",
+    },
+    {
+      scenario: "Website delivery image",
+      settings: "Export WebP or AVIF only when the website supports it.",
+      review: "Test the image in the browser or CMS where it will appear.",
+    },
+  ],
+  "heic-to-jpg": [
+    {
+      scenario: "iPhone photo for a form",
+      settings: "Convert HEIC to JPG first, then resize or compress the JPG if required.",
+      review: "Check orientation, color and upload size.",
+    },
+    {
+      scenario: "Sharing with older desktop apps",
+      settings: "Use JPG output for broad compatibility.",
+      review: "Open the download in the target app before deleting the HEIC source.",
+    },
+  ],
+  "image-to-text": [
+    {
+      scenario: "Copy text from a screenshot",
+      settings: "Crop to the text area and choose the closest language option.",
+      review: "Compare names, numbers and punctuation with the original image.",
+    },
+    {
+      scenario: "Receipt or label extraction",
+      settings: "Use the clearest source image and avoid shadows.",
+      review: "Verify totals, dates and serial numbers manually.",
+    },
+  ],
+  "webp-to-jpg": [
+    {
+      scenario: "Older portal rejects WebP",
+      settings: "Export JPG with a plain background for any transparent pixels.",
+      review: "Confirm the portal accepts the real JPG output.",
+    },
+    {
+      scenario: "Send image to a print shop",
+      settings: "Use higher JPG quality for photos.",
+      review: "Check color and edge quality before sending.",
+    },
+  ],
+  "merge-pdf": [
+    {
+      scenario: "Application packet",
+      settings: "Place the main form first, then ID proof, address proof and certificates.",
+      review: "Open the merged PDF and check every page is in order.",
+    },
+    {
+      scenario: "Invoice bundle",
+      settings: "Sort files by date or invoice number before merging.",
+      review: "Remove duplicate invoices before final export.",
+    },
+  ],
+  "compress-pdf": [
+    {
+      scenario: "Scanned PDF over email limit",
+      settings: "Use balanced compression and a realistic target size.",
+      review: "Zoom into signatures, stamps and small text.",
+    },
+    {
+      scenario: "Text PDF already optimized",
+      settings: "Try light compression first instead of forcing a tiny target.",
+      review: "Check whether selectable text still behaves as expected.",
+    },
+  ],
+  "split-pdf": [
+    {
+      scenario: "Long PDF with multiple certificates",
+      settings: "Use custom ranges for each certificate or section.",
+      review: "Open each exported file and verify page boundaries.",
+    },
+    {
+      scenario: "Need every page separately",
+      settings: "Use every-page mode and download the ZIP.",
+      review: "Check naming pattern before uploading files elsewhere.",
+    },
+  ],
+  "convert-pdf-to-image": [
+    {
+      scenario: "Single PDF page preview",
+      settings: "Export only the needed page as JPG or PNG.",
+      review: "Check DPI, text clarity and final image size.",
+    },
+    {
+      scenario: "Sharp document screenshot",
+      settings: "Use PNG and higher DPI when clarity matters more than size.",
+      review: "Zoom into small text after export.",
+    },
+  ],
+  "convert-image-to-pdf": [
+    {
+      scenario: "Photos into one document",
+      settings: "Arrange images in order and choose A4 or match-image page size.",
+      review: "Check page order, margins and final PDF size.",
+    },
+    {
+      scenario: "Scanned form pages",
+      settings: "Rotate images before creating the PDF.",
+      review: "Open the PDF and verify every page is readable.",
+    },
+  ],
+  "jpg-to-pdf": [
+    {
+      scenario: "JPG scans for a portal",
+      settings: "Use A4 pages, consistent margins and correct image order.",
+      review: "Confirm the PDF opens and fits the upload size limit.",
+    },
+    {
+      scenario: "Photo set archive",
+      settings: "Use match-image sizing when printing is not required.",
+      review: "Check that no photo is cropped unexpectedly.",
+    },
+  ],
+  "edit-pdf": [
+    {
+      scenario: "Fill a simple PDF form",
+      settings: "Place text at the correct zoom level and keep font sizes consistent.",
+      review: "Open the exported PDF and check alignment.",
+    },
+    {
+      scenario: "Add a visual signature",
+      settings: "Use a clear signature image or drawing on the required page.",
+      review: "Confirm this visual mark is accepted by the recipient.",
+    },
+  ],
+  "redact-pdf": [
+    {
+      scenario: "Hide ID or account numbers",
+      settings: "Place redaction boxes over every repeated sensitive detail.",
+      review: "Try selecting text around the redacted area in the output.",
+    },
+    {
+      scenario: "Share a partial document",
+      settings: "Redact unnecessary private areas before compression or sharing.",
+      review: "Check headers, footers and thumbnails for missed details.",
+    },
+  ],
+};
+
 const guideProfiles: Partial<Record<ToolContentSlug, GuideProfile>> = {
   resize: {
     audience:
@@ -1498,6 +1675,7 @@ export function ToolContentSections({
   const faqs = kind === "pdf" ? getPdfToolFaqs(slug) : getImageToolFaqs(slug);
   const relatedTools = getRelatedTools(kind, slug);
   const guide = buildContentGuide({ kind, notes, slug, tool });
+  const examples = workflowExamples[slug] ?? [];
   const relatedGuides = getRelatedGuides(guide.relatedGuideSlugs);
   const categoryLabel = kind === "pdf" ? "PDF tool" : "Image tool";
   const fileLabel = kind === "pdf" ? "PDFs" : "images";
@@ -1647,6 +1825,34 @@ export function ToolContentSections({
           </div>
         </div>
       </section>
+
+      {examples.length ? (
+        <section className="mt-5 rounded-xl border border-[var(--border)] bg-white p-5 shadow-sm sm:p-6">
+          <h2 className="font-display text-xl font-extrabold text-[var(--text)]">
+            Example workflows
+          </h2>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            {examples.map((example) => (
+              <article
+                className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-4"
+                key={example.scenario}
+              >
+                <h3 className="text-sm font-extrabold leading-6 text-[var(--text)]">
+                  {example.scenario}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                  <span className="font-bold text-[var(--text)]">Settings: </span>
+                  {example.settings}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                  <span className="font-bold text-[var(--text)]">Review: </span>
+                  {example.review}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {relatedGuides.length ? (
         <section className="mt-5 rounded-xl border border-[var(--border)] bg-white p-5 shadow-sm sm:p-6">

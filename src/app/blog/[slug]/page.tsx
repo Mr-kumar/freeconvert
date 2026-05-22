@@ -36,7 +36,7 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.description,
-    authors: [{ name: "FreeConvert", url: BASE_URL }],
+    authors: [{ name: "FreeConvert Editorial Team", url: `${BASE_URL}/editorial-policy` }],
     alternates: {
       canonical: `${BASE_URL}/blog/${post.slug}`,
     },
@@ -111,6 +111,27 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <p className="mt-4 text-lg leading-8 text-[var(--muted)]">
           {post.description}
         </p>
+        <div className="mt-6 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm leading-6 text-[var(--muted)]">
+          <p>
+            Written and reviewed by{" "}
+            <Link
+              className="font-bold text-[var(--accent)]"
+              href="/editorial-policy"
+            >
+              FreeConvert Editorial Team
+            </Link>
+            . Updated{" "}
+            {new Date(post.updatedAt ?? post.publishedAt).toLocaleDateString(
+              "en-IN",
+              {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              },
+            )}
+            .
+          </p>
+        </div>
 
         <div className="mt-10 space-y-8">
           {post.sections.map((section, index) => (
@@ -129,6 +150,47 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     </p>
                   ))}
                 </div>
+                {section.table ? (
+                  <div className="mt-5 overflow-hidden rounded-xl border border-[var(--border)]">
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full border-collapse bg-white text-left text-sm">
+                        <caption className="bg-[var(--surface-2)] px-4 py-3 text-left font-bold text-[var(--text)]">
+                          {section.table.caption}
+                        </caption>
+                        <thead className="bg-[var(--surface-2)] text-[var(--text)]">
+                          <tr>
+                            {section.table.headers.map((header) => (
+                              <th
+                                className="border-t border-[var(--border)] px-4 py-3 font-extrabold"
+                                key={header}
+                                scope="col"
+                              >
+                                {header}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {section.table.rows.map((row) => (
+                            <tr
+                              className="border-t border-[var(--border)]"
+                              key={row.join("|")}
+                            >
+                              {row.map((cell) => (
+                                <td
+                                  className="px-4 py-3 leading-6 text-[var(--muted)]"
+                                  key={cell}
+                                >
+                                  {cell}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                ) : null}
               </section>
               {index === 0 ? (
                 <AdSlot

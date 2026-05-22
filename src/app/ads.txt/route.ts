@@ -14,8 +14,8 @@ export function GET() {
   const body = publisherId
     ? `google.com, ${publisherId}, DIRECT, ${GOOGLE_CERTIFICATION_AUTHORITY_ID}\n`
     : [
-        "# Configure ADSENSE_PUBLISHER_ID=pub-0000000000000000",
-        "# or NEXT_PUBLIC_ADSENSE_ID=ca-pub-0000000000000000.",
+        "# Configure ADSENSE_PUBLISHER_ID with your Google publisher ID",
+        "# or configure NEXT_PUBLIC_ADSENSE_ID with your AdSense client ID.",
         "# The live AdSense publisher line will be generated automatically.",
         "",
       ].join("\n");

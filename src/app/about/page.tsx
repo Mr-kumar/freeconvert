@@ -58,6 +58,11 @@ export default function AboutPage() {
           keep the core workflow local when the browser can complete the task
           reliably.
         </p>
+        <p>
+          A more detailed explanation is available on the{" "}
+          <Link href="/how-it-works">How FreeConvert Works</Link> page,
+          including limitations, third-party assets and output review steps.
+        </p>
       </LegalSection>
       <LegalSection title="Privacy Philosophy">
         <p>
@@ -80,6 +85,12 @@ export default function AboutPage() {
           select a file. That matters because choosing the wrong format,
           dimensions, compression level or PDF operation can cause rejected
           uploads and repeated work.
+        </p>
+        <p>
+          Guides are written and reviewed under the{" "}
+          <Link href="/editorial-policy">FreeConvert Editorial Policy</Link>.
+          The policy explains how topics are selected, how tool pages are
+          reviewed and how corrections can be requested.
         </p>
       </LegalSection>
       <LegalSection title="Technology Stack">
@@ -115,6 +126,14 @@ export default function AboutPage() {
           QR generation, OCR, media conversion, UI primitives and icons. Those
           projects make it possible to build useful client-side tools on the
           modern web.
+        </p>
+      </LegalSection>
+      <LegalSection title="Independent Website">
+        <p>
+          FreeConvert.in is an independent browser-based tools website. It does
+          not claim affiliation with similarly named converter websites unless a
+          relationship is stated clearly on this site. The content, policies and
+          tool pages are maintained for FreeConvert.in users.
         </p>
       </LegalSection>
       <LegalSection title="Contact">

@@ -32,12 +32,12 @@ export function UtilityToolRoutePage({ slug }: { slug: UtilityToolSlug }) {
         rightSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RAIL_RIGHT}
       />
       <UtilityToolPageClient slug={slug} />
+      <UtilityContentSections slug={slug} />
       <AdSlot
-        className="pb-2"
+        className="pb-10"
         minHeight={96}
         slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOOL_BOTTOM}
       />
-      <UtilityContentSections slug={slug} />
     </>
   );
 }
