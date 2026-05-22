@@ -2,6 +2,9 @@
 
 import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
+import { CrawlableToolFallback } from "@/components/CrawlableToolFallback";
+import { useHydrated } from "@/components/useHydrated";
+import { pdfToolConfigs } from "@/lib/tools";
 import type { PDFToolSlug, ToolDefaults } from "@/lib/types";
 
 interface PDFToolClientProps {
@@ -119,5 +122,21 @@ const pdfToolClients: Record<PDFToolSlug, ComponentType<PDFToolClientProps>> = {
 
 export function PDFToolPageClient({ slug, defaults }: PDFToolPageClientProps) {
   const Client = pdfToolClients[slug];
+  const tool = pdfToolConfigs[slug];
+  const hydrated = useHydrated();
+
+  if (!hydrated) {
+    return (
+      <CrawlableToolFallback
+        backHref="/pdf-tools"
+        backLabel="PDF Tools"
+        badgeLabel="Browser only"
+        description={tool.description}
+        features={tool.features}
+        title={tool.name}
+      />
+    );
+  }
+
   return <Client defaults={defaults} slug={slug} />;
 }

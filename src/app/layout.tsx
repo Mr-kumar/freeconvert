@@ -24,6 +24,7 @@ const websiteJsonLd = {
       "@id": `${BASE_URL}/#website`,
       url: BASE_URL,
       name: "FreeConvert",
+      alternateName: "freeconvert.in",
       description:
         "Free online image, PDF and utility tools. Files and inputs stay on your device.",
       inLanguage: "en-IN",
@@ -41,6 +42,12 @@ const websiteJsonLd = {
       "@id": `${BASE_URL}/#organization`,
       name: "FreeConvert",
       url: BASE_URL,
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "customer support",
+        email: "hello@freeconvert.in",
+        availableLanguage: ["English", "Hindi"],
+      },
       logo: {
         "@type": "ImageObject",
         "@id": `${BASE_URL}/#logo`,
@@ -80,6 +87,7 @@ export const metadata: Metadata = {
     default: "FreeConvert - Free Online Image, PDF & Utility Tools",
     template: "%s | FreeConvert",
   },
+  applicationName: "FreeConvert",
   description:
     "Use free online image, PDF, QR, text, calculator, color, password and developer tools. No upload required.",
   keywords: [

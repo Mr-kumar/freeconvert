@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { normalizeAdSenseClientId } from "@/lib/adsense";
+import { normalizeAdSenseClientId, normalizeAdSenseSlotId } from "@/lib/adsense";
 import { useAdSenseSlot } from "@/components/useAdSenseSlot";
 
 const RAIL_MEDIA_QUERY = "(min-width: 1900px)";
@@ -73,16 +73,18 @@ export function AdRailSlots({
   rightSlot?: string;
 }) {
   const client = normalizeAdSenseClientId(process.env.NEXT_PUBLIC_ADSENSE_ID);
+  const left = normalizeAdSenseSlotId(leftSlot);
+  const right = normalizeAdSenseSlotId(rightSlot);
   const canRenderRailAds = useCanRenderRailAds();
 
-  if (!canRenderRailAds || !client || (!leftSlot && !rightSlot)) {
+  if (!canRenderRailAds || !client || (!left && !right)) {
     return null;
   }
 
   return (
     <>
-      {leftSlot ? <RailAd client={client} side="left" slot={leftSlot} /> : null}
-      {rightSlot ? <RailAd client={client} side="right" slot={rightSlot} /> : null}
+      {left ? <RailAd client={client} side="left" slot={left} /> : null}
+      {right ? <RailAd client={client} side="right" slot={right} /> : null}
     </>
   );
 }

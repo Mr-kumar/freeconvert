@@ -2,6 +2,9 @@
 
 import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
+import { CrawlableToolFallback } from "@/components/CrawlableToolFallback";
+import { useHydrated } from "@/components/useHydrated";
+import { toolConfigs } from "@/lib/tools";
 import type { ToolDefaults, ToolSlug } from "@/lib/types";
 
 interface ToolClientProps {
@@ -129,5 +132,21 @@ const toolClients: Record<ToolSlug, ComponentType<ToolClientProps>> = {
 
 export function ToolPageClient({ slug, defaults }: ToolClientProps) {
   const Client = toolClients[slug];
+  const tool = toolConfigs[slug];
+  const hydrated = useHydrated();
+
+  if (!hydrated) {
+    return (
+      <CrawlableToolFallback
+        backHref="/#image-tools"
+        backLabel="Image Tools"
+        badgeLabel="Browser only"
+        description={tool.description}
+        features={tool.features}
+        title={tool.name}
+      />
+    );
+  }
+
   return <Client defaults={defaults} slug={slug} />;
 }

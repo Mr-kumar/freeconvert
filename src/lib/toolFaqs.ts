@@ -146,6 +146,202 @@ export const imageToolFaqs: Partial<Record<ToolSlug, ToolFaq[]>> = {
       answer: "No. Metadata inspection runs locally on your device.",
     },
   ],
+  "webp-to-jpg": [
+    {
+      question: "Why convert WebP to JPG?",
+      answer: "JPG is accepted by more older apps, upload portals and desktop workflows than WebP.",
+    },
+    {
+      question: "Will transparency be preserved?",
+      answer: "No. JPG does not support transparency, so transparent WebP areas are flattened to a background color.",
+    },
+    {
+      question: "Does the WebP file upload to a server?",
+      answer: "No. Conversion runs in your browser and creates a new JPG download locally.",
+    },
+  ],
+  "png-to-jpg": [
+    {
+      question: "When should I convert PNG to JPG?",
+      answer: "Use JPG for photos or large PNG files when transparency is not needed and smaller file size matters.",
+    },
+    {
+      question: "What happens to transparent PNG areas?",
+      answer: "Transparent pixels are flattened onto a background because JPG cannot store transparency.",
+    },
+    {
+      question: "Can I control JPG quality?",
+      answer: "Yes. Choose the quality setting before downloading the converted JPG file.",
+    },
+  ],
+  "jpg-to-png": [
+    {
+      question: "Does converting JPG to PNG improve quality?",
+      answer: "No. PNG keeps the current pixels losslessly, but it cannot restore detail already lost in the JPG.",
+    },
+    {
+      question: "Will the PNG have transparency?",
+      answer: "No. A regular JPG does not contain transparent pixels, so the PNG copy will remain opaque.",
+    },
+    {
+      question: "Why is the PNG larger?",
+      answer: "PNG is lossless and often creates larger files for photos than JPG.",
+    },
+  ],
+  "avif-to-jpg": [
+    {
+      question: "Can every browser convert AVIF?",
+      answer: "AVIF conversion depends on your browser's ability to decode the selected AVIF file.",
+    },
+    {
+      question: "Why use JPG output?",
+      answer: "JPG is more widely accepted by older apps, forms and document workflows.",
+    },
+    {
+      question: "Does AVIF to JPG happen locally?",
+      answer: "Yes. The browser decodes the AVIF and exports a JPG copy on your device.",
+    },
+  ],
+  "png-to-webp": [
+    {
+      question: "Does WebP support transparency?",
+      answer: "Yes. WebP can preserve transparency when the browser supports the export.",
+    },
+    {
+      question: "Is WebP smaller than PNG?",
+      answer: "Often yes, especially for web images, but screenshots with tiny text should still be checked visually.",
+    },
+    {
+      question: "Where should I use WebP?",
+      answer: "Use WebP for websites or apps that clearly support it, and keep PNG for maximum compatibility.",
+    },
+  ],
+  "compress-jpg": [
+    {
+      question: "Can I compress JPG to a target KB?",
+      answer: "Yes. Set a target KB and the tool will try to create a JPG close to that limit.",
+    },
+    {
+      question: "Will JPG compression reduce quality?",
+      answer: "Strong compression can reduce detail, so preview the result before submitting important files.",
+    },
+    {
+      question: "Should I resize before compressing JPG?",
+      answer: "Yes, if the image is very large or the upload portal also has dimension limits.",
+    },
+  ],
+  "compress-png": [
+    {
+      question: "Can PNG files be compressed as much as JPG?",
+      answer: "Usually no. PNG is lossless, so photos often shrink less than they would as JPG or WebP.",
+    },
+    {
+      question: "Will PNG transparency remain?",
+      answer: "Yes. PNG output keeps transparency when the source image has transparent areas.",
+    },
+    {
+      question: "What if the PNG is still too large?",
+      answer: "Reduce dimensions or convert to WebP if the destination supports WebP.",
+    },
+  ],
+  "heic-to-jpg": [
+    {
+      question: "Can I convert iPhone HEIC photos to JPG?",
+      answer: "Yes. The tool decodes HEIC or HEIF photos in the browser and exports JPG copies.",
+    },
+    {
+      question: "Why is JPG useful for HEIC photos?",
+      answer: "JPG is accepted by more forms, printers, older apps and desktop workflows than HEIC.",
+    },
+    {
+      question: "Are HEIC photos uploaded?",
+      answer: "No. HEIC decoding and JPG export happen locally in your browser.",
+    },
+  ],
+  "heic-to-png": [
+    {
+      question: "When should I convert HEIC to PNG?",
+      answer: "Use PNG when you need a lossless editing copy or a destination specifically asks for PNG.",
+    },
+    {
+      question: "Will PNG be larger than JPG?",
+      answer: "Often yes, especially for phone photos, because PNG is lossless.",
+    },
+    {
+      question: "Does conversion keep the original HEIC?",
+      answer: "Yes. The source HEIC remains unchanged and a new PNG file is downloaded.",
+    },
+  ],
+  "image-to-text": [
+    {
+      question: "Can OCR read every image perfectly?",
+      answer: "No. OCR works best on sharp, well-lit images with clear printed text and good contrast.",
+    },
+    {
+      question: "Can I copy the extracted text?",
+      answer: "Yes. You can copy the recognized text or download it as a TXT file.",
+    },
+    {
+      question: "Is OCR processed locally?",
+      answer: "Yes. The OCR engine runs in your browser after its language data loads.",
+    },
+  ],
+  "svg-to-png": [
+    {
+      question: "Can I choose output size?",
+      answer: "Yes. Use the scale and size controls to export a larger or smaller raster image.",
+    },
+    {
+      question: "Which formats are supported?",
+      answer: "You can rasterize SVG files to PNG, JPG or WebP where supported by the browser.",
+    },
+    {
+      question: "Is the SVG sanitized?",
+      answer: "Yes. The tool sanitizes SVG content before rendering it to a canvas output.",
+    },
+  ],
+  "favicon-generator": [
+    {
+      question: "What image should I use for a favicon?",
+      answer: "Use a simple square image or logo with enough padding so it remains readable at small sizes.",
+    },
+    {
+      question: "Does it create multiple icon sizes?",
+      answer: "Yes. The generator creates common PNG icon sizes and an ICO file in a ZIP download.",
+    },
+    {
+      question: "Can I use transparent icons?",
+      answer: "Yes. Transparent PNG source images are supported for icon generation.",
+    },
+  ],
+  "blur-image": [
+    {
+      question: "Can I blur only part of an image?",
+      answer: "Yes. Add blur boxes over faces, numbers, addresses or other private areas.",
+    },
+    {
+      question: "Is blur enough for sensitive text?",
+      answer: "Use strong blur or pixelation for sensitive text, and inspect the output at full size before sharing.",
+    },
+    {
+      question: "Does the original image change?",
+      answer: "No. The blurred image is exported as a new download.",
+    },
+  ],
+  "image-collage-maker": [
+    {
+      question: "Can I make a grid collage?",
+      answer: "Yes. Choose grid layouts and adjust spacing, background and aspect settings before export.",
+    },
+    {
+      question: "Can I combine screenshots and photos?",
+      answer: "Yes. You can combine mixed images, but check readability when screenshots are scaled down.",
+    },
+    {
+      question: "Which format should I download?",
+      answer: "Use JPG or WebP for smaller photo collages and PNG for crisp graphics or transparency.",
+    },
+  ],
 };
 
 export const pdfToolFaqs: Partial<Record<PDFToolSlug, ToolFaq[]>> = {
@@ -329,6 +525,132 @@ export const pdfToolFaqs: Partial<Record<PDFToolSlug, ToolFaq[]>> = {
     {
       question: "Can I clean PDF metadata?",
       answer: "Yes. You can strip or edit metadata locally before saving a new copy.",
+    },
+  ],
+  "jpg-to-pdf": [
+    {
+      question: "Can I combine multiple JPG files into one PDF?",
+      answer: "Yes. Add JPG files in the correct order and export them as a single PDF document.",
+    },
+    {
+      question: "Can I choose A4 page size?",
+      answer: "Yes. You can choose A4, Letter and other page settings before creating the PDF.",
+    },
+    {
+      question: "Are JPG files uploaded?",
+      answer: "No. The PDF is created locally in your browser.",
+    },
+  ],
+  "png-to-pdf": [
+    {
+      question: "Can I convert screenshots to PDF?",
+      answer: "Yes. PNG screenshots can be placed on PDF pages with your chosen page size and margins.",
+    },
+    {
+      question: "What happens to transparent PNG areas?",
+      answer: "Transparent areas are handled according to the PDF page background and image embedding settings.",
+    },
+    {
+      question: "Can I add multiple PNG files?",
+      answer: "Yes. Add multiple PNG images and export them in one PDF.",
+    },
+  ],
+  "heic-to-pdf": [
+    {
+      question: "Can I turn iPhone HEIC photos into PDF?",
+      answer: "Yes. HEIC or HEIF photos are decoded in the browser and placed into a PDF.",
+    },
+    {
+      question: "Can I control page size?",
+      answer: "Yes. Choose page size, margins and fit settings before exporting the PDF.",
+    },
+    {
+      question: "Will the PDF be large?",
+      answer: "Phone photos can create large PDFs, so compress the final PDF if the destination has a size limit.",
+    },
+  ],
+  "delete-pages-from-pdf": [
+    {
+      question: "Can I remove selected PDF pages?",
+      answer: "Yes. Select unwanted pages visually or by range and export a new PDF without those pages.",
+    },
+    {
+      question: "Does deleting pages affect the original?",
+      answer: "No. The original PDF remains unchanged and the cleaned PDF downloads as a new file.",
+    },
+    {
+      question: "Can I undo before exporting?",
+      answer: "Yes. Review the selected pages and reset before export if the selection is wrong.",
+    },
+  ],
+  "edit-pdf": [
+    {
+      question: "Can I add text to a PDF?",
+      answer: "Yes. You can place text, highlights, boxes, drawings and signature images on selected pages.",
+    },
+    {
+      question: "Is this a full PDF editor?",
+      answer: "It is designed for quick visual edits and annotations, not complex layout reconstruction.",
+    },
+    {
+      question: "Does PDF editing upload my file?",
+      answer: "No. The PDF is edited in your browser and exported as a new copy.",
+    },
+  ],
+  "sign-pdf": [
+    {
+      question: "Can I draw a signature?",
+      answer: "Yes. You can draw a signature or upload a signature image and place it on the PDF.",
+    },
+    {
+      question: "Is this the same as certificate-based digital signing?",
+      answer: "No. It adds a visible signature mark; use a compliant digital-signature workflow when legally required.",
+    },
+    {
+      question: "Can I sign selected pages?",
+      answer: "Yes. Place the signature on the page or pages where it is needed.",
+    },
+  ],
+  "crop-pdf": [
+    {
+      question: "Can I crop margins from PDF pages?",
+      answer: "Yes. Set top, right, bottom and left crop values for all pages or selected page ranges.",
+    },
+    {
+      question: "Is cropping the same as redaction?",
+      answer: "No. Cropping changes visible page boundaries; use redaction when sensitive content must be hidden.",
+    },
+    {
+      question: "Can I apply crop to selected pages only?",
+      answer: "Yes. Use page range controls when different pages need different handling.",
+    },
+  ],
+  "pdf-to-text": [
+    {
+      question: "Can it extract text from scanned PDFs?",
+      answer: "Only selectable text can be extracted directly. Scanned image-only PDFs may need OCR first.",
+    },
+    {
+      question: "Can I download the text?",
+      answer: "Yes. You can copy the extracted text or download it as a TXT file.",
+    },
+    {
+      question: "Will tables keep their layout?",
+      answer: "Plain text extraction may not preserve complex tables or multi-column layouts perfectly.",
+    },
+  ],
+  "redact-pdf": [
+    {
+      question: "Can I black out sensitive PDF areas?",
+      answer: "Yes. Draw redaction rectangles over private areas and export a redacted copy.",
+    },
+    {
+      question: "Should I check the redacted output?",
+      answer: "Yes. Always open the exported PDF and confirm sensitive text or areas are not visible.",
+    },
+    {
+      question: "Is redaction processed locally?",
+      answer: "Yes. Redaction runs in the browser and the selected PDF stays on your device.",
     },
   ],
 };

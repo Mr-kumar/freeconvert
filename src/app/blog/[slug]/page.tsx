@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { AdRailSlots } from "@/components/AdRailSlots";
 import { AdSlot } from "@/components/AdSlot";
 import {
+  blogPostImagePath,
   blogPostBreadcrumbJsonLd,
   blogPostJsonLd,
   blogPosts,
@@ -30,6 +31,8 @@ export async function generateMetadata({
     return {};
   }
 
+  const imagePath = blogPostImagePath(post);
+
   return {
     title: post.title,
     description: post.description,
@@ -43,13 +46,14 @@ export async function generateMetadata({
       url: `${BASE_URL}/blog/${post.slug}`,
       type: "article",
       publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt ?? post.publishedAt,
       siteName: "FreeConvert",
       images: [
         {
-          url: "/opengraph-image",
+          url: imagePath,
           width: 1200,
           height: 630,
-          alt: "FreeConvert - Free Online Image, PDF and Utility Tools",
+          alt: `${post.title} - FreeConvert guide`,
         },
       ],
     },
@@ -57,7 +61,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      images: ["/opengraph-image"],
+      images: [imagePath],
     },
   };
 }
@@ -150,6 +154,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   key={tool.href}
                 >
                   {tool.label}
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {post.relatedPosts?.length ? (
+          <section className="mt-6 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-5">
+            <h2 className="text-xl font-extrabold text-[var(--text)]">
+              Continue reading
+            </h2>
+            <div className="mt-4 grid gap-2 sm:grid-cols-2">
+              {post.relatedPosts.map((relatedPost) => (
+                <Link
+                  className="rounded-lg border border-[var(--border)] bg-white p-4 text-sm font-bold leading-6 text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                  href={`/blog/${relatedPost.slug}`}
+                  key={relatedPost.slug}
+                >
+                  {relatedPost.title}
                 </Link>
               ))}
             </div>

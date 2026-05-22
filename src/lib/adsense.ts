@@ -25,3 +25,17 @@ export function normalizeAdSensePublisherId(value: string | undefined) {
 
   return null;
 }
+
+export function normalizeAdSenseSlotId(value: string | undefined) {
+  const trimmed = value?.trim();
+
+  if (!trimmed || /^0+$/.test(trimmed)) {
+    return undefined;
+  }
+
+  if (/^\d{10,}$/.test(trimmed)) {
+    return trimmed;
+  }
+
+  return undefined;
+}

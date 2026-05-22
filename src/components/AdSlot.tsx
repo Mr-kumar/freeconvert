@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useSyncExternalStore } from "react";
-import { normalizeAdSenseClientId } from "@/lib/adsense";
+import { normalizeAdSenseClientId, normalizeAdSenseSlotId } from "@/lib/adsense";
 import { cn } from "@/lib/utils";
 import { useAdSenseSlot } from "@/components/useAdSenseSlot";
 
@@ -47,17 +47,18 @@ export function AdSlot({
   minViewportWidth,
 }: AdSlotProps) {
   const client = normalizeAdSenseClientId(process.env.NEXT_PUBLIC_ADSENSE_ID);
+  const normalizedSlot = normalizeAdSenseSlotId(slot);
   const shellRef = useRef<HTMLDivElement>(null);
   const mounted = useHydrated();
   const matchesViewport = useMinViewportWidth(minViewportWidth);
 
   useAdSenseSlot({
-    enabled: Boolean(client && slot && mounted && matchesViewport),
-    slotKey: `${client}:${slot}:${format}`,
+    enabled: Boolean(client && normalizedSlot && mounted && matchesViewport),
+    slotKey: `${client}:${normalizedSlot}:${format}`,
     targetRef: shellRef,
   });
 
-  if (!client || !slot || !matchesViewport) {
+  if (!client || !normalizedSlot || !matchesViewport) {
     return null;
   }
 
@@ -74,7 +75,7 @@ export function AdSlot({
             className="adsbygoogle"
             data-ad-client={client}
             data-ad-format={format}
-            data-ad-slot={slot}
+            data-ad-slot={normalizedSlot}
             data-full-width-responsive="true"
             style={{ display: "block", minHeight, width: "100%" }}
           />

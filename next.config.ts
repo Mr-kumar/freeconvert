@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   turbopack: {},
   async redirects() {
     return [
-      { source: "/tools", destination: "/", permanent: false },
+      { source: "/tools", destination: "/", permanent: true },
       { source: "/pdf", destination: "/pdf-tools", permanent: true },
       { source: "/pdf/merge", destination: "/merge-pdf", permanent: true },
       { source: "/pdf-merge", destination: "/merge-pdf", permanent: true },
@@ -106,6 +106,13 @@ const nextConfig: NextConfig = {
       { key: "Cross-Origin-Embedder-Policy", value: "credentialless" },
       { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
     ];
+    const longTermResourceHeaders = [
+      ...sameOriginResourceHeaders,
+      {
+        key: "Cache-Control",
+        value: "public, max-age=31536000, immutable",
+      },
+    ];
     const securityHeaders = [
       { key: "X-Frame-Options", value: "SAMEORIGIN" },
       { key: "X-Content-Type-Options", value: "nosniff" },
@@ -149,19 +156,23 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/qpdf.js",
-        headers: sameOriginResourceHeaders,
+        headers: longTermResourceHeaders,
       },
       {
         source: "/qpdf.wasm",
-        headers: sameOriginResourceHeaders,
+        headers: longTermResourceHeaders,
+      },
+      {
+        source: "/pdf.worker.min.mjs",
+        headers: longTermResourceHeaders,
       },
       {
         source: "/ffmpeg/(.*)",
-        headers: sameOriginResourceHeaders,
+        headers: longTermResourceHeaders,
       },
       {
         source: "/tesseract/(.*)",
-        headers: sameOriginResourceHeaders,
+        headers: longTermResourceHeaders,
       },
       {
         source: "/icons/(.*)",

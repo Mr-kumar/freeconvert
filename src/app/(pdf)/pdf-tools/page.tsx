@@ -184,6 +184,76 @@ export default function PDFHubPage() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+          <div>
+            <p className="text-xs font-extrabold uppercase text-[var(--accent)]">
+              PDF workflow guide
+            </p>
+            <h2 className="mt-2 font-display text-2xl font-extrabold leading-tight text-[var(--text)]">
+              Choose the right PDF tool before exporting a new copy
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-[var(--muted)]">
+              PDF tasks are easier when the operation happens in the right
+              order. Merge and reorder pages before compression, rotate scanned
+              pages before sharing, remove unwanted pages before reducing file
+              size, and protect sensitive documents only after the final copy is
+              ready. This hub groups those tasks so you can move from cleanup to
+              export without searching through unrelated tools.
+            </p>
+            <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
+              Many PDF tools on FreeConvert run directly in the browser with
+              client-side libraries or WebAssembly. That is useful for everyday
+              documents such as certificates, invoices, notes, receipts and
+              application packets because selected files can stay on your
+              device while a new output is created.
+            </p>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2">
+            <article>
+              <h3 className="text-base font-extrabold text-[var(--text)]">
+                For upload limits
+              </h3>
+              <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
+                Use Compress PDF after the final document is assembled. Check
+                small text, signatures, stamps and QR codes before submitting to
+                a job portal, university form or email recipient.
+              </p>
+            </article>
+            <article>
+              <h3 className="text-base font-extrabold text-[var(--text)]">
+                For document order
+              </h3>
+              <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
+                Use Merge PDF, Split PDF, Extract Pages and Reorder Pages to
+                build a clean packet. Keep the original files until the exported
+                PDF has been reviewed and accepted.
+              </p>
+            </article>
+            <article>
+              <h3 className="text-base font-extrabold text-[var(--text)]">
+                For privacy
+              </h3>
+              <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
+                Use Redact PDF for hidden details, Protect PDF for an open
+                password and View PDF Metadata when you need to inspect document
+                properties before publishing or forwarding.
+              </p>
+            </article>
+            <article>
+              <h3 className="text-base font-extrabold text-[var(--text)]">
+                For conversion
+              </h3>
+              <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
+                Use PDF to Image for page previews and Image to PDF when photos
+                or screenshots need to become one document. Choose page size,
+                margins and quality based on the destination.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6">
         <div className="mb-8">
           <h2 className="font-display text-2xl font-extrabold text-[var(--text)]">

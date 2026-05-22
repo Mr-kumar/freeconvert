@@ -264,6 +264,77 @@ export function HomeTools() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
+          <div>
+            <p className="text-xs font-extrabold uppercase text-[var(--accent)]">
+              Built for everyday files
+            </p>
+            <h2 className="mt-2 font-display text-2xl font-extrabold leading-tight text-[var(--text)]">
+              Practical tools with clear pages and local processing
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-[var(--muted)]">
+              FreeConvert focuses on small tasks people repeat often: preparing
+              images for upload forms, reducing PDF file size, extracting text,
+              generating QR codes and checking values in simple calculators.
+              Each tool page explains what it does, when to use it and what to
+              check before downloading the result.
+            </p>
+            <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
+              The tools are organized for practical workflows rather than one
+              long upload queue. You can resize a photo before compression,
+              merge a PDF before reducing size, generate a QR code for a link
+              or UPI payment, and use developer utilities for quick checks
+              without leaving the browser.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <article>
+              <h3 className="text-base font-extrabold text-[var(--text)]">
+                Private by design
+              </h3>
+              <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
+                Supported image, PDF, text, QR, calculator and developer tools
+                run directly in the browser. That keeps common files on the
+                device and avoids forcing a signup for quick work.
+              </p>
+            </article>
+            <article>
+              <h3 className="text-base font-extrabold text-[var(--text)]">
+                Organized for review
+              </h3>
+              <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
+                The site includes direct tool URLs, category navigation,
+                practical notes, related tools, common questions and guides so
+                visitors can understand the right workflow before processing a
+                file.
+              </p>
+            </article>
+            <article>
+              <h3 className="text-base font-extrabold text-[var(--text)]">
+                Built for upload rules
+              </h3>
+              <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
+                Image and PDF pages include notes for dimensions, target KB,
+                page order, format compatibility and final review so files are
+                easier to prepare for strict forms and email limits.
+              </p>
+            </article>
+            <article>
+              <h3 className="text-base font-extrabold text-[var(--text)]">
+                Guides included
+              </h3>
+              <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
+                The guide section covers compression, image formats, PDF
+                security, QR codes, OCR, video size and common upload problems
+                that users should understand before submitting files.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mt-10 grid gap-4 md:grid-cols-3">
           {[

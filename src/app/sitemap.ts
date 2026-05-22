@@ -3,24 +3,26 @@ import { blogPosts } from "@/lib/blog";
 import { BASE_URL, pdfTools, tools } from "@/lib/tools";
 import { utilityTools } from "@/lib/utilityTools";
 
-const lastModified = new Date("2026-05-13T00:00:00.000Z");
+const contentLastModified = new Date("2026-05-22T00:00:00.000Z");
+const toolLastModified = new Date("2026-05-22T00:00:00.000Z");
+const legalLastModified = new Date("2026-05-22T00:00:00.000Z");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolRoutes = tools.map((tool) => ({
     url: `${BASE_URL}${tool.href}`,
-    lastModified,
+    lastModified: toolLastModified,
     changeFrequency: "monthly" as const,
     priority: tool.priority,
   }));
   const pdfToolRoutes = pdfTools.map((tool) => ({
     url: `${BASE_URL}${tool.href}`,
-    lastModified,
+    lastModified: toolLastModified,
     changeFrequency: "monthly" as const,
     priority: tool.priority,
   }));
   const utilityToolRoutes = utilityTools.map((tool) => ({
     url: `${BASE_URL}${tool.href}`,
-    lastModified,
+    lastModified: toolLastModified,
     changeFrequency: "monthly" as const,
     priority: tool.priority,
   }));
@@ -28,14 +30,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: BASE_URL,
-      lastModified,
+      lastModified: contentLastModified,
       changeFrequency: "weekly",
       priority: 1,
     },
     ...toolRoutes,
     {
       url: `${BASE_URL}/pdf-tools`,
-      lastModified,
+      lastModified: contentLastModified,
       changeFrequency: "weekly",
       priority: 0.95,
     },
@@ -43,31 +45,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...utilityToolRoutes,
     {
       url: `${BASE_URL}/about`,
-      lastModified,
+      lastModified: legalLastModified,
       changeFrequency: "yearly",
       priority: 0.4,
     },
     {
       url: `${BASE_URL}/contact`,
-      lastModified,
+      lastModified: legalLastModified,
       changeFrequency: "yearly",
       priority: 0.4,
     },
     {
       url: `${BASE_URL}/search`,
-      lastModified,
+      lastModified: contentLastModified,
       changeFrequency: "monthly",
       priority: 0.35,
     },
     {
       url: `${BASE_URL}/blog`,
-      lastModified,
+      lastModified: contentLastModified,
       changeFrequency: "monthly",
       priority: 0.5,
     },
     ...blogPosts.map((post) => ({
       url: `${BASE_URL}/blog/${post.slug}`,
-      lastModified: new Date(post.publishedAt),
+      lastModified: new Date(post.updatedAt ?? post.publishedAt),
       changeFrequency: "monthly" as const,
       priority: 0.45,
     })),
@@ -79,7 +81,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       "dmca",
     ].map((slug) => ({
       url: `${BASE_URL}/${slug}`,
-      lastModified,
+      lastModified: legalLastModified,
       changeFrequency: "yearly" as const,
       priority: 0.2,
     })),
