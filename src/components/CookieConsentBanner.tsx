@@ -3,10 +3,8 @@
 import { useEffect, useState } from "react";
 import Script from "next/script";
 import Link from "next/link";
-import { normalizeAdSenseClientId } from "@/lib/adsense";
 
 const CONSENT_KEY = "fc_cookie_consent";
-const ADSENSE_SCRIPT_ID = "google-adsense-script";
 
 type ConsentValue = "granted" | "denied";
 
@@ -42,7 +40,6 @@ export function CookieConsentBanner() {
   const [visible, setVisible] = useState(false);
   const [consented, setConsented] = useState(false);
   const analyticsId = process.env.NEXT_PUBLIC_GA_ID;
-  const adsenseId = normalizeAdSenseClientId(process.env.NEXT_PUBLIC_ADSENSE_ID);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -65,19 +62,6 @@ export function CookieConsentBanner() {
 
     return () => cancelAnimationFrame(frame);
   }, []);
-
-  useEffect(() => {
-    if (!adsenseId || document.getElementById(ADSENSE_SCRIPT_ID)) {
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.async = true;
-    script.crossOrigin = "anonymous";
-    script.id = ADSENSE_SCRIPT_ID;
-    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`;
-    document.head.appendChild(script);
-  }, [adsenseId]);
 
   function accept() {
     localStorage.setItem(CONSENT_KEY, "true");

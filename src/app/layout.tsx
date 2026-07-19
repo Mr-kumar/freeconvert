@@ -6,6 +6,7 @@ import "./globals.css";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
+import { normalizeAdSenseClientId } from "@/lib/adsense";
 import { BASE_URL } from "@/lib/tools";
 import { safeJsonLd } from "@/lib/utils";
 
@@ -63,9 +64,11 @@ const websiteJsonLd = {
   ],
 };
 
+const adsenseClientId = normalizeAdSenseClientId(
+  process.env.NEXT_PUBLIC_ADSENSE_ID,
+);
 const hasGoogleMeasurement =
-  Boolean(process.env.NEXT_PUBLIC_ADSENSE_ID) ||
-  Boolean(process.env.NEXT_PUBLIC_GA_ID);
+  Boolean(adsenseClientId) || Boolean(process.env.NEXT_PUBLIC_GA_ID);
 
 const googleConsentDefaults = `
   window.dataLayer = window.dataLayer || [];
@@ -252,6 +255,15 @@ export default function RootLayout({
           >
             {googleConsentDefaults}
           </Script>
+        ) : null}
+        {adsenseClientId ? (
+          <Script
+            async
+            crossOrigin="anonymous"
+            id="google-adsense-script"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
+            strategy="afterInteractive"
+          />
         ) : null}
         <script
           type="application/ld+json"
