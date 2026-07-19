@@ -9,6 +9,7 @@ export type UtilityToolCategory =
   | "converter"
   | "password"
   | "developer"
+  | "html"
   | "file"
   | "media";
 
@@ -36,6 +37,21 @@ export type UtilityToolSlug =
   | "json-formatter"
   | "base64-encoder-decoder"
   | "url-encoder-decoder"
+  | "html-to-pdf"
+  | "html-viewer"
+  | "html-formatter"
+  | "html-minifier"
+  | "html-validator"
+  | "html-to-markdown"
+  | "markdown-to-html"
+  | "html-to-text"
+  | "html-entities-encoder-decoder"
+  | "html-table-generator"
+  | "html-to-image"
+  | "responsive-html-preview"
+  | "iframe-generator"
+  | "meta-tag-generator"
+  | "css-js-formatter-minifier"
   | "file-hash-checksum"
   | "zip-extractor"
   | "video-compressor"
@@ -121,6 +137,14 @@ export const utilityCategoryConfigs: Record<
     title: "Free Developer Tools",
     description: "Format JSON and encode or decode Base64 and URL text.",
     anchor: "developer-tools",
+  },
+  html: {
+    id: "html",
+    label: "HTML Tools",
+    title: "Free HTML Tools",
+    description:
+      "Preview, format, minify, validate and convert HTML code in the browser.",
+    anchor: "html-tools",
   },
   file: {
     id: "file",
@@ -956,6 +980,528 @@ export const utilityToolConfigs: Record<UtilityToolSlug, UtilityToolConfig> = {
     notes: [
       "Use component encoding for query parameter values.",
       "Decode only trusted URLs before opening them in a browser.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "html-to-pdf": {
+    slug: "html-to-pdf",
+    name: "HTML to PDF Converter",
+    shortName: "HTML to PDF",
+    title: "HTML to PDF Converter Online Free",
+    description:
+      "Convert pasted or uploaded HTML to PDF online free in your browser with page size, orientation, margin and preview options.",
+    homeDescription: "Convert HTML code to PDF",
+    href: "/html-to-pdf",
+    category: "html",
+    priority: 0.94,
+    popular: true,
+    keywords: [
+      "html to pdf",
+      "html to pdf converter",
+      "convert html to pdf online",
+      "html code to pdf",
+      "webpage to pdf from html",
+    ],
+    features: [
+      "Paste or upload HTML",
+      "Sandboxed live preview",
+      "A4, Letter and long-page PDF options",
+      "Client-side PDF download",
+    ],
+    bestFor: [
+      "Saving receipts, email templates, reports and simple HTML documents as PDF files.",
+      "Testing how HTML content exports before sharing or archiving it.",
+    ],
+    notes: [
+      "This browser tool converts pasted or uploaded HTML; converting arbitrary live URLs usually needs a server-side browser.",
+      "External images and fonts may be blocked by browser CORS rules during PDF export.",
+    ],
+    faqs: [
+      privacyFaq,
+      freeFaq,
+      {
+        question: "Can it convert a live website URL?",
+        answer:
+          "No. To stay client-side, paste the HTML code or upload an HTML file instead of sending a URL to a server.",
+      },
+    ],
+  },
+  "html-viewer": {
+    slug: "html-viewer",
+    name: "HTML Viewer",
+    shortName: "HTML Viewer",
+    title: "HTML Viewer Online Free - Live HTML Preview",
+    description:
+      "Preview HTML code online free with a sandboxed browser frame, source statistics, upload support and desktop or mobile view sizes.",
+    homeDescription: "Preview HTML code live",
+    href: "/html-viewer",
+    category: "html",
+    priority: 0.92,
+    popular: true,
+    keywords: [
+      "html viewer",
+      "html preview online",
+      "live html editor",
+      "view html code online",
+      "html renderer online",
+    ],
+    features: [
+      "Live HTML preview",
+      "Sandboxed iframe output",
+      "Desktop, tablet and mobile widths",
+      "HTML file upload",
+    ],
+    bestFor: [
+      "Checking small HTML snippets, email fragments and layout examples before publishing.",
+      "Viewing an HTML file without opening a full code editor.",
+    ],
+    notes: [
+      "Scripts are disabled by default so pasted HTML cannot run active code in the page.",
+      "Use the responsive preview tool when you need several viewport widths at once.",
+    ],
+    faqs: [
+      privacyFaq,
+      freeFaq,
+      {
+        question: "Does the preview run JavaScript?",
+        answer:
+          "No. The preview is sandboxed and keeps scripts disabled by default for safer testing.",
+      },
+    ],
+  },
+  "html-formatter": {
+    slug: "html-formatter",
+    name: "HTML Formatter",
+    shortName: "HTML Formatter",
+    title: "HTML Formatter Online Free - Beautify HTML Code",
+    description:
+      "Format and beautify HTML online free with indentation, readable line breaks and clean output that you can copy or download.",
+    homeDescription: "Beautify messy HTML code",
+    href: "/html-formatter",
+    category: "html",
+    priority: 0.9,
+    popular: true,
+    keywords: [
+      "html formatter",
+      "html beautifier",
+      "beautify html online",
+      "pretty print html",
+      "format html code",
+    ],
+    features: [
+      "Indent HTML code",
+      "Choose two or four spaces",
+      "Format fragments or full documents",
+      "Copy or download output",
+    ],
+    bestFor: [
+      "Making minified or messy HTML easier to read during debugging and review.",
+      "Cleaning copied snippets before placing them in docs, templates or source files.",
+    ],
+    notes: [
+      "Formatting can normalize some browser-parsed HTML structure.",
+      "Review template syntax from frameworks before replacing source files.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "html-minifier": {
+    slug: "html-minifier",
+    name: "HTML Minifier",
+    shortName: "HTML Minifier",
+    title: "HTML Minifier Online Free - Compress HTML Code",
+    description:
+      "Minify HTML online free by removing comments and extra whitespace while preserving script, style, pre and textarea content.",
+    homeDescription: "Compress HTML code",
+    href: "/html-minifier",
+    category: "html",
+    priority: 0.88,
+    keywords: [
+      "html minifier",
+      "minify html online",
+      "compress html code",
+      "html compressor",
+      "reduce html size",
+    ],
+    features: [
+      "Remove HTML comments",
+      "Collapse whitespace",
+      "Preserve sensitive text blocks",
+      "Size reduction summary",
+    ],
+    bestFor: [
+      "Creating smaller HTML snippets for templates, demos and simple static pages.",
+      "Comparing original and minified size before using code in a project.",
+    ],
+    notes: [
+      "Do not minify framework templates with custom syntax unless you review the output.",
+      "Whitespace inside pre, textarea, script and style blocks is preserved.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "html-validator": {
+    slug: "html-validator",
+    name: "HTML Validator",
+    shortName: "HTML Validator",
+    title: "HTML Validator Online Free - Check HTML Issues",
+    description:
+      "Validate HTML online free with browser parsing checks, duplicate ID detection, accessibility hints and SEO basics for common page markup.",
+    homeDescription: "Check common HTML issues",
+    href: "/html-validator",
+    category: "html",
+    priority: 0.86,
+    keywords: [
+      "html validator",
+      "html lint online",
+      "validate html online",
+      "html checker",
+      "html error checker",
+    ],
+    features: [
+      "Duplicate ID checks",
+      "Image alt and form label hints",
+      "Title, viewport and language checks",
+      "Issue severity summary",
+    ],
+    bestFor: [
+      "Finding common HTML quality, accessibility and SEO issues before publishing.",
+      "Reviewing snippets when a full W3C validation workflow is more than you need.",
+    ],
+    notes: [
+      "This local checker catches common issues but is not a full standards validator.",
+      "Use an official validator for final production conformance checks.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "html-to-markdown": {
+    slug: "html-to-markdown",
+    name: "HTML to Markdown Converter",
+    shortName: "HTML to Markdown",
+    title: "HTML to Markdown Converter Online Free",
+    description:
+      "Convert HTML to Markdown online free in your browser. Paste HTML and get clean Markdown for docs, README files and content systems.",
+    homeDescription: "Convert HTML to Markdown",
+    href: "/html-to-markdown",
+    category: "html",
+    priority: 0.86,
+    keywords: [
+      "html to markdown",
+      "html to md converter",
+      "convert html to markdown",
+      "html markdown converter",
+    ],
+    features: [
+      "HTML to Markdown conversion",
+      "Sanitized input option",
+      "Copy or download Markdown",
+      "Live output statistics",
+    ],
+    bestFor: [
+      "Turning web content, CMS snippets and exported HTML into Markdown drafts.",
+      "Preparing readable Markdown for documentation, notes and README files.",
+    ],
+    notes: [
+      "Complex tables and custom widgets may need manual cleanup after conversion.",
+      "Sanitizing removes scripts and unsafe attributes before conversion.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "markdown-to-html": {
+    slug: "markdown-to-html",
+    name: "Markdown to HTML Converter",
+    shortName: "Markdown to HTML",
+    title: "Markdown to HTML Converter Online Free",
+    description:
+      "Convert Markdown to HTML online free with sanitized live preview, generated HTML code and copy or download actions.",
+    homeDescription: "Convert Markdown to HTML",
+    href: "/markdown-to-html",
+    category: "html",
+    priority: 0.84,
+    keywords: [
+      "markdown to html",
+      "md to html converter",
+      "convert markdown to html",
+      "markdown preview html",
+    ],
+    features: [
+      "Markdown to HTML conversion",
+      "Sanitized preview",
+      "Generated HTML output",
+      "Copy or download HTML",
+    ],
+    bestFor: [
+      "Previewing Markdown notes, docs and README drafts as HTML.",
+      "Creating simple HTML from Markdown content without opening a desktop editor.",
+    ],
+    notes: [
+      "HTML output is sanitized before preview to remove unsafe active content.",
+      "Custom Markdown extensions may not render exactly like every publishing platform.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "html-to-text": {
+    slug: "html-to-text",
+    name: "HTML to Text Converter",
+    shortName: "HTML to Text",
+    title: "HTML to Text Converter Online Free",
+    description:
+      "Convert HTML to plain text online free. Extract readable text from markup with options for link URLs and whitespace cleanup.",
+    homeDescription: "Extract plain text from HTML",
+    href: "/html-to-text",
+    category: "html",
+    priority: 0.82,
+    keywords: [
+      "html to text",
+      "extract text from html",
+      "html text extractor",
+      "remove html tags",
+    ],
+    features: [
+      "Strip HTML tags",
+      "Optional link URL output",
+      "Whitespace cleanup",
+      "Copy or download text",
+    ],
+    bestFor: [
+      "Extracting readable copy from HTML emails, snippets and exported pages.",
+      "Removing markup before pasting content into forms, documents or messages.",
+    ],
+    notes: [
+      "Hidden text and alt text may appear differently from a browser-rendered page.",
+      "Review the output before using it as final copy.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "html-entities-encoder-decoder": {
+    slug: "html-entities-encoder-decoder",
+    name: "HTML Entities Encoder Decoder",
+    shortName: "HTML Entities",
+    title: "HTML Entities Encoder and Decoder Online Free",
+    description:
+      "Encode and decode HTML entities online free. Escape markup characters or decode entity text directly in your browser.",
+    homeDescription: "Encode or decode HTML entities",
+    href: "/html-entities-encoder-decoder",
+    category: "html",
+    priority: 0.82,
+    keywords: [
+      "html entities encoder",
+      "html entities decoder",
+      "html escape online",
+      "decode html entities",
+    ],
+    features: [
+      "Encode reserved HTML characters",
+      "Decode named and numeric entities",
+      "Copy or download output",
+      "Local browser conversion",
+    ],
+    bestFor: [
+      "Escaping code examples before placing them inside HTML pages.",
+      "Reading encoded text from feeds, source code, emails or API responses.",
+    ],
+    notes: [
+      "Encoding text is different from sanitizing unsafe HTML.",
+      "Decode only trusted content before rendering it as HTML.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "html-table-generator": {
+    slug: "html-table-generator",
+    name: "HTML Table Generator",
+    shortName: "HTML Table",
+    title: "HTML Table Generator Online Free",
+    description:
+      "Generate HTML table code online free with rows, columns, caption, header, footer, responsive wrapper and CSS styling options.",
+    homeDescription: "Create table HTML and CSS",
+    href: "/html-table-generator",
+    category: "html",
+    priority: 0.84,
+    keywords: [
+      "html table generator",
+      "table html generator",
+      "create html table",
+      "responsive table generator",
+    ],
+    features: [
+      "Rows and columns controls",
+      "Header, footer and caption options",
+      "Responsive wrapper",
+      "Generated HTML and CSS",
+    ],
+    bestFor: [
+      "Building simple product, schedule, comparison and data tables without writing markup manually.",
+      "Creating starter table HTML that can be copied into a website or document.",
+    ],
+    notes: [
+      "Use real table headings for tabular data so screen readers can understand the structure.",
+      "Very wide tables should use the responsive wrapper option.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "html-to-image": {
+    slug: "html-to-image",
+    name: "HTML to Image Converter",
+    shortName: "HTML to Image",
+    title: "HTML to PNG JPG Converter Online Free",
+    description:
+      "Convert HTML to PNG or JPG online free in your browser. Render pasted HTML as an image with width, scale and background controls.",
+    homeDescription: "Export HTML as PNG or JPG",
+    href: "/html-to-image",
+    category: "html",
+    priority: 0.86,
+    keywords: [
+      "html to image",
+      "html to png",
+      "html to jpg",
+      "convert html to image",
+      "html screenshot generator",
+    ],
+    features: [
+      "PNG or JPG output",
+      "Custom render width",
+      "Scale and background controls",
+      "Client-side image download",
+    ],
+    bestFor: [
+      "Saving simple HTML cards, snippets and previews as images.",
+      "Creating shareable screenshots from local HTML content without uploading it.",
+    ],
+    notes: [
+      "External images may be skipped if the source blocks browser canvas access.",
+      "Use a solid background for JPG output because JPG does not support transparency.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "responsive-html-preview": {
+    slug: "responsive-html-preview",
+    name: "Responsive HTML Preview",
+    shortName: "Responsive Preview",
+    title: "Responsive HTML Preview Online Free",
+    description:
+      "Preview HTML at mobile, tablet and desktop widths online free with sandboxed side-by-side frames and upload support.",
+    homeDescription: "Preview HTML across devices",
+    href: "/responsive-html-preview",
+    category: "html",
+    priority: 0.84,
+    keywords: [
+      "responsive html preview",
+      "mobile html preview",
+      "html viewport preview",
+      "test html responsive online",
+    ],
+    features: [
+      "Mobile, tablet and desktop frames",
+      "Sandboxed preview",
+      "HTML upload support",
+      "Viewport width labels",
+    ],
+    bestFor: [
+      "Checking whether a small HTML layout adapts across common viewport widths.",
+      "Reviewing snippets before copying them into a website or email template.",
+    ],
+    notes: [
+      "The preview estimates viewport widths but cannot simulate every device browser exactly.",
+      "Scripts are disabled to keep the preview safer and predictable.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "iframe-generator": {
+    slug: "iframe-generator",
+    name: "iFrame Generator",
+    shortName: "iFrame",
+    title: "iFrame Generator Online Free",
+    description:
+      "Generate iframe HTML code online free with title, width, height, loading, sandbox, fullscreen and responsive wrapper options.",
+    homeDescription: "Generate iframe embed code",
+    href: "/iframe-generator",
+    category: "html",
+    priority: 0.8,
+    keywords: [
+      "iframe generator",
+      "html iframe generator",
+      "embed code generator",
+      "responsive iframe generator",
+    ],
+    features: [
+      "URL, title and size fields",
+      "Sandbox and loading options",
+      "Responsive wrapper code",
+      "Live iframe preview",
+    ],
+    bestFor: [
+      "Creating embed code for maps, videos, dashboards and external pages.",
+      "Adding accessible iframe titles and common security attributes.",
+    ],
+    notes: [
+      "Only embed content from sources you trust and have permission to use.",
+      "Some websites block embedding with security headers, so their preview may not load.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "meta-tag-generator": {
+    slug: "meta-tag-generator",
+    name: "Meta Tag Generator",
+    shortName: "Meta Tags",
+    title: "Meta Tag and Open Graph Generator Online Free",
+    description:
+      "Generate SEO meta tags, Open Graph tags and Twitter card tags online free with search and social preview panels.",
+    homeDescription: "Generate SEO and social tags",
+    href: "/meta-tag-generator",
+    category: "html",
+    priority: 0.84,
+    keywords: [
+      "meta tag generator",
+      "open graph generator",
+      "twitter card generator",
+      "seo meta tags",
+      "og tag preview",
+    ],
+    features: [
+      "Title and description tags",
+      "Open Graph and Twitter card tags",
+      "Search result preview",
+      "Social card preview",
+    ],
+    bestFor: [
+      "Drafting page metadata before adding it to a website or CMS.",
+      "Checking whether titles and descriptions fit common search preview lengths.",
+    ],
+    notes: [
+      "Search engines can rewrite titles and descriptions based on the query.",
+      "Use accurate page-specific metadata instead of repeating the same text everywhere.",
+    ],
+    faqs: [privacyFaq, freeFaq],
+  },
+  "css-js-formatter-minifier": {
+    slug: "css-js-formatter-minifier",
+    name: "CSS JS Formatter Minifier",
+    shortName: "CSS JS Minifier",
+    title: "CSS JS Formatter and Minifier Online Free",
+    description:
+      "Format or minify CSS and JavaScript snippets online free with quick copy and download output for front-end code cleanup.",
+    homeDescription: "Format or minify CSS and JS",
+    href: "/css-js-formatter-minifier",
+    category: "html",
+    priority: 0.82,
+    keywords: [
+      "css formatter",
+      "js formatter",
+      "css minifier",
+      "javascript minifier",
+      "format css javascript",
+    ],
+    features: [
+      "CSS format and minify modes",
+      "JavaScript format and minify modes",
+      "Size reduction summary",
+      "Copy or download output",
+    ],
+    bestFor: [
+      "Cleaning small CSS and JavaScript snippets while working with HTML.",
+      "Preparing compact code examples or readable snippets for documentation.",
+    ],
+    notes: [
+      "This tool is best for small snippets, not complex production bundles.",
+      "Review JavaScript output before replacing source code because formatting is intentionally lightweight.",
     ],
     faqs: [privacyFaq, freeFaq],
   },

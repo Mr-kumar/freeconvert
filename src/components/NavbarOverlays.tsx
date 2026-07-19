@@ -140,6 +140,21 @@ const toolIconMap: Record<string, ComponentType<{ className?: string }>> = {
   "json-formatter": Braces,
   "base64-encoder-decoder": Braces,
   "url-encoder-decoder": Braces,
+  "html-to-pdf": Braces,
+  "html-viewer": Braces,
+  "html-formatter": Braces,
+  "html-minifier": Minimize2,
+  "html-validator": FileSearch,
+  "html-to-markdown": RefreshCw,
+  "markdown-to-html": RefreshCw,
+  "html-to-text": Type,
+  "html-entities-encoder-decoder": Braces,
+  "html-table-generator": Grid3X3,
+  "html-to-image": FileImage,
+  "responsive-html-preview": Maximize,
+  "iframe-generator": Braces,
+  "meta-tag-generator": FileSearch,
+  "css-js-formatter-minifier": Braces,
   "file-hash-checksum": FileSearch,
   "zip-extractor": FileArchive,
   "video-compressor": Video,
@@ -208,6 +223,18 @@ const megaMenuColumns: Record<MegaMenuKey, MegaMenuColumnConfig[]> = {
       ]),
     },
     {
+      title: "HTML",
+      icon: Braces,
+      tools: pickTools(utilityTools, [
+        "html-to-pdf",
+        "html-to-image",
+        "html-to-markdown",
+        "markdown-to-html",
+        "html-to-text",
+        "html-entities-encoder-decoder",
+      ]),
+    },
+    {
       title: "Others",
       icon: Grid3X3,
       tools: utilityToolsFor(["converter", "developer"]),
@@ -233,6 +260,14 @@ const megaMenuColumns: Record<MegaMenuKey, MegaMenuColumnConfig[]> = {
       title: "Media",
       icon: Video,
       tools: pickTools(utilityTools, ["video-compressor"]),
+    },
+    {
+      title: "Code",
+      icon: Braces,
+      tools: pickTools(utilityTools, [
+        "html-minifier",
+        "css-js-formatter-minifier",
+      ]),
     },
     {
       title: "File Utilities",
@@ -288,6 +323,11 @@ const megaMenuColumns: Record<MegaMenuKey, MegaMenuColumnConfig[]> = {
       ]),
     },
     {
+      title: "HTML Tools",
+      icon: Braces,
+      tools: utilityToolsFor(["html"]),
+    },
+    {
       title: "QR, Text & Calculators",
       icon: Type,
       tools: utilityToolsFor(["qr", "text", "calculator"]),
@@ -308,6 +348,10 @@ const megaMenuColumns: Record<MegaMenuKey, MegaMenuColumnConfig[]> = {
 };
 
 function megaGridClass(columnCount: number) {
+  if (columnCount >= 7) {
+    return "grid-cols-1 sm:grid-cols-2 xl:grid-cols-7";
+  }
+
   if (columnCount >= 6) {
     return "grid-cols-1 sm:grid-cols-2 xl:grid-cols-6";
   }

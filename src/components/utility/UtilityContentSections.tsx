@@ -34,6 +34,7 @@ const categoryGuideLinks: Partial<Record<UtilityToolConfig["category"], string[]
   converter: ["file-upload-size-limits-checklist"],
   password: ["browser-based-file-tools-privacy"],
   developer: ["browser-based-file-tools-privacy"],
+  html: ["browser-based-file-tools-privacy"],
   file: ["browser-based-file-tools-privacy", "file-upload-size-limits-checklist"],
   media: ["video-compression-basics-formats-bitrates-and-quality"],
 };

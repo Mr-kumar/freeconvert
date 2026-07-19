@@ -54,6 +54,24 @@ const SearchDialog = dynamic(
   { ssr: false },
 );
 
+const htmlToolPaths = [
+  "/html-to-pdf",
+  "/html-viewer",
+  "/html-formatter",
+  "/html-minifier",
+  "/html-validator",
+  "/html-to-markdown",
+  "/markdown-to-html",
+  "/html-to-text",
+  "/html-entities-encoder-decoder",
+  "/html-table-generator",
+  "/html-to-image",
+  "/responsive-html-preview",
+  "/iframe-generator",
+  "/meta-tag-generator",
+  "/css-js-formatter-minifier",
+];
+
 const toolPathSet = new Set([
   "/pdf-tools",
   "/resize-image",
@@ -131,6 +149,7 @@ const toolPathSet = new Set([
   "/mp4-to-mp3",
   "/mp4-to-gif",
   "/audio-converter",
+  ...htmlToolPaths,
 ]);
 
 const convertPathSet = new Set([
@@ -156,6 +175,12 @@ const convertPathSet = new Set([
   "/mp4-to-mp3",
   "/mp4-to-gif",
   "/audio-converter",
+  "/html-to-pdf",
+  "/html-to-markdown",
+  "/markdown-to-html",
+  "/html-to-text",
+  "/html-entities-encoder-decoder",
+  "/html-to-image",
 ]);
 
 const compressPathSet = new Set([
@@ -165,6 +190,8 @@ const compressPathSet = new Set([
   "/compress-pdf",
   "/resize-image",
   "/video-compressor",
+  "/html-minifier",
+  "/css-js-formatter-minifier",
 ]);
 
 const megaMenuNavItems: { key: MegaMenuKey; label: string }[] = [

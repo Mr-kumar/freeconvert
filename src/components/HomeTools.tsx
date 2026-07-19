@@ -40,6 +40,7 @@ const categoryIconMap: Record<string, ComponentType<{ className?: string }>> = {
   converter: Ruler,
   password: KeyRound,
   developer: Braces,
+  html: Braces,
   file: FileArchive,
   media: Video,
 };
@@ -51,6 +52,8 @@ const popularIconMap: Record<string, ComponentType<{ className?: string }>> = {
   "qr-code-generator": QrCode,
   "word-counter": Type,
   "json-formatter": Braces,
+  "html-to-pdf": Braces,
+  "html-viewer": Braces,
   "password-generator": KeyRound,
   "emi-calculator": Calculator,
   "heic-to-jpg": FileImage,
@@ -167,6 +170,8 @@ function utilityCategoryCard(category: UtilityCategoryConfig) {
 export function HomeTools() {
   const popular = [
     pdfTools.find((tool) => tool.slug === "merge-pdf"),
+    utilityTools.find((tool) => tool.slug === "html-to-pdf"),
+    utilityTools.find((tool) => tool.slug === "html-viewer"),
     tools.find((tool) => tool.slug === "heic-to-jpg"),
     tools.find((tool) => tool.slug === "compress"),
     utilityTools.find((tool) => tool.slug === "character-counter"),
@@ -202,6 +207,7 @@ export function HomeTools() {
     utilityCategoryCard(utilityCategoryConfigs.converter),
     utilityCategoryCard(utilityCategoryConfigs.password),
     utilityCategoryCard(utilityCategoryConfigs.developer),
+    utilityCategoryCard(utilityCategoryConfigs.html),
     utilityCategoryCard(utilityCategoryConfigs.file),
     utilityCategoryCard(utilityCategoryConfigs.media),
   ];
@@ -276,7 +282,7 @@ export function HomeTools() {
             <p className="mt-4 text-sm leading-7 text-[var(--muted)]">
               FreeConvert focuses on small tasks people repeat often: preparing
               images for upload forms, reducing PDF file size, extracting text,
-              generating QR codes and checking values in simple calculators.
+              previewing HTML code, generating QR codes and checking values in simple calculators.
               Each tool page explains what it does, when to use it and what to
               check before downloading the result.
             </p>
@@ -284,7 +290,7 @@ export function HomeTools() {
               The tools are organized for practical workflows rather than one
               long upload queue. You can resize a photo before compression,
               merge a PDF before reducing size, generate a QR code for a link
-              or UPI payment, and use developer utilities for quick checks
+              or UPI payment, preview and convert HTML code, and use developer utilities for quick checks
               without leaving the browser.
             </p>
           </div>
@@ -295,7 +301,7 @@ export function HomeTools() {
                 Private by design
               </h3>
               <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
-                Supported image, PDF, text, QR, calculator and developer tools
+                Supported image, PDF, HTML, text, QR, calculator and developer tools
                 run directly in the browser. That keeps common files on the
                 device and avoids forcing a signup for quick work.
               </p>
